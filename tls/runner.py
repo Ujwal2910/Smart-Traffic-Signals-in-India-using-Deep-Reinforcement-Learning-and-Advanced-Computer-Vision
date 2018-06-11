@@ -22,6 +22,7 @@ import sys
 import optparse
 import subprocess
 import random
+import time
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -88,6 +89,7 @@ def run():
     # we start with phase 2 where EW has green
     traci.trafficlight.setPhase("0", 2)
     while traci.simulation.getMinExpectedNumber() > 0:
+        time.sleep(0.01)
         traci.simulationStep()
         if traci.trafficlight.getPhase("0") == 2:
             # we are not already switching
@@ -108,6 +110,9 @@ def get_options():
                          default=False, help="run the commandline version of sumo")
     options, args = optParser.parse_args()
     return options
+
+def take_action():
+    traci.trafficlight.setPhase("0", traci.trafficlight.getPhase("0") + 1)
 
 
 # this is the main entry point of this script
