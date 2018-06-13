@@ -7,6 +7,11 @@ mon = {'top': 140, 'left': 100, 'width': 884, 'height': 900}
 
 sct = mss()
 
+fgbg = cv2.createBackgroundSubtractorMOG2()
+
+checker  = np.zeros((80),dtype=int)
+
+
 
 def warped_simulation(rect,frame):
     dst = np.array([(125, 0), (375, 0), (500, 800), (0, 800)], dtype="float32")
@@ -15,6 +20,47 @@ def warped_simulation(rect,frame):
     warped = cv2.warpPerspective(frame, M, (500, 800))
     #cv2.imshow('warped', warped)
     return warped
+
+
+def tail_length(lane):
+
+    fgmask = fgbg.apply(lane)
+    #cv2.imshow("bog",fgmask)
+    start = 800
+
+    for i in range(80):
+        density = lane[ start-10:start ,62:438]
+        cv2.imshow("density",density)
+        d_gray = cv2.cvtColor(density, cv2.COLOR_BGR2GRAY)
+        white = cv2.countNonZero(d_gray)
+        print(" ", white)
+        #start +=10
+
+
+        if white > 1500:
+            checker[i] = 1
+        else:
+            checker[i] = 0
+        start -= 10
+
+
+    tail = 800
+
+    for i in range(77):
+        over = 1
+        for j in range(i, i + 3):
+            if checker[j] == 1:
+                over = 0
+                break
+
+        if over == 1:
+            tail = i
+            break
+
+    print(checker)
+    print(tail)
+
+    return tail
 
 
 while 1:
@@ -51,13 +97,28 @@ while 1:
     cv2.imshow("upper",warp_upperlane)
 
     warp_lowerlane = warped_simulation(lower_lane, rotated180)
-    cv2.imshow("lower", warp_lowerlane)
+    #cv2.imshow("lower", warp_lowerlane)
 
     warp_rightlane = warped_simulation(right_lane, rotated90)
-    cv2.imshow("right", warp_rightlane)
+    #cv2.imshow("right", warp_rightlane)
 
     warp_leftlane = warped_simulation(left_lane, rotated270)
-    cv2.imshow("left", warp_leftlane)
+    #cv2.imshow("left", warp_leftlane)
+
+    tail_length_upper = tail_length(warp_upperlane)
+    tail_length_lower = tail_length(warp_lowerlane)
+    tail_length_right = tail_length(warp_rightlane)
+    tail_length_left  = tail_length(warp_leftlane)
+
+    print("Tail lengths - ")
+
+    print("Upper Tail ",tail_length_upper)
+    print("lower Tail ", tail_length_lower)
+    print("right Tail ", tail_length_right)
+    print("left Tail ", tail_length_left)
+
+    print("  end")
+
 
 
 
