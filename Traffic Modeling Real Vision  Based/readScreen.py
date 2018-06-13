@@ -37,7 +37,7 @@ def tail_length(lane):
         #start +=10
 
 
-        if white > 1520:
+        if white > 1500:
             checker[i] = 1
         else:
             checker[i] = 0
