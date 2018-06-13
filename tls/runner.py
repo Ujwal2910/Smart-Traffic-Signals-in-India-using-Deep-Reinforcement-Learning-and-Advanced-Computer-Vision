@@ -16,13 +16,22 @@
 
 from __future__ import absolute_import
 from __future__ import print_function
-
+from select import select
+import termios
 import os
 import sys
 import optparse
 import subprocess
 import random
 import time
+import cv2
+import curses
+
+stdscr = curses.initscr()
+curses.cbreak()
+stdscr.keypad(1)
+stdscr.refresh()
+key = ''
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -64,6 +73,7 @@ def generate_routefile():
     <route id="r9" edges="53o 3i 4o 54i"/>
     <route id="r10" edges="53o 3i 1o 51i"/>
     <route id="r11" edges="53o 3i 2o 52i"/>
+    
     <flow id="mixed1" begin="0" end="1500" number="100" route="r0" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed2" begin="0" end="1500" number="100" route="r1" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed3" begin="0" end="1500" number="100" route="r2" type="mixed" departLane="random" departPosLat="random"/>
@@ -111,21 +121,43 @@ def generate_routefile():
 def run():
     """execute the TraCI control loop"""
     step = 0
-    # we start with phase 2 where EW has green
+    
     traci.trafficlight.setPhase("0", 0)
     while traci.simulation.getMinExpectedNumber() > 0:
         
         traci.simulationStep()
-        
-        '''if traci.trafficlight.getPhase("0") == 2:
-            # we are not already switching
-            if traci.inductionloop.getLastStepVehicleNumber("0") > 0:
-                # there is a vehicle from the north, switch
-                traci.trafficlight.setPhase("0", 3)
-            else:
-                # otherwise try to keep green for EW
-                traci.trafficlight.setPhase("0", 2)'''
+        # timeout = 0.2
+        # print("Time right now - ",step)
+        # rlist, wlist, xlist = select([sys.stdin],[],[],timeout)
+
+        # if rlist:
+        #     print("Key pressed - ")
+        #     print(rlist)
+        #     traci.vehicle.addFull(vehID='left_'+str(step),routeID='r0',typeID='car',depart='triggered',departLane='random',departPos='random')
+        #     termios.tcflush(sys.stdin,termios.TCIFLUSH)
+
+        key = stdscr.getch()
+        stdscr.addch(20,25,key)
+        stdscr.refresh()
+
+        if key == curses.KEY_RIGHT: 
+            stdscr.addstr(2, 20, "Up")
+            traci.vehicle.addFull(vehID='right_'+str(step),routeID='r0',typeID='car',depart='triggered',departLane='random',departPos='random')
+
+        elif key == curses.KEY_DOWN: 
+            stdscr.addstr(3, 20, "Down")
+            traci.vehicle.addFull(vehID='down_'+str(step),routeID='r3',typeID='car',depart='triggered',departLane='random',departPos='random')
+
+        elif key == curses.KEY_LEFT: 
+            stdscr.addstr(4, 20, "Left")
+            traci.vehicle.addFull(vehID='left_'+str(step),routeID='r6',typeID='car',depart='triggered',departLane='random',departPos='random')
+
+        elif key == curses.KEY_UP: 
+            stdscr.addstr(5, 20, "Up")
+            traci.vehicle.addFull(vehID='up_'+str(step),routeID='r9',typeID='car',depart='triggered',departLane='random',departPos='random')
+
         step += 1
+    curses.endwin()
     traci.close()
     sys.stdout.flush()
 
