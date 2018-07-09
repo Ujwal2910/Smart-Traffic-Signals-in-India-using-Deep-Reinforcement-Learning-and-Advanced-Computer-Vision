@@ -180,13 +180,13 @@ if __name__ == '__main__':
         tail_length_right = getRightQlength()
         tail_length_left = getLeftQlength()
 
-        # print("Tail lengths - ")
-        #
-        # print("Upper Tail ", tail_length_upper)
-        # print("lower Tail ", tail_length_lower)
-        # print("right Tail ", tail_length_right)
-        # print("left Tail ", tail_length_left)
-        #
+        print("Tail lengths - ")
+
+        print("Upper Tail ", tail_length_upper)
+        print("lower Tail ", tail_length_lower)
+        print("right Tail ", tail_length_right)
+        print("left Tail ", tail_length_left)
+
         # print("  end")
 
         # cv2.imshow('test', image)
@@ -194,7 +194,7 @@ if __name__ == '__main__':
         # cv2.imshow("90",rotated90)
         # cv2.imshow("270",rotated270)
 
-        if cv2.waitKey(25) & 0xFF == ord('q'):
+        if cv2.waitKey(0) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
             break
 
