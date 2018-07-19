@@ -3,7 +3,7 @@ import cv2
 from mss import mss
 from PIL import Image
 
-mon = {'top': 140, 'left': 100, 'width': 884, 'height': 900}
+mon = {'top': 140, 'left':1000, 'width': 884, 'height': 900}
 
 sct = mss()
 
@@ -44,25 +44,27 @@ def makeMask(lane, SIDE):
 
 def subtractImage(image, SIDE):
     if SIDE == 'upper':
-        bg = cv2.imread('upper_background.png')
+        bg = cv2.imread('upper_screenshot.png')
         fgmask = image - bg
         fgmask = cv2.cvtColor(fgmask, cv2.COLOR_BGR2GRAY)
         # cv2.imshow("sub_upper", fgmask)
+        # cv2.imshow("upper", image)
+        # cv2.imshow("bg",bg)
 
     elif SIDE == 'lower':
-        bg = cv2.imread('lower_background.png')
+        bg = cv2.imread('lower_screenshot.png')
         fgmask = image - bg
         fgmask = cv2.cvtColor(fgmask, cv2.COLOR_BGR2GRAY)
         # cv2.imshow("bog_lower", fgmask)
 
     elif SIDE == 'right':
-        bg = cv2.imread('right_background.png')
+        bg = cv2.imread('right_screenshot.png')
         fgmask = image - bg
         fgmask = cv2.cvtColor(fgmask, cv2.COLOR_BGR2GRAY)
         # cv2.imshow("bog_right", fgmask)
 
     elif SIDE == 'left':
-        bg = cv2.imread('left_background.png')
+        bg = cv2.imread('left_screenshot.png')
         fgmask = image - bg
         fgmask = cv2.cvtColor(fgmask, cv2.COLOR_BGR2GRAY)
         # cv2.imshow("bog_left", fgmask)
@@ -101,6 +103,7 @@ def tail_length(mask):
             break
 
     #print(checker)
+
     #print(tail)
 
     if tail < 5:
@@ -114,6 +117,7 @@ def getScreenImage():
     img = Image.frombytes('RGB', (sct.width, sct.height), sct.image)
     image = np.array(img)
 
+
     return image
 
 
@@ -126,9 +130,12 @@ def getCenter(image):
 
 def getUpperQlength():
     image = getScreenImage()
-    upper_lane = np.array([(428, 39), (517, 39), (517, 351), (428, 351)], dtype="float32")
+    upper_lane = np.array([(455, 31), (544, 31), (544, 351), (455, 351)], dtype="float32")
+    #cv2.imshow("upper",upper_lane)
     warp_upperlane = warped_simulation(upper_lane, image)
+    #cv2.imshow("upper",warp_upperlane)
     mask_upper = subtractImage(warp_upperlane, "upper")
+    #cv2.imshow("upper", mask_upper)
     tail_length_upper = tail_length(mask_upper)
 
     return tail_length_upper
@@ -139,9 +146,12 @@ def getLowerQlength():
     h, w, center = getCenter(image)
     M180 = cv2.getRotationMatrix2D(center, 180, 1.0)
     rotated180 = cv2.warpAffine(image, M180, (w, h))
-    lower_lane = np.array([(456, 31), (544, 31), (544, 349), (456, 349)], dtype="float32")
+    lower_lane = np.array([(430, 31), (520, 31), (520, 340), (430, 340)], dtype="float32")
+    #cv2.imshow("lower", lower_lane)
     warp_lowerlane = warped_simulation(lower_lane, rotated180)
+    #cv2.imshow("lower", warp_lowerlane)
     mask_lower = subtractImage(warp_lowerlane, "lower")
+    #cv2.imshow("lower", mask_lower)
     tail_length_lower = tail_length(mask_lower)
 
     return tail_length_lower
@@ -152,9 +162,12 @@ def getRightQlength():
     h, w, center = getCenter(image)
     M90 = cv2.getRotationMatrix2D(center, 90, 1.0)
     rotated90 = cv2.warpAffine(image, M90, (w, h))
-    right_lane = np.array([(445, 36), (533, 36), (533, 363), (445, 363)], dtype="float32")
+    right_lane = np.array([(445, 36), (533, 36), (533, 330), (445, 330)], dtype="float32")
+    #cv2.imshow("right", right_lane)
     warp_rightlane = warped_simulation(right_lane, rotated90)
+    #cv2.imshow("right", warp_rightlane)
     mask_right = subtractImage(warp_rightlane, "right")
+    #cv2.imshow("right", mask_right)
     tail_length_right = tail_length(mask_right)
 
     return tail_length_right
@@ -165,20 +178,26 @@ def getLeftQlength():
     h, w, center = getCenter(image)
     M270 = cv2.getRotationMatrix2D(center, 270, 1.0)
     rotated270 = cv2.warpAffine(image, M270, (w, h))
-    left_lane = np.array([(439, 34), (528, 34), (528, 334), (439, 334)], dtype="float32")
+    left_lane = np.array([(439, 34), (528, 34), (528, 354), (439, 354)], dtype="float32")
+    #cv2.imshow("left", left_lane)
     warp_leftlane = warped_simulation(left_lane, rotated270)
+    #cv2.imshow("left", warp_leftlane)
     mask_left = subtractImage(warp_leftlane, "left")
+    #cv2.imshow("left", mask_left)
     tail_length_left = tail_length(mask_left)
     return tail_length_left
 
 
 if __name__ == '__main__':
-    while 1:
+    while True:
 
+        #image = getScreenImage()
         tail_length_upper = getUpperQlength()
         tail_length_lower = getLowerQlength()
         tail_length_right = getRightQlength()
-        tail_length_left = getLeftQlength()
+        tail_length_left  = getLeftQlength()
+
+
 
         print("Tail lengths - ")
 
@@ -188,8 +207,10 @@ if __name__ == '__main__':
         print("left Tail ", tail_length_left)
 
         # print("  end")
+        # image = getScreenImage()
+        # cv2.imshow("test", image)
 
-        # cv2.imshow('test', image)
+        #cv2.imshow('test', image)
         # cv2.imshow("180",rotated180)
         # cv2.imshow("90",rotated90)
         # cv2.imshow("270",rotated270)

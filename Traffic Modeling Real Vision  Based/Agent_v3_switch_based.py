@@ -15,7 +15,7 @@ from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.callbacks import TensorBoard
-import readScreen2
+import readscreen3
 import numpy as np
 from time import time
 
@@ -108,13 +108,13 @@ print("TraCI Started")
 
 
 def getState():#made the order changes
-    state = [readScreen2.getLowerQlength() / 80,
-             readScreen2.getRightQlength() / 80,
-             readScreen2.getUpperQlength() / 80,
-             readScreen2.getLeftQlength() / 80,
+    state = [readscreen3.getLowerQlength() / 80,
+             readscreen3.getRightQlength() / 80,
+             readscreen3.getUpperQlength() / 80,
+             readscreen3.getLeftQlength() / 80,
              traci.trafficlight.getPhase("0")]
 
-    print(state)
+    #print (state)
 
     return state
 
@@ -125,9 +125,10 @@ import traci
 
 
 
-def makeMove(phase, transition_time):
+def makeMove(action, transition_time):
 
-    traci.trafficlight.setPhase("0", phase)
+    if action == 1:
+        traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
 
     for _ in range(transition_time):
         traci.simulationStep()
@@ -170,7 +171,7 @@ def getReward(this_state, this_new_state):
 
 def build_model(history):
     num_hidden_units_lstm = 10
-    num_actions = 4
+    num_actions = 2
     model = Sequential()
     model.add(LSTM(num_hidden_units_lstm,batch_size=1,input_shape=(history,5)))
     #model.add(LSTM(8))
@@ -206,7 +207,7 @@ traci.start([sumoBinary, "-c", "data/cross.sumocfg",
 
 traci.trafficlight.setPhase("0", 0)
 
-nA = 4###
+nA = 2###
 state = getState()
 experience = []
 for i in range(num_history):
@@ -240,14 +241,12 @@ for episode in range(num_episode):
         policy_s[np.argmax(q_val)] = 1 - epsilon + (epsilon / nA)
 
         action = np.random.choice(np.arange(nA), p=policy_s)
-        #phase = np.argmax(q_val)
-        phase = action
-        print("else action", phase)
+
         if np.argmax(q_val) != action:
             print("RANDOM CHOICE TAKEN")
         else:
             print("POLICY FOLLOWED ")
-        new_state = makeMove(phase,transition_time)
+        new_state = makeMove(action,transition_time)
 
         Average_Q_lengths = new_state[:4]
         sum_q_lens += np.average(Average_Q_lengths)
@@ -262,7 +261,7 @@ for episode in range(num_episode):
         oracle = np.zeros((1, nA))
         oracle[:] = q_val[:]
         print(reward)
-        oracle[0][phase] = (reward + gamma*np.max(model.predict((np.array(batch_experience)).reshape((1, batch_history, 5)))))
+        oracle[0][action] = (reward + gamma*np.max(model.predict((np.array(batch_experience)).reshape((1, batch_history, 5)))))
         print(oracle)
         model.fit((np.array(batch_experience)).reshape((1, batch_history, 5)), oracle, verbose=1)
         state = new_state
@@ -271,7 +270,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens/702)
     sum_q_lens = 0
     if episode % 25 == 0:
-        model.save('lstm_phase_1607_{}.h5'.format(episode))
+        model.save('lstm_switch_1607_{}.h5'.format(episode))
     traci.load(["--start", "-c", "data/cross.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
 

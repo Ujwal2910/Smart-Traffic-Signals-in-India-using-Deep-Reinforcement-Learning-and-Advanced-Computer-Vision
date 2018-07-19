@@ -10,14 +10,16 @@ import random
 import time
 import cv2
 import curses
-from keras.optimizers import RMSprop
+from keras.optimizers import RMSprop,Adam
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.models import load_model
-import readscreen3
+from keras.callbacks import TensorBoard
+import readScreen2
 import numpy as np
-
+from time import time
+from keras.models import load_model
+from tkinter import *
 
 def get_options():
     optParser = optparse.OptionParser()
@@ -31,7 +33,7 @@ def generate_routefile():
         print("""<routes>
     <vTypeDistribution id="mixed">
         <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
-        <vType id="moped" vClass="moped" speedDev="0.4" transition_timelatAlignment="compact" probability="0.7"/>
+        <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
     </vTypeDistribution>
     <route id="r0" edges="51o 1i 2o 52i"/>
     <route id="r1" edges="51o 1i 4o 54i"/>
@@ -106,11 +108,11 @@ print("TraCI Started")
 #print(Runner().run)
 
 
-def getState():
-    state = [readscreen3.getLowerQlength() / 80,
-             readscreen3.getRightQlength() / 80,
-             readscreen3.getUpperQlength() / 80,
-             readscreen3.getLeftQlength() / 80,
+def getState():#made the order changes
+    state = [readScreen2.getLowerQlength() / 80,
+             readScreen2.getRightQlength() / 80,
+             readScreen2.getUpperQlength() / 80,
+             readScreen2.getLeftQlength() / 80,
              traci.trafficlight.getPhase("0")]
 
     #print (state)
@@ -123,21 +125,15 @@ print("here")
 import traci
 
 
-def makeMove(phase, transition_time, experience):
 
+def makeMove(action, transition_time, experience):
 
-    # current_phase = traci.trafficlight.getPhase("0")
-    #
-    # if phase == 1:
-    #     traci.trafficlight.setPhase("0", (int(current_phase)+1) % 4)
-    # else:
-    #     traci.trafficlight.setPhase("0",phase)
-    traci.trafficlight.setPhase("0", phase)
+    if action == 1:
+        traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
 
     for _ in range(transition_time):
         experience.pop(0)
         traci.simulationStep()
-
         experience.append(getState())
     # traci.simulationStep()
     # traci.simulationStep()
@@ -149,43 +145,81 @@ def makeMove(phase, transition_time, experience):
     return newState, experience
 
 
-# def getReward(state,new_state):
-#
-#     qLengths1 = state[:4]
-#     qLengths2 = new_state[:4]
-#
-#     q1 = np.average(qLengths1)*np.std(qLengths1)
-#     q2 = np.average(qLengths2)*np.std(qLengths2)
-#
-#     if q1 >= q2:
-#         reward = -1
-#     elif q1<q2:
-#         reward = 1
-#
-#     return reward
-#
+def getReward(this_state, this_new_state):
+    qLengths1 = this_state[:4]
+    qLengths2 = this_new_state[:4]
+
+    qLengths11 = [x + 1 for x in qLengths1]
+    qLengths21 = [x + 1 for x in qLengths2]
+
+    q1 = np.prod(qLengths11)
+    q2 = np.prod(qLengths21)
 
 
-# def build_model():
-#     num_hidden_units_lstm = 32
-#     num_actions = 4
-#     model = Sequential()
-#     model.add(LSTM(num_hidden_units_lstm, input_shape=(100, 5)))
-#     model.add(LSTM(32))
-#     model.add(Dense(num_actions, activation='linear'))
-#     opt = RMSprop(lr=0.00025)
-#     model.compile(loss='mse', optimizer=opt)
-#
-#     return model
+    # print("Old State with product : ", q1)
+    #
+    # print("New State with product : ", q2)
+    #
+    #
+    # if q1 > q2:
+    #     this_reward = 1
+    # else:
+    #     this_reward = -1
+    this_reward = q1-q2
 
-num_episode = 400
-gamma = 0.99
+    return this_reward
+
+
+
+def build_model(history):
+    num_hidden_units_lstm = 10
+    num_actions = 2
+    model = Sequential()
+    model.add(LSTM(num_hidden_units_lstm,batch_size=1,input_shape=(history,5)))
+    #model.add(LSTM(8))
+    model.add(Dense(num_actions, activation='linear'))
+    opt = RMSprop(lr=0.00025)
+    model.compile(loss='mse', optimizer=opt)
+
+    return model
+
+
+def getWaitingTime():
+    sum = 0
+
+    sum += traci.lane.getWaitingTime("1i_0")
+    sum += traci.lane.getWaitingTime("1i_1")
+    sum += traci.lane.getWaitingTime("1i_2")
+
+    sum += traci.lane.getWaitingTime("2i_0")
+    sum += traci.lane.getWaitingTime("2i_1")
+    sum += traci.lane.getWaitingTime("2i_2")
+
+    sum += traci.lane.getWaitingTime("3i_0")
+    sum += traci.lane.getWaitingTime("3i_1")
+    sum += traci.lane.getWaitingTime("3i_2")
+
+    sum += traci.lane.getWaitingTime("4i_0")
+    sum += traci.lane.getWaitingTime("4i_1")
+    sum += traci.lane.getWaitingTime("4i_2")
+
+    return sum/12
+
+
+num_episode = 101
+gamma = 0.95
 epsilon = 1
-buffer = 100
+num_batches = 25
+Average_Q_lengths = []
+sum_q_lens = 0
+AVG_Q_len_perepisode = []
 num_history = 100
-transition_time = 30
-#model = build_model()
-model = load_model('lstm_phase_1707_25.h5')
+batch_history = 20
+transition_time = 10
+model = build_model(batch_history)
+print(model.summary())
+
+model = load_model('lstm_switch_1707_75.h5')
 
 generate_routefile()
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
@@ -193,21 +227,29 @@ traci.start([sumoBinary, "-c", "data/cross.sumocfg",
 
 traci.trafficlight.setPhase("0", 0)
 
-
-traci.trafficlight.setPhase("0", 0)
+nA = 2
 state = getState()
 experience = []
+
+
+# root = Tk()
+# T = Text(root, height=2, width=30)
+# T.pack()
+# T.insert(END, "Just a text Widget\nin two lines\n")
+
+
 for i in range(num_history):
     experience.append(state)
+
+
 while traci.simulation.getMinExpectedNumber() > 0:
-    print("Input to NN : ")
+
     print((np.array(experience)).reshape((1, num_history, 5)))
     q_val = model.predict((np.array(experience)).reshape((1, num_history, 5)))
-    phase = np.argmax(q_val)
+    action = np.argmax(q_val)
     print("Output of NN : ")
     print(q_val)
-    state, experience = makeMove(phase, transition_time, experience)
-
+    state, experience = makeMove(action, transition_time, experience)
 
 
 

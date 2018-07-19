@@ -153,7 +153,7 @@ def getReward(state,new_state):
 
 
 def build_model():
-    num_hidden_units_lstm = 32
+    num_hidden_units_lstm = 10
     num_actions = 2
     model = Sequential()
     model.add(LSTM(num_hidden_units_lstm, input_shape=(100, 5)))
@@ -175,14 +175,14 @@ traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                  "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
+state = getState()
+experience = []
 
+for i in range(100):
+    experience.append(state)
 
 for episode in range(num_episode):
-    traci.trafficlight.setPhase("0", 0)
-    state = getState()
-    experience = []
-    for i in range(100):
-        experience.append(state)#-----
+    #-----
     while traci.simulation.getMinExpectedNumber() > 0:
         print("Episode # ", episode)
         q_val = model.predict((np.array(experience)).reshape((1, 100, 5)))
