@@ -29,7 +29,7 @@ def get_options():
     return options
 
 def generate_routefile():
-    with open("data/cross_auto.rou.xml", "w") as routes:
+    with open("data/cross_auto.rou2.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
         <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
