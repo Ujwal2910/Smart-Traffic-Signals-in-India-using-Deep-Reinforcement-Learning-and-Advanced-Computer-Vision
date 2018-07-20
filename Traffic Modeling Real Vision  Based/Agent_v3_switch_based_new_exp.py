@@ -68,7 +68,7 @@ def generate_routefile_random(episode_length, total_vehicles):
         for i in np.arange(len(traffic)):
             print(
                 '<flow id="mixed%i" begin="0" end="%i" number="%i" route="r%i" type="mixed" departLane="random" departPosLat="random"/>' % (
-                i, episode_length, traffic[i], i))
+                i, episode_length, traffic[i], i), file = routes)
 
         print("</routes>", file=routes)
 
