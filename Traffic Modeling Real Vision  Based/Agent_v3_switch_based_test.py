@@ -28,6 +28,64 @@ def get_options():
     options, args = optParser.parse_args()
     return options
 
+def constrained_sum_sample_pos(n, total):
+    """Return a randomly chosen list of n positive integers summing to total.
+    Each such list is equally likely to occur."""
+
+    dividers = sorted(random.sample(range(1, total), n - 1))
+    return [a - b for a, b in zip(dividers + [total], [0] + dividers)]
+
+
+def generate_routefile_random(episode_length, total_vehicles):
+    N_ROADS = 4
+    division = constrained_sum_sample_pos(N_ROADS, total_vehicles)
+    traffic = []
+
+    for i in np.arange(len(division)):
+        traffic.append(division[i] * 0.6)
+        traffic.append(division[i] * 0.2)
+        traffic.append(division[i] * 0.2)
+
+    with open("data/cross.rou.xml", "w") as routes:
+        print("""<routes>
+        <vTypeDistribution id="mixed">
+        <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
+        <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
+        </vTypeDistribution>
+        <route id="r0" edges="51o 1i 2o 52i"/>
+        <route id="r1" edges="51o 1i 4o 54i"/>
+        <route id="r2" edges="51o 1i 3o 53i"/>
+        <route id="r3" edges="54o 4i 3o 53i"/>
+        <route id="r4" edges="54o 4i 1o 51i"/>
+        <route id="r5" edges="54o 4i 2o 52i"/>
+        <route id="r6" edges="52o 2i 1o 51i"/>
+        <route id="r7" edges="52o 2i 4o 54i"/>
+        <route id="r8" edges="52o 2i 3o 53i"/>
+        <route id="r9" edges="53o 3i 4o 54i"/>
+        <route id="r10" edges="53o 3i 1o 51i"/>
+        <route id="r11" edges="53o 3i 2o 52i"/>""", file=routes)
+
+        for i in np.arange(len(traffic)):
+            print(
+                '<flow id="mixed%i" begin="0" end="%i" number="%i" route="r%i" type="mixed" departLane="random" departPosLat="random"/>' % (
+                i, episode_length, traffic[i], i))
+
+        print("</routes>", file=routes)
+
+    print('TRAFFIC CONFIGURATION - ')
+    for i in np.arange(len(traffic)):
+        print('Lane %i - %i' % (i+1, traffic[i]))
+
+# The program looks like this
+#    <tlLogic id="0" type="static" programID="0" offset="0">
+# the locations of the tls are      NESW
+#        <phase duration="31" state="GrGr"/>
+#        <phase duration="6"  state="yryr"/>
+#        <phase duration="31" state="rGrG"/>
+#        <phase duration="6"  state="ryry"/>
+#    </tlLogic>
+
+
 def generate_routefile():
     with open("data/cross_auto.rou2.xml", "w") as routes:
         print("""<routes>
@@ -214,14 +272,15 @@ Average_Q_lengths = []
 sum_q_lens = 0
 AVG_Q_len_perepisode = []
 num_history = 100
-batch_history = 20
+episode_time = 5000
+num_vehicles = 5200
 transition_time = 10
-model = build_model(batch_history)
+model = build_model(num_history)
 print(model.summary())
 
 model = load_model('lstm_switch_1707_75.h5')
 
-generate_routefile()
+generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                  "--tripinfo-output", "tripinfo.xml"])
 
