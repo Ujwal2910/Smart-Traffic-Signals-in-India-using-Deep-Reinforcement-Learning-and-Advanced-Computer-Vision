@@ -181,18 +181,19 @@ def makeMove(action, transition_time, experience):
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
 
     for _ in range(transition_time):
-        experience.pop(0)
+
         traci.simulationStep()
-        experience.append(getState())
+
 
     # traci.simulationStep()
     # traci.simulationStep()
     # traci.simulationStep()
     # traci.simulationStep()
 
-    newState = getState()
-
-    return newState, experience
+    #newState = getState()
+    experience.pop(0)
+    experience.append(getState())
+    return experience
 
 
 def getReward(this_state, this_new_state):
@@ -227,7 +228,7 @@ def build_model(history):
     model.add(Dense(output_dim =24, init='uniform', activation='relu'))
     # model.add(Dense(24, init='uniform', activation='relu'))
     model.add(Dense(output_dim =12, init='uniform', activation='relu'))
-    model.add(Dense(output_dim =2, init='uniform', activation='sigmoid'))
+    model.add(Dense(output_dim =2, init='uniform', activation='linear'))
     # Compile model
     model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
 
@@ -300,8 +301,8 @@ for episode in range(num_episode):
             print("RANDOM CHOICE TAKEN")
         else:
             print("POLICY FOLLOWED ")
-        new_state, experience = makeMove(action, transition_time, experience)
-
+        experience = makeMove(action, transition_time, experience)
+        new_state = getState()
         Average_Q_lengths = new_state[:4]
         sum_q_lens += np.average(Average_Q_lengths)
 
@@ -316,10 +317,10 @@ for episode in range(num_episode):
         model.fit((np.array(old_experience)).reshape(1,5), oracle, verbose=1)
         state = new_state
 
-    AVG_Q_len_perepisode.append(sum_q_lens / 702)
+    AVG_Q_len_perepisode.append(sum_q_lens / 100)
     sum_q_lens = 0
     if episode % 25 == 0:
-        model.save('lstm_switch_1707_{}.h5'.format(episode))
+        model.save('sequential_switch_2007_{}.h5'.format(episode))
 
     generate_routefile_random(episode_time, num_vehicles)
     traci.load(["--start", "-c", "data/cross.sumocfg",
