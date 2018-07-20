@@ -10,7 +10,7 @@ import random
 import time
 import cv2
 import curses
-from keras.optimizers import RMSprop,Adam
+from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 from keras.layers import Dense
@@ -26,6 +26,64 @@ def get_options():
                          default=False, help="run the commandline version of sumo")
     options, args = optParser.parse_args()
     return options
+
+
+def constrained_sum_sample_pos(n, total):
+    """Return a randomly chosen list of n positive integers summing to total.
+    Each such list is equally likely to occur."""
+
+    dividers = sorted(random.sample(range(1, total), n - 1))
+    return [a - b for a, b in zip(dividers + [total], [0] + dividers)]
+
+
+def generate_routefile_random(episode_length, total_vehicles):
+    N_ROADS = 4
+    division = constrained_sum_sample_pos(N_ROADS, total_vehicles)
+    traffic = []
+
+    for i in np.arange(len(division)):
+        traffic.append(division[i] * 0.6)
+        traffic.append(division[i] * 0.2)
+        traffic.append(division[i] * 0.2)
+
+    with open("data/cross.rou.xml", "w") as routes:
+        print("""<routes>
+        <vTypeDistribution id="mixed">
+        <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
+        <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
+        </vTypeDistribution>
+        <route id="r0" edges="51o 1i 2o 52i"/>
+        <route id="r1" edges="51o 1i 4o 54i"/>
+        <route id="r2" edges="51o 1i 3o 53i"/>
+        <route id="r3" edges="54o 4i 3o 53i"/>
+        <route id="r4" edges="54o 4i 1o 51i"/>
+        <route id="r5" edges="54o 4i 2o 52i"/>
+        <route id="r6" edges="52o 2i 1o 51i"/>
+        <route id="r7" edges="52o 2i 4o 54i"/>
+        <route id="r8" edges="52o 2i 3o 53i"/>
+        <route id="r9" edges="53o 3i 4o 54i"/>
+        <route id="r10" edges="53o 3i 1o 51i"/>
+        <route id="r11" edges="53o 3i 2o 52i"/>""", file=routes)
+
+        for i in np.arange(len(traffic)):
+            print(
+                '<flow id="mixed%i" begin="0" end="%i" number="%i" route="r%i" type="mixed" departLane="random" departPosLat="random"/>' % (
+                i, episode_length, traffic[i], i))
+
+        print("</routes>", file=routes)
+
+    print('TRAFFIC CONFIGURATION - ')
+    for i in np.arange(len(traffic)):
+        print('Lane %i - %i' % (i+1, traffic[i]))
+
+# The program looks like this
+#    <tlLogic id="0" type="static" programID="0" offset="0">
+# the locations of the tls are      NESW
+#        <phase duration="31" state="GrGr"/>
+#        <phase duration="6"  state="yryr"/>
+#        <phase duration="31" state="rGrG"/>
+#        <phase duration="6"  state="ryry"/>
+#    </tlLogic>
 
 def generate_routefile():
     with open("data/cross_auto.rou.xml", "w") as routes:
@@ -63,7 +121,6 @@ def generate_routefile():
         vehNr = 0
 
 
-
 try:
     sys.path.append(os.path.join(os.path.dirname(
         __file__), '..', '..', '..', '..', "tools"))  # tutorial in tests
@@ -73,7 +130,6 @@ try:
 except ImportError:
     sys.exit(
         "please declare environment variable 'SUMO_HOME' as the root directory of your sumo installation (it should contain folders 'bin', 'tools' and 'docs')")
-
 
 options = get_options()
 
@@ -94,39 +150,33 @@ else:
 print("TraCI Started")
 
 
+# State = State_Lengths()
+# print(State.get_tails())
+
+# states = State.get_tails
 
 
-#State = State_Lengths()
-#print(State.get_tails())
-
-#states = State.get_tails
+# runner = Runner()
+# print(Runner().run)
 
 
-
-#runner = Runner()
-#print(Runner().run)
-
-
-def getState():#made the order changes
+def getState():  # made the order changes
     state = [readscreen3.getLowerQlength() / 80,
              readscreen3.getRightQlength() / 80,
              readscreen3.getUpperQlength() / 80,
              readscreen3.getLeftQlength() / 80,
              traci.trafficlight.getPhase("0")]
 
-    #print (state)
+    # print (state)
 
     return state
-
 
 
 print("here")
 import traci
 
 
-
 def makeMove(action, transition_time, experience):
-
     if action == 1:
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
 
@@ -134,7 +184,6 @@ def makeMove(action, transition_time, experience):
         experience.pop(0)
         traci.simulationStep()
         experience.append(getState())
-
 
     # traci.simulationStep()
     # traci.simulationStep()
@@ -156,7 +205,6 @@ def getReward(this_state, this_new_state):
     q1 = np.prod(qLengths11)
     q2 = np.prod(qLengths21)
 
-
     # print("Old State with product : ", q1)
     #
     # print("New State with product : ", q2)
@@ -166,18 +214,17 @@ def getReward(this_state, this_new_state):
     #     this_reward = 1
     # else:
     #     this_reward = -1
-    this_reward = q1-q2
+    this_reward = q1 - q2
 
     return this_reward
-
 
 
 def build_model(history):
     num_hidden_units_lstm = 10
     num_actions = 2
     model = Sequential()
-    model.add(LSTM(num_hidden_units_lstm,batch_size=1,input_shape=(history,5)))
-    #model.add(LSTM(8))
+    model.add(LSTM(num_hidden_units_lstm, batch_size=1, input_shape=(history, 5)))
+    # model.add(LSTM(8))
     model.add(Dense(num_actions, activation='linear'))
     opt = RMSprop(lr=0.00025)
     model.compile(loss='mse', optimizer=opt)
@@ -197,20 +244,19 @@ Average_Q_lengths = []
 sum_q_lens = 0
 AVG_Q_len_perepisode = []
 num_history = 100
-
+episode_time = 5000
+num_vehicles = 5200
 transition_time = 30
 model = build_model(num_history)
 print(model.summary())
 
-
-
-generate_routefile()
+generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
-                 "--tripinfo-output", "tripinfo.xml"])
+             "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
 
-nA = 2###
+nA = 2  ###
 state = getState()
 experience = []
 for i in range(num_history):
@@ -225,12 +271,12 @@ for episode in range(num_episode):
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         print("Episode # ", episode)
-        #print("Waiting time on lane 1i_0 = ",getWaitingTime("1i_0"))
+        # print("Waiting time on lane 1i_0 = ",getWaitingTime("1i_0"))
 
-        print("Inside episode counter",counter)
+        print("Inside episode counter", counter)
         print(experience)
-        counter+=1
-        #batch_experience = experience[:batch_history]
+        counter += 1
+        # batch_experience = experience[:batch_history]
         q_val = model.predict((np.array(experience)).reshape((1, num_history, 5)))
         print(q_val)
         # if random.random() < epsilon:
@@ -239,7 +285,7 @@ for episode in range(num_episode):
         # else:
         #     phase = np.argmax(q_val)
         #     print("else action",phase)
-        epsilon = 1.0 / (episode+1)
+        epsilon = 1.0 / (episode + 1)
         policy_s = np.ones(nA) * epsilon / nA
 
         policy_s[np.argmax(q_val)] = 1 - epsilon + (epsilon / nA)
@@ -250,7 +296,7 @@ for episode in range(num_episode):
             print("RANDOM CHOICE TAKEN")
         else:
             print("POLICY FOLLOWED ")
-        new_state, experience = makeMove(action,transition_time,experience)
+        new_state, experience = makeMove(action, transition_time, experience)
 
         Average_Q_lengths = new_state[:4]
         sum_q_lens += np.average(Average_Q_lengths)
@@ -260,19 +306,20 @@ for episode in range(num_episode):
         oracle = np.zeros((1, nA))
         oracle[:] = q_val[:]
         print(reward)
-        oracle[0][action] = (reward + gamma*np.max(model.predict((np.array(experience)).reshape((1, num_history, 5)))))
+        oracle[0][action] = (
+                    reward + gamma * np.max(model.predict((np.array(experience)).reshape((1, num_history, 5)))))
         print(oracle)
         model.fit((np.array(old_experience)).reshape((1, num_history, 5)), oracle, verbose=1)
         state = new_state
 
-
-    AVG_Q_len_perepisode.append(sum_q_lens/702)
+    AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 25 == 0:
         model.save('lstm_switch_1707_{}.h5'.format(episode))
+
+    generate_routefile_random(episode_time, num_vehicles)
     traci.load(["--start", "-c", "data/cross.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
-
 
 print(AVG_Q_len_perepisode)
 
@@ -281,62 +328,3 @@ print(AVG_Q_len_perepisode)
 # plt.plot([x for x in range(num_episode)],[AVG_Q_len_perepisode], 'ro')
 # plt.axis([0, num_episode, 0, 10])
 # plt.show()
-
-
-
-def generate_routefile_random(N):
-    random.seed(42)  # make tests reproducible
-    #N = 3600  # number of time steps
-    # demand per second from different directions
-    pWE = 1. / 10
-    pEW = 1. / 11
-    pNS = 1. / 30
-    pSN = 1. / 15
-    with open("data/cross.rou.xml", "w") as routes:
-        print("""<routes>
-        <vTypeDistribution id="mixed">
-        <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
-        <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
-        </vTypeDistribution>
-        <route id="r0" edges="51o 1i 2o 52i"/>
-        <route id="r1" edges="51o 1i 4o 54i"/>
-        <route id="r2" edges="51o 1i 3o 53i"/>
-        <route id="r3" edges="54o 4i 3o 53i"/>
-        <route id="r4" edges="54o 4i 1o 51i"/>
-        <route id="r5" edges="54o 4i 2o 52i"/>
-        <route id="r6" edges="52o 2i 1o 51i"/>
-        <route id="r7" edges="52o 2i 4o 54i"/>
-        <route id="r8" edges="52o 2i 3o 53i"/>
-        <route id="r9" edges="53o 3i 4o 54i"/>
-        <route id="r10" edges="53o 3i 1o 51i"/>
-        <route id="r11" edges="53o 3i 2o 52i"/>""", file=routes)
-        lastVeh = 0
-        vehNr = 0
-        for i in range(N):
-            if random.uniform(0, 1) < pWE:
-                print('    <vehicle id="right_%i" type="typeWE" route="right" depart="%i" />' % (
-                    vehNr, i), file=routes)
-                vehNr += 1
-                lastVeh = i
-            if random.uniform(0, 1) < pEW:
-                print('    <vehicle id="left_%i" type="typeWE" route="left" depart="%i" />' % (
-                    vehNr, i), file=routes)
-                vehNr += 1
-                lastVeh = i
-            if random.uniform(0, 1) < pNS:
-                print('    <vehicle id="down_%i" type="typeNS" route="down" depart="%i" color="1,0,0"/>' % (
-                    vehNr, i), file=routes)
-                vehNr += 1
-                lastVeh = i
-        print("</routes>", file=routes)
-
-# The program looks like this
-#    <tlLogic id="0" type="static" programID="0" offset="0">
-# the locations of the tls are      NESW
-#        <phase duration="31" state="GrGr"/>
-#        <phase duration="6"  state="yryr"/>
-#        <phase duration="31" state="rGrG"/>
-#        <phase duration="6"  state="ryry"/>
-#    </tlLogic>
-
-
