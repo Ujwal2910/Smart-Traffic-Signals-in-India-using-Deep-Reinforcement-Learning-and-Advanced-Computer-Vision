@@ -265,14 +265,10 @@
     </edge>
 
     <tlLogic id="0" type="static" programID="0" offset="0">
-        <phase duration="29" state="GGGGgrrrrrGGGGgrrrrr"/>
-        <phase duration="5" state="yyyygrrrrryyyygrrrrr"/>
-        <phase duration="6" state="rrrrGrrrrrrrrrGrrrrr"/>
-        <phase duration="5" state="rrrryrrrrrrrrryrrrrr"/>
-        <phase duration="29" state="rrrrrGGGGgrrrrrGGGGg"/>
-        <phase duration="5" state="rrrrryyyygrrrrryyyyg"/>
-        <phase duration="6" state="rrrrrrrrrGrrrrrrrrrG"/>
-        <phase duration="5" state="rrrrrrrrryrrrrrrrrry"/>
+        <phase duration="100229" state="GGGGGrrrrrrrrrrrrrrr"/>
+        <phase duration="100229" state="rrrrrGGGGGrrrrrrrrrr"/>
+        <phase duration="100229" state="rrrrrrrrrrGGGGGrrrrr"/>
+        <phase duration="100229" state="rrrrrrrrrrrrrrrGGGGG"/>
     </tlLogic>
 
     <junction id="0" type="traffic_light" x="510.00" y="510.00" incLanes="3i_0 3i_1 3i_2 2i_0 2i_1 2i_2 4i_0 4i_1 4i_2 1i_0 1i_1 1i_2" intLanes=":0_0_0 :0_1_0 :0_1_1 :0_1_2 :0_20_0 :0_5_0 :0_6_0 :0_6_1 :0_6_2 :0_21_0 :0_10_0 :0_11_0 :0_11_1 :0_11_2 :0_22_0 :0_15_0 :0_16_0 :0_16_1 :0_16_2 :0_23_0" shape="500.15,498.65 519.85,498.65 521.35,500.15 521.35,519.85 519.85,521.35 500.15,521.35 498.65,519.85 498.65,500.15">

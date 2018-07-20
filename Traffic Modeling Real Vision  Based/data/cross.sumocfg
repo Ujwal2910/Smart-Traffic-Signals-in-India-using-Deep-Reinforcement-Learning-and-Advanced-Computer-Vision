@@ -4,7 +4,7 @@
 
     <input>
         <net-file value="cross_2lanes.net.xml"/>
-        <route-files value="cross_2lanes.rou.xml"/>
+        <route-files value="cross_auto.rou.xml"/>
         <additional-files value="cross.det.xml"/>
     </input>
 
@@ -15,7 +15,7 @@
     <processing>
         <lateral-resolution value="0.64"/>
     </processing>
-    
+
     <report>
         <verbose value="true"/>
         <no-step-log value="true"/>
