@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Thursday 19 July 2018 01:20:12 PM IST by SUMO gui Version 0.32.0
+<!-- generated on Friday 20 July 2018 06:52:08 PM IST by SUMO gui Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
         <net-file value="data/cross_2lanes.net.xml"/>
-        <route-files value="data/cross_auto.rou.xml"/>
+        <route-files value="data/cross.rou.xml"/>
         <additional-files value="data/cross.det.xml"/>
     </input>
 
@@ -28,8 +28,21 @@
         <no-step-log value="true"/>
     </report>
 
-    <gui_only>
-        <start value="true"/>
-    </gui_only>
+    <traci_server>
+        <remote-port value="44631"/>
+    </traci_server>
 
 </configuration>
+-->
+
+<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e1_file.xsd">
+    <interval begin="0.00" end="30.00" id="0" nVehContrib="1" flow="120.00" occupancy="0.92" speed="18.05" length="5.00" nVehEntered="1"/>
+    <interval begin="30.00" end="60.00" id="0" nVehContrib="4" flow="480.00" occupancy="3.09" speed="15.48" length="3.55" nVehEntered="4"/>
+    <interval begin="60.00" end="90.00" id="0" nVehContrib="7" flow="840.00" occupancy="3.69" speed="13.83" length="2.10" nVehEntered="7"/>
+    <interval begin="90.00" end="120.00" id="0" nVehContrib="2" flow="240.00" occupancy="2.46" speed="5.71" length="2.10" nVehEntered="2"/>
+    <interval begin="120.00" end="150.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
+    <interval begin="150.00" end="180.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
+    <interval begin="180.00" end="210.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
+    <interval begin="210.00" end="240.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
+    <interval begin="240.00" end="241.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
+</detector>
