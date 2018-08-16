@@ -163,7 +163,7 @@ def updateTargetModel(model, targetModel):
     targetModel.set_weights(model.get_weights())
 
 
-def getState():  # made the order changes
+def getState(transition_time):  # made the order changes
     newState = []
     for _ in range(transition_time):
         traci.simulationStep()
@@ -196,7 +196,7 @@ def makeMove(action, transition_time):
     # traci.simulationStep()
     # traci.simulationStep()
 
-    return getState()
+    return getState(transition_time)
 
 
 def getReward(this_state, this_new_state):
@@ -250,7 +250,7 @@ def getWaitingTime(laneID):
 
 
 num_episode = 101
-gamma = 0.95
+discount_factor = 0.95
 epsilon = 1
 num_batches = 25
 Average_Q_lengths = []
@@ -261,8 +261,12 @@ episode_time = 5000
 num_vehicles = 5200
 transition_time = 4
 target_update_time = 500
-model = build_model(transition_time)
-print(model.summary())
+q_estimator_model = build_model(transition_time)
+target_estimator_model = build_model(transition_time)
+replay_memory_init_size = 500
+replay_memory_size = 5000
+batch_size = 32
+print(q_estimator_model.summary())
 
 generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
@@ -270,13 +274,31 @@ traci.start([sumoBinary, "-c", "data/cross.sumocfg",
 
 traci.trafficlight.setPhase("0", 0)
 
-nA = 2  ###
+nA = 2
 
+target_estimator_model.set_weights(q_estimator_model.get_weights())
 
+replay_memory = []
+
+for _ in range(replay_memory_init_size):
+    if traci.simulation.getMinExpectedNumber() <= 0:
+        generate_routefile_random(episode_time, num_vehicles)
+        traci.load(["--start", "-c", "data/cross.sumocfg",
+                    "--tripinfo-output", "tripinfo.xml"])
+    state = getState(transition_time)
+    action = np.random.choice(np.arange(nA))
+    new_state = makeMove(action,transition_time)
+    reward = getReward(state,new_state)
+    replay_memory.append([state,action,reward,new_state])
+
+total_t = 0
 for episode in range(num_episode):
+    generate_routefile_random(episode_time, num_vehicles)
+    traci.load(["--start", "-c", "data/cross.sumocfg",
+                "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
 
-
+    state = getState(transition_time)
     counter = 0
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
@@ -286,8 +308,15 @@ for episode in range(num_episode):
         print("Inside episode counter", counter)
 
         counter += 1
+        total_t += 1
         # batch_experience = experience[:batch_history]
-        q_val = model.predict((np.array(experience)).reshape((1, num_history, 5)))
+
+        if total_t % target_update_time == 0:
+            target_estimator_model.set_weights(q_estimator_model.get_weights())
+
+
+
+        q_val = q_estimator_model.predict(state)
         print(q_val)
         # if random.random() < epsilon:
         #     phase = np.random.choice(4)
@@ -301,17 +330,35 @@ for episode in range(num_episode):
         policy_s[np.argmax(q_val)] = 1 - epsilon + (epsilon / nA)
 
         action = np.random.choice(np.arange(nA), p=policy_s)
-        old_experience = experience
+
         if np.argmax(q_val) != action:
             print("RANDOM CHOICE TAKEN")
         else:
             print("POLICY FOLLOWED ")
-        new_state, experience = makeMove(action, transition_time, experience)
+
+        new_state = makeMove(action, transition_time)
+        reward = getReward(state,new_state)
+
+        if len(replay_memory) == replay_memory_size:
+            replay_memory.pop(0)
+
+        replay_memory.append([state,action,reward,new_state])
+
 
         Average_Q_lengths = new_state[:4]
         sum_q_lens += np.average(Average_Q_lengths)
 
-        reward = getReward(state, new_state)
+        samples = random.sample(replay_memory, batch_size)
+        states_batch, action_batch, reward_batch, next_states_batch = map(np.array, zip(*samples))
+
+        q_values_next = target_estimator_model.predict(next_states_batch)
+        targets_batch = reward_batch + discount_factor * np.amax(
+            q_values_next, axis=1)
+
+        states_batch = np.array(states_batch)
+        
+        # CODE FOR UPDATE REMAINING, REST DONE!
+        loss = q_estimator_model.update(states_batch, action_batch, targets_batch)
 
         oracle = np.zeros((1, nA))
         oracle[:] = q_val[:]
@@ -327,9 +374,7 @@ for episode in range(num_episode):
     if episode % 25 == 0:
         model.save('lstm_switch_1707_{}.h5'.format(episode))
 
-    generate_routefile_random(episode_time, num_vehicles)
-    traci.load(["--start", "-c", "data/cross.sumocfg",
-                "--tripinfo-output", "tripinfo.xml"])
+
 
 print(AVG_Q_len_perepisode)
 
