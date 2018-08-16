@@ -164,15 +164,20 @@ def updateTargetModel(model, targetModel):
 
 
 def getState():  # made the order changes
-    state = [readscreen3.getLowerQlength() / 80,
+    newState = []
+    for _ in range(transition_time):
+        traci.simulationStep()
+
+        state = [readscreen3.getLowerQlength() / 80,
              readscreen3.getRightQlength() / 80,
              readscreen3.getUpperQlength() / 80,
              readscreen3.getLeftQlength() / 80
              ]
 
+        newState.insert(0, state)
     # print (state)
 
-    return state
+    return newState
 
 
 print("here")
@@ -183,17 +188,15 @@ def makeMove(action, transition_time):
     if action == 1:
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
 
-    newState = []
-    for _ in range(transition_time):
-        traci.simulationStep()
-        newState.insert(0,getState())
+
+
 
     # traci.simulationStep()
     # traci.simulationStep()
     # traci.simulationStep()
     # traci.simulationStep()
 
-    return newState
+    return getState()
 
 
 def getReward(this_state, this_new_state):
@@ -256,9 +259,9 @@ AVG_Q_len_perepisode = []
 num_history = 100
 episode_time = 5000
 num_vehicles = 5200
-transition_time = 30
+transition_time = 4
 target_update_time = 500
-model = build_model(num_history)
+model = build_model(transition_time)
 print(model.summary())
 
 generate_routefile_random(episode_time, num_vehicles)
@@ -268,16 +271,12 @@ traci.start([sumoBinary, "-c", "data/cross.sumocfg",
 traci.trafficlight.setPhase("0", 0)
 
 nA = 2  ###
-state = getState()
-experience = []
-for i in range(num_history):
-    experience.append(state)
+
 
 for episode in range(num_episode):
     traci.trafficlight.setPhase("0", 0)
 
-    print("INITIAL EXPERIENCE : ")
-    print(experience)
+
     counter = 0
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
@@ -285,7 +284,7 @@ for episode in range(num_episode):
         # print("Waiting time on lane 1i_0 = ",getWaitingTime("1i_0"))
 
         print("Inside episode counter", counter)
-        print(experience)
+
         counter += 1
         # batch_experience = experience[:batch_history]
         q_val = model.predict((np.array(experience)).reshape((1, num_history, 5)))
