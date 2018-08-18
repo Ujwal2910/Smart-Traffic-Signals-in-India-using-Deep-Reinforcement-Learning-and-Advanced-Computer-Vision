@@ -290,6 +290,7 @@ for _ in range(replay_memory_init_size):
     new_state = makeMove(action,transition_time)
     reward = getReward(state,new_state)
     replay_memory.append([state,action,reward,new_state])
+    print(len(replay_memory))
 
 total_t = 0
 for episode in range(num_episode):
