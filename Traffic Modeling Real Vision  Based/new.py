@@ -387,7 +387,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 25 == 0:
-        q_estimator_model.save('model_{}.h5'.format(datetime.date.now().strftime("%B %d, %Y")))
+        q_estimator_model.save('model_{}_{}.h5'.format(datetime.date.now().strftime("%B %d, %Y"), episode))
 
 
 
