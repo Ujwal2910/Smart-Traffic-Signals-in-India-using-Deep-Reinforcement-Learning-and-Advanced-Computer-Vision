@@ -17,6 +17,7 @@ from keras.layers import Dense
 from keras.callbacks import TensorBoard
 import readscreen3
 import numpy as np
+import datetime
 from time import time
 
 
@@ -386,7 +387,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 25 == 0:
-        model.save('lstm_switch_1707_{}.h5'.format(episode))
+        q_estimator_model.save('model_{}.h5'.format(datetime.date.now().strftime("%B %d, %Y")))
 
 
 
