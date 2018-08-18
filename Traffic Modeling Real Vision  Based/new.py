@@ -13,7 +13,7 @@ import curses
 from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
 import readscreen3
 import numpy as np
@@ -235,10 +235,10 @@ def build_model(transition_time):
     num_hidden_units_cnn = 10
     num_actions = 2
     model = Sequential()
-    model.add(conv2d(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, 4)))
+    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, 4)))
     # model.add(LSTM(8))
     model.add(Flatten())
-    model.add(Dense(20,activation='relu'))
+    model.add(Dense(20, activation='relu'))
     model.add(Dense(num_actions, activation='linear'))
     opt = RMSprop(lr=0.00025)
     model.compile(loss='mse', optimizer=opt)
