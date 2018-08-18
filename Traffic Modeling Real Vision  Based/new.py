@@ -160,8 +160,7 @@ print("TraCI Started")
 # runner = Runner()
 # print(Runner().run)
 
-def updateTargetModel(model, targetModel):
-    targetModel.set_weights(model.get_weights())
+
 
 
 def getState(transition_time):  # made the order changes
@@ -235,7 +234,7 @@ def build_model(transition_time):
     num_hidden_units_cnn = 10
     num_actions = 2
     model = Sequential()
-    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, 4)))
+    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, 4,1)))
     # model.add(LSTM(8))
     model.add(Flatten())
     model.add(Dense(20, activation='relu'))
