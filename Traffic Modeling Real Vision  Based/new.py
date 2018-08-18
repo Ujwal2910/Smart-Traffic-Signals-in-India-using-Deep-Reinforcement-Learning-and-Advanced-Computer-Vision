@@ -347,6 +347,7 @@ for episode in range(num_episode):
         sum_q_lens += np.average(new_state)
 
         samples = random.sample(replay_memory, batch_size)
+        '''
         states_batch, action_batch, reward_batch, next_states_batch = map(np.array, zip(*samples))
 
         q_values_next = target_estimator_model.predict(next_states_batch)
@@ -354,10 +355,24 @@ for episode in range(num_episode):
             q_values_next, axis=1)
 
         states_batch = np.array(states_batch)
-
-        # CODE FOR UPDATE REMAINING, REST DONE!
         loss = q_estimator_model.update(states_batch, action_batch, targets_batch)
+        '''
+        # CODE FOR UPDATE REMAINING, REST DONE!
+        x_batch, y_batch = [], []
+        for inst_state, inst_action, inst_reward, inst_next_state in samples:
+            y_target = q_estimator_model(inst_state)
+            q_val_next = target_estimator_model.predict(inst_next_state)
+            y_target[0][inst_action] = inst_reward + discount_factor * np.amax(
+                q_val_next, axis=1
+            )
+            x_batch.append(state[0])
+            y_batch.append(y_target[0])
 
+        q_estimator_model.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
+
+        ####
+
+        '''
         oracle = np.zeros((1, nA))
         oracle[:] = q_val[:]
         print(reward)
@@ -365,6 +380,7 @@ for episode in range(num_episode):
                     reward + gamma * np.max(model.predict((np.array(experience)).reshape((1, num_history, 5)))))
         print(oracle)
         model.fit((np.array(old_experience)).reshape((1, num_history, 5)), oracle, verbose=1)
+        '''
         state = new_state
 
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
