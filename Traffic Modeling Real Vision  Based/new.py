@@ -337,16 +337,14 @@ for episode in range(num_episode):
             print("POLICY FOLLOWED ")
 
         new_state = makeMove(action, transition_time)
-        reward = getReward(state,new_state)
+        reward = getReward(state, new_state)
 
         if len(replay_memory) == replay_memory_size:
             replay_memory.pop(0)
 
-        replay_memory.append([state,action,reward,new_state])
+        replay_memory.append([state, action, reward, new_state])
 
-
-        Average_Q_lengths = new_state[:4]
-        sum_q_lens += np.average(Average_Q_lengths)
+        sum_q_lens += np.average(new_state)
 
         samples = random.sample(replay_memory, batch_size)
         states_batch, action_batch, reward_batch, next_states_batch = map(np.array, zip(*samples))
@@ -356,7 +354,7 @@ for episode in range(num_episode):
             q_values_next, axis=1)
 
         states_batch = np.array(states_batch)
-        
+
         # CODE FOR UPDATE REMAINING, REST DONE!
         loss = q_estimator_model.update(states_batch, action_batch, targets_batch)
 
