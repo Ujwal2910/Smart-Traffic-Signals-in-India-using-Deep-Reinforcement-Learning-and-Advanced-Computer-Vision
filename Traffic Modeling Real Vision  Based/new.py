@@ -252,23 +252,27 @@ def getWaitingTime(laneID):
 
 
 num_episode = 101
-discount_factor = 0
-epsilon = 1
-num_batches = 25
+discount_factor = 0.9
+#epsilon = 1
+epsilon_start = 1
+epsilon_end = 0.01
+epsilon_decay_steps = 1000
+
 Average_Q_lengths = []
 sum_q_lens = 0
 AVG_Q_len_perepisode = []
-num_history = 100
+
 episode_time = 350
 num_vehicles = 250
 transition_time = 8
-target_update_time = 500
+target_update_time = 20
 q_estimator_model = build_model(transition_time)
 target_estimator_model = build_model(transition_time)
 replay_memory_init_size = 50
 replay_memory_size = 5000
 batch_size = 32
 print(q_estimator_model.summary())
+epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
@@ -296,6 +300,7 @@ for _ in range(replay_memory_init_size):
 
 total_t = 0
 for episode in range(num_episode):
+    num_vehicles += 1
     generate_routefile_random(episode_time, num_vehicles)
     traci.load(["--start", "-c", "data/cross.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
@@ -325,7 +330,8 @@ for episode in range(num_episode):
         # else:
         #     phase = np.argmax(q_val)
         #     print("else action",phase)
-        epsilon = 1.0 / (episode + 1)
+        epsilon = epsilons[min(total_t, epsilon_decay_steps-1)]
+        print("Epsilon -", epsilon)
         policy_s = np.ones(nA) * epsilon / nA
 
         policy_s[np.argmax(q_val)] = 1 - epsilon + (epsilon / nA)
@@ -387,7 +393,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 25 == 0:
-        q_estimator_model.save('new_model_2008_{}.h5'.format(episode))
+        q_estimator_model.save('new_model_2008_1_{}.h5'.format(episode))
 
 
 
