@@ -177,7 +177,7 @@ def getState(transition_time):  # made the order changes
         newState.insert(0, state)
     # print (state)
 
-    return newState
+    return np.array(newState).reshape(1,transition_time,4,1)
 
 
 print("here")
@@ -257,13 +257,13 @@ Average_Q_lengths = []
 sum_q_lens = 0
 AVG_Q_len_perepisode = []
 num_history = 100
-episode_time = 5000
-num_vehicles = 5200
-transition_time = 4
+episode_time = 350
+num_vehicles = 250
+transition_time = 8
 target_update_time = 500
 q_estimator_model = build_model(transition_time)
 target_estimator_model = build_model(transition_time)
-replay_memory_init_size = 500
+replay_memory_init_size = 50
 replay_memory_size = 5000
 batch_size = 32
 print(q_estimator_model.summary())
@@ -281,10 +281,10 @@ target_estimator_model.set_weights(q_estimator_model.get_weights())
 replay_memory = []
 
 for _ in range(replay_memory_init_size):
-    if traci.simulation.getMinExpectedNumber() <= 0:
+    '''if traci.simulation.getMinExpectedNumber() <= 0:
         generate_routefile_random(episode_time, num_vehicles)
         traci.load(["--start", "-c", "data/cross.sumocfg",
-                    "--tripinfo-output", "tripinfo.xml"])
+                    "--tripinfo-output", "tripinfo.xml"]) '''
     state = getState(transition_time)
     action = np.random.choice(np.arange(nA))
     new_state = makeMove(action,transition_time)
@@ -314,8 +314,6 @@ for episode in range(num_episode):
 
         if total_t % target_update_time == 0:
             target_estimator_model.set_weights(q_estimator_model.get_weights())
-
-
 
         q_val = q_estimator_model.predict(state)
         print(q_val)
@@ -361,12 +359,12 @@ for episode in range(num_episode):
         # CODE FOR UPDATE REMAINING, REST DONE!
         x_batch, y_batch = [], []
         for inst_state, inst_action, inst_reward, inst_next_state in samples:
-            y_target = q_estimator_model(inst_state)
+            y_target = q_estimator_model.predict(inst_state)
             q_val_next = target_estimator_model.predict(inst_next_state)
             y_target[0][inst_action] = inst_reward + discount_factor * np.amax(
                 q_val_next, axis=1
             )
-            x_batch.append(state[0])
+            x_batch.append(inst_state[0])
             y_batch.append(y_target[0])
 
         q_estimator_model.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
@@ -387,7 +385,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 25 == 0:
-        q_estimator_model.save('model_{}_{}.h5'.format(datetime.date.now().strftime("%B %d, %Y"), episode))
+        q_estimator_model.save('new_model_1808_{}.h5'.format(episode))
 
 
 
