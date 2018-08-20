@@ -224,7 +224,9 @@ def getReward(this_state, this_new_state):
         this_reward = 1
     elif this_reward < 0:
         this_reward = -1
-    else :
+    elif q2 > 1:
+        this_reward = -1
+    else:
         this_reward = 0
 
     return this_reward
@@ -250,7 +252,7 @@ def getWaitingTime(laneID):
 
 
 num_episode = 101
-discount_factor = 0.95
+discount_factor = 0
 epsilon = 1
 num_batches = 25
 Average_Q_lengths = []
@@ -385,7 +387,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 25 == 0:
-        q_estimator_model.save('new_model_1808_{}.h5'.format(episode))
+        q_estimator_model.save('new_model_2008_{}.h5'.format(episode))
 
 
 

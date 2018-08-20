@@ -261,7 +261,7 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 500
-q_estimator_model = load_model('new_model_1808_25.h5')
+q_estimator_model = load_model('new_model_2008_100.h5')
 #target_estimator_model = build_model(transition_time)
 replay_memory_init_size = 50
 replay_memory_size = 5000
@@ -295,6 +295,7 @@ for episode in range(num_episode):
 
         action = np.argmax(q_val)
         new_state = makeMove(action, transition_time)
+        print(new_state)
 
         state = new_state
 
