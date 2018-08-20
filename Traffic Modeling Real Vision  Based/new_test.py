@@ -12,7 +12,7 @@ import cv2
 import curses
 from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
 import readscreen3
@@ -261,42 +261,21 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 500
-q_estimator_model = build_model(transition_time)
-target_estimator_model = build_model(transition_time)
+q_estimator_model = load_model('new_model_1808_25.h5')
+#target_estimator_model = build_model(transition_time)
 replay_memory_init_size = 50
 replay_memory_size = 5000
 batch_size = 32
+nA = 2
 print(q_estimator_model.summary())
 
 generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
-traci.trafficlight.setPhase("0", 0)
-
-nA = 2
-
-target_estimator_model.set_weights(q_estimator_model.get_weights())
-
-replay_memory = []
-
-for _ in range(replay_memory_init_size):
-    '''if traci.simulation.getMinExpectedNumber() <= 0:
-        generate_routefile_random(episode_time, num_vehicles)
-        traci.load(["--start", "-c", "data/cross.sumocfg",
-                    "--tripinfo-output", "tripinfo.xml"]) '''
-    state = getState(transition_time)
-    action = np.random.choice(np.arange(nA))
-    new_state = makeMove(action,transition_time)
-    reward = getReward(state,new_state)
-    replay_memory.append([state,action,reward,new_state])
-    print(len(replay_memory))
-
 total_t = 0
 for episode in range(num_episode):
-    generate_routefile_random(episode_time, num_vehicles)
-    traci.load(["--start", "-c", "data/cross.sumocfg",
-                "--tripinfo-output", "tripinfo.xml"])
+
     traci.trafficlight.setPhase("0", 0)
 
     state = getState(transition_time)
@@ -310,89 +289,17 @@ for episode in range(num_episode):
 
         counter += 1
         total_t += 1
-        # batch_experience = experience[:batch_history]
-
-        if total_t % target_update_time == 0:
-            target_estimator_model.set_weights(q_estimator_model.get_weights())
 
         q_val = q_estimator_model.predict(state)
         print(q_val)
-        # if random.random() < epsilon:
-        #     phase = np.random.choice(4)
-        #     print("random action chosen",phase)
-        # else:
-        #     phase = np.argmax(q_val)
-        #     print("else action",phase)
-        epsilon = 1.0 / (episode + 1)
-        policy_s = np.ones(nA) * epsilon / nA
 
-        policy_s[np.argmax(q_val)] = 1 - epsilon + (epsilon / nA)
-
-        action = np.random.choice(np.arange(nA), p=policy_s)
-
-        if np.argmax(q_val) != action:
-            print("RANDOM CHOICE TAKEN")
-        else:
-            print("POLICY FOLLOWED ")
-
+        action = np.argmax(q_val)
         new_state = makeMove(action, transition_time)
-        reward = getReward(state, new_state)
 
-        if len(replay_memory) == replay_memory_size:
-            replay_memory.pop(0)
-
-        replay_memory.append([state, action, reward, new_state])
-
-        sum_q_lens += np.average(new_state)
-
-        samples = random.sample(replay_memory, batch_size)
-        '''
-        states_batch, action_batch, reward_batch, next_states_batch = map(np.array, zip(*samples))
-
-        q_values_next = target_estimator_model.predict(next_states_batch)
-        targets_batch = reward_batch + discount_factor * np.amax(
-            q_values_next, axis=1)
-
-        states_batch = np.array(states_batch)
-        loss = q_estimator_model.update(states_batch, action_batch, targets_batch)
-        '''
-        # CODE FOR UPDATE REMAINING, REST DONE!
-        x_batch, y_batch = [], []
-        for inst_state, inst_action, inst_reward, inst_next_state in samples:
-            y_target = q_estimator_model.predict(inst_state)
-            q_val_next = target_estimator_model.predict(inst_next_state)
-            y_target[0][inst_action] = inst_reward + discount_factor * np.amax(
-                q_val_next, axis=1
-            )
-            x_batch.append(inst_state[0])
-            y_batch.append(y_target[0])
-
-        q_estimator_model.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
-
-        ####
-
-        '''
-        oracle = np.zeros((1, nA))
-        oracle[:] = q_val[:]
-        print(reward)
-        oracle[0][action] = (
-                    reward + gamma * np.max(model.predict((np.array(experience)).reshape((1, num_history, 5)))))
-        print(oracle)
-        model.fit((np.array(old_experience)).reshape((1, num_history, 5)), oracle, verbose=1)
-        '''
         state = new_state
 
-    AVG_Q_len_perepisode.append(sum_q_lens / 702)
-    sum_q_lens = 0
-    if episode % 25 == 0:
-        q_estimator_model.save('new_model_1808_{}.h5'.format(episode))
+    generate_routefile_random(episode_time, num_vehicles)
+    traci.load(["--start", "-c", "data/cross.sumocfg",
+                "--tripinfo-output", "tripinfo.xml"])
 
 
-
-print(AVG_Q_len_perepisode)
-
-# import matplotlib.pyplot as plt
-#
-# plt.plot([x for x in range(num_episode)],[AVG_Q_len_perepisode], 'ro')
-# plt.axis([0, num_episode, 0, 10])
-# plt.show()
