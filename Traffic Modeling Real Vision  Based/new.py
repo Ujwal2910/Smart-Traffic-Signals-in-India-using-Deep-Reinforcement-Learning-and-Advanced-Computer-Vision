@@ -161,6 +161,11 @@ print("TraCI Started")
 # print(Runner().run)
 
 
+def getPhaseState(transition_time):
+    phase = traci.trafficlight.getPhase("0")
+    phaseState = np.zeros((4,transition_time,4))
+    phaseState[phase] = np.ones((transition_time,4))
+    return phaseState
 
 
 def getState(transition_time):  # made the order changes
@@ -176,8 +181,10 @@ def getState(transition_time):  # made the order changes
 
         newState.insert(0, state)
     # print (state)
-
-    return np.array(newState).reshape(1,transition_time,4,1)
+    newState = np.array(newState)
+    phaseState = getPhaseState(transition_time)
+    newState = np.append(newState, phaseState)
+    return np.array(newState).reshape(1,transition_time,4,5)
 
 
 print("here")
@@ -236,7 +243,7 @@ def build_model(transition_time):
     num_hidden_units_cnn = 10
     num_actions = 2
     model = Sequential()
-    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, 4,1)))
+    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, 4,5)))
     # model.add(LSTM(8))
     model.add(Flatten())
     model.add(Dense(20, activation='relu'))
