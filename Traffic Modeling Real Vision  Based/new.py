@@ -87,7 +87,7 @@ def generate_routefile_random(episode_length, total_vehicles):
 #    </tlLogic>
 
 def generate_routefile():
-    with open("data/cross_auto.rou.xml", "w") as routes:
+    with open("data/cross.rou.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
         <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
@@ -105,18 +105,18 @@ def generate_routefile():
     <route id="r9" edges="53o 3i 4o 54i"/>
     <route id="r10" edges="53o 3i 1o 51i"/>
     <route id="r11" edges="53o 3i 2o 52i"/>
-    <flow id="mixed1" begin="0" end="5000" number="1000" route="r0" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="5000" number="100" route="r1" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="5000" number="200" route="r2" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="5000" number="1000" route="r3" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed5" begin="0" end="5000" number="100" route="r4" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed6" begin="0" end="5000" number="200" route="r5" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed7" begin="0" end="5000" number="1000" route="r6" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed8" begin="0" end="5000" number="100" route="r7" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed9" begin="0" end="5000" number="200" route="r8" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed10" begin="0" end="5000" number="1000" route="r9" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed11" begin="0" end="5000" number="200" route="r10" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed12" begin="0" end="5000" number="100" route="r11" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed1" begin="0" end="350" number="10" route="r0" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="0" number="0" route="r1" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="0" number="0" route="r2" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="0" number="90" route="r3" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed5" begin="0" end="0" number="0" route="r4" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed6" begin="0" end="0" number="0" route="r5" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed7" begin="0" end="0" number="0" route="r6" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed8" begin="0" end="0" number="0" route="r7" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed9" begin="0" end="0" number="0" route="r8" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed10" begin="0" end="0" number="0" route="r9" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed11" begin="0" end="0" number="0" route="r10" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed12" begin="0" end="0" number="0" route="r11" type="mixed" departLane="random" departPosLat="random"/>
 </routes>""", file=routes)
         lastVeh = 0
         vehNr = 0
@@ -263,7 +263,7 @@ discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
 epsilon_end = 0.01
-epsilon_decay_steps = 1000
+epsilon_decay_steps = 10000
 
 Average_Q_lengths = []
 sum_q_lens = 0
@@ -281,7 +281,8 @@ batch_size = 32
 print(q_estimator_model.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
-generate_routefile_random(episode_time, num_vehicles)
+#generate_routefile_random(episode_time, num_vehicles)
+generate_routefile()
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
@@ -308,7 +309,8 @@ for _ in range(replay_memory_init_size):
 total_t = 0
 for episode in range(num_episode):
     num_vehicles += 1
-    generate_routefile_random(episode_time, num_vehicles)
+    generate_routefile()
+    #generate_routefile_random(episode_time, num_vehicles)
     traci.load(["--start", "-c", "data/cross.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
