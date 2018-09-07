@@ -284,7 +284,7 @@ transition_time = 8
 target_update_time = 20
 q_estimator_model = build_model(transition_time)
 target_estimator_model = build_model(transition_time)
-replay_memory_init_size = 30
+replay_memory_init_size = 35
 replay_memory_size = 5000
 batch_size = 32
 print(q_estimator_model.summary())
