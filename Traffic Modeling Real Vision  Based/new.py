@@ -188,6 +188,7 @@ def getState(transition_time):  # made the order changes
     newState = np.array(newState)
     phaseState = getPhaseState(transition_time)
     newState = np.dstack((newState, phaseState))
+    newState = np.expand_dims(newState, axis=0)
     return newState
 
 
@@ -266,12 +267,12 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 61
+num_episode = 41
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
 epsilon_end = 0.01
-epsilon_decay_steps = 4000
+epsilon_decay_steps = 3000
 
 Average_Q_lengths = []
 sum_q_lens = 0
@@ -283,7 +284,7 @@ transition_time = 8
 target_update_time = 20
 q_estimator_model = build_model(transition_time)
 target_estimator_model = build_model(transition_time)
-replay_memory_init_size = 50
+replay_memory_init_size = 30
 replay_memory_size = 5000
 batch_size = 32
 print(q_estimator_model.summary())
