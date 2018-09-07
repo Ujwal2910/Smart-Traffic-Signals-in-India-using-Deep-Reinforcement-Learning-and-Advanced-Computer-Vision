@@ -75,7 +75,7 @@ def subtractImage(image, SIDE):
 def tail_length(mask):
     checker = np.zeros((80), dtype=int)
     start = 800
-    width_threshold = 300
+    width_threshold = 200
     for i in range(80):
         density = mask[start - 10:start, 0:500]
 
