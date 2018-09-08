@@ -164,9 +164,13 @@ print("TraCI Started")
 
 
 def getPhaseState(transition_time):
+    num_lanes = 4
+    num_phases = 4
     phase = traci.trafficlight.getPhase("0")
-    phaseState = np.zeros((4,transition_time,4))
-    phaseState[phase] = np.ones((transition_time,4))
+    phaseState = np.zeros((transition_time,num_lanes,num_phases))
+    for i in range(transition_time):
+        for j in range(num_lanes):
+            phaseState[i][j][phase] = 1
     return phaseState
 
 
@@ -185,8 +189,9 @@ def getState(transition_time):  # made the order changes
     # print (state)
     newState = np.array(newState)
     phaseState = getPhaseState(transition_time)
-    newState = np.append(newState, phaseState)
-    return np.array(newState).reshape(1,transition_time,4,5)
+    newState = np.dstack((newState, phaseState))
+    newState = np.expand_dims(newState, axis=0)
+    return newState
 
 
 print("here")
@@ -226,7 +231,7 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 500
-q_estimator_model = load_model('new_model_0709_1_100.h5')
+q_estimator_model = load_model('new_model_0709_3_20.h5')
 #target_estimator_model = build_model(transition_time)
 replay_memory_init_size = 50
 replay_memory_size = 5000
