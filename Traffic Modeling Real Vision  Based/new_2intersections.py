@@ -345,7 +345,7 @@ for episode in range(num_episode):
     '''
     generate_routefile()
     #generate_routefile_random(episode_time, num_vehicles)
-    traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+    traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
                  "--tripinfo-output", "tripinfo.xml"])
     '''traci.trafficlight.setPhase("0", 0)'''
 
