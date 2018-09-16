@@ -86,7 +86,7 @@ def generate_routefile_random(episode_length, total_vehicles):
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-def generate_routefile():
+def generate_routefile(left_qty, up_qty):
     with open("data/cross.rou.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
@@ -105,10 +105,10 @@ def generate_routefile():
     <route id="r9" edges="53o 3i 4o 54i"/>
     <route id="r10" edges="53o 3i 1o 51i"/>
     <route id="r11" edges="53o 3i 2o 52i"/>
-    <flow id="mixed1" begin="0" end="350" number="10" route="r0" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed1" begin="0" end="350" number="%i" route="r0" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed2" begin="0" end="0" number="0" route="r1" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed3" begin="0" end="0" number="0" route="r2" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="350" number="90" route="r3" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="350" number="%i" route="r3" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="0" number="0" route="r4" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed6" begin="0" end="0" number="0" route="r5" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed7" begin="0" end="0" number="0" route="r6" type="mixed" departLane="random" departPosLat="random"/>
@@ -117,7 +117,7 @@ def generate_routefile():
     <flow id="mixed10" begin="0" end="0" number="0" route="r9" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed11" begin="0" end="0" number="0" route="r10" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed12" begin="0" end="0" number="0" route="r11" type="mixed" departLane="random" departPosLat="random"/>
-</routes>""", file=routes)
+</routes>""" % (left_qty, up_qty), file=routes)
         lastVeh = 0
         vehNr = 0
 
@@ -267,7 +267,7 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 41
+num_episode = 81
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
@@ -285,13 +285,13 @@ target_update_time = 20
 q_estimator_model = build_model(transition_time)
 target_estimator_model = build_model(transition_time)
 replay_memory_init_size = 35
-replay_memory_size = 5000
+replay_memory_size = 800
 batch_size = 32
 print(q_estimator_model.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 #generate_routefile_random(episode_time, num_vehicles)
-generate_routefile()
+generate_routefile(90,10)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
@@ -318,7 +318,10 @@ for _ in range(replay_memory_init_size):
 total_t = 0
 for episode in range(num_episode):
     num_vehicles += 1
-    generate_routefile()
+    if episode < 40:
+        generate_routefile(90,10)
+    else:
+        generate_routefile(10,90)
     #generate_routefile_random(episode_time, num_vehicles)
     traci.load(["--start", "-c", "data/cross.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
@@ -348,6 +351,10 @@ for episode in range(num_episode):
         # else:
         #     phase = np.argmax(q_val)
         #     print("else action",phase)
+
+
+
+
         epsilon = epsilons[min(total_t, epsilon_decay_steps-1)]
         print("Epsilon -", epsilon)
         policy_s = np.ones(nA) * epsilon / nA
@@ -355,6 +362,16 @@ for episode in range(num_episode):
         policy_s[np.argmax(q_val)] = 1 - epsilon + (epsilon / nA)
 
         action = np.random.choice(np.arange(nA), p=policy_s)
+
+        same_action_count = 0
+        for temp in reversed(replay_memory):
+            if temp[1] == 0:
+                same_action_count += 1
+            else:
+                break
+        if same_action_count == 20:
+            action = 1
+            print("SAME ACTION PENALTY")
 
         if np.argmax(q_val) != action:
             print("RANDOM CHOICE TAKEN")
@@ -368,6 +385,8 @@ for episode in range(num_episode):
             replay_memory.pop(0)
 
         replay_memory.append([state, action, reward, new_state])
+
+        print("Memory Length :", len(replay_memory))
 
         sum_q_lens += np.average(new_state)
 
@@ -411,7 +430,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('new_model_0709_3_{}.h5'.format(episode))
+        q_estimator_model.save('new_model_1609_1_{}.h5'.format(episode))
 
 
 

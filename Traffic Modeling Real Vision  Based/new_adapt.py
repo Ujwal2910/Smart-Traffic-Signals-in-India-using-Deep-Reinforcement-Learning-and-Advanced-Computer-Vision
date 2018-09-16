@@ -267,12 +267,12 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 41
+num_episode = 121
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
 epsilon_end = 0.01
-epsilon_decay_steps = 3000
+epsilon_decay_steps = 9000
 
 Average_Q_lengths = []
 sum_q_lens = 0
@@ -411,7 +411,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('new_model_0709_3_20_adapt_0909_1_{}.h5'.format(episode))
+        q_estimator_model.save('new_model_0709_3_20_adapt_0909_2_{}.h5'.format(episode))
 
 
 
