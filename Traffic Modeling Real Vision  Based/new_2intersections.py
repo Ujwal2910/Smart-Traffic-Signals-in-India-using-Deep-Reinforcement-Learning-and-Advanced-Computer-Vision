@@ -86,37 +86,55 @@ def generate_routefile_random(episode_length, total_vehicles):
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-def generate_routefile(left_qty, up_qty):
-    with open("data/cross.rou.xml", "w") as routes:
+def generate_routefile(left_qty=20, up_qty=20):
+    with open("data/cross_2intersections.rou.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
         <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
         <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
     </vTypeDistribution>
-    <route id="r0" edges="51o 1i 2o 52i"/>
-    <route id="r1" edges="51o 1i 4o 54i"/>
-    <route id="r2" edges="51o 1i 3o 53i"/>
-    <route id="r3" edges="54o 4i 3o 53i"/>
-    <route id="r4" edges="54o 4i 1o 51i"/>
-    <route id="r5" edges="54o 4i 2o 52i"/>
-    <route id="r6" edges="52o 2i 1o 51i"/>
-    <route id="r7" edges="52o 2i 4o 54i"/>
-    <route id="r8" edges="52o 2i 3o 53i"/>
-    <route id="r9" edges="53o 3i 4o 54i"/>
-    <route id="r10" edges="53o 3i 1o 51i"/>
-    <route id="r11" edges="53o 3i 2o 52i"/>
-    <flow id="mixed1" begin="0" end="350" number="%i" route="r0" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="0" number="0" route="r1" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="0" number="0" route="r2" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="350" number="%i" route="r3" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed5" begin="0" end="0" number="0" route="r4" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed6" begin="0" end="0" number="0" route="r5" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed7" begin="0" end="0" number="0" route="r6" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed8" begin="0" end="0" number="0" route="r7" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed9" begin="0" end="0" number="0" route="r8" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed10" begin="0" end="0" number="0" route="r9" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed11" begin="0" end="0" number="0" route="r10" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed12" begin="0" end="0" number="0" route="r11" type="mixed" departLane="random" departPosLat="random"/>
+    <route id="r10" edges="51o 1i 4o 54i"/>
+    <route id="r11" edges="51o 1i 010i 14o 154i"/>
+    <route id="r12" edges="51o 1i 010i 2o 2i"/>
+    <route id="r13" edges="51o 1i 010i 13o 153i"/>
+    <route id="r14" edges="51o 1i 3o 53i"/>
+    
+    <route id="r20" edges="52o 2i 14o 154i"/>
+    <route id="r21" edges="52o 2i 010o 4o 54i"/>
+    <route id="r22" edges="52o 2i 010o 1o 51i"/>
+    <route id="r23" edges="52o 2i 010o 3o 53i"/>
+    <route id="r24" edges="52o 2i 13o 153i"/>
+    
+    <route id="r30" edges="53o 3i 1o 51i"/>
+    <route id="r31" edges="53o 3i 4o 54i"/>
+    <route id="r32" edges="53o 3i 010i 14o 154i"/>
+    <route id="r33" edges="53o 3i 010i 2o 52i"/>
+    <route id="r34" edges="53o 3i 010i 13o 153i"/>
+    
+    <route id="r40" edges="54o 4i 1o 51i"/>
+    <route id="r41" edges="54o 4i 3o 53i"/>
+    <route id="r42" edges="54o 4i 010i 13o 153i"/>
+    <route id="r43" edges="54o 4i 010i 2o 52i"/>
+    <route id="r44" edges="54o 4i 010i 14o 154i"/>
+    
+    <route id="r130" edges="153o 13i 2o 52i"/>
+    <route id="r131" edges="153o 13i 14o 154i"/>
+    <route id="r132" edges="153o 13i 010o 4o 54i"/>
+    <route id="r133" edges="153o 13i 010o 1o 51i"/>
+    <route id="r134" edges="153o 13i 010o 3o 53i"/>
+    
+    <route id="r140" edges="154o 14i 2o 52i"/>
+    <route id="r141" edges="154o 14i 13o 153i"/>
+    <route id="r142" edges="154o 14i 010o 3o 53i"/>
+    <route id="r143" edges="154o 14i 010o 1o 51i"/>
+    <route id="r144" edges="154o 14i 010o 4o 54i"/>
+    
+    <flow id="mixed1" begin="0" end="350" number="%i" route="r12" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="20" route="r22" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="350" number="20" route="r31" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="350" number="%i" route="r41" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed5" begin="0" end="350" number="20" route="r131" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed6" begin="0" end="350" number="20" route="r141" type="mixed" departLane="random" departPosLat="random"/>
 </routes>""" % (left_qty, up_qty), file=routes)
         lastVeh = 0
         vehNr = 0
@@ -291,6 +309,7 @@ print(q_estimator_model.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 #generate_routefile_random(episode_time, num_vehicles)
+'''
 generate_routefile(90,10)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
@@ -304,53 +323,52 @@ target_estimator_model.set_weights(q_estimator_model.get_weights())
 replay_memory = []
 
 for _ in range(replay_memory_init_size):
-    '''if traci.simulation.getMinExpectedNumber() <= 0:
+    if traci.simulation.getMinExpectedNumber() <= 0:
         generate_routefile_random(episode_time, num_vehicles)
         traci.load(["--start", "-c", "data/cross.sumocfg",
-                    "--tripinfo-output", "tripinfo.xml"]) '''
+                    "--tripinfo-output", "tripinfo.xml"]) 
     state = getState(transition_time)
     action = np.random.choice(np.arange(nA))
     new_state = makeMove(action,transition_time)
     reward = getReward(state,new_state)
     replay_memory.append([state,action,reward,new_state])
     print(len(replay_memory))
-
+'''
 total_t = 0
 for episode in range(num_episode):
+    '''
     num_vehicles += 1
     if episode < 40:
         generate_routefile(90,10)
     else:
         generate_routefile(10,90)
+    '''
+    generate_routefile()
     #generate_routefile_random(episode_time, num_vehicles)
-    traci.load(["--start", "-c", "data/cross.sumocfg",
+    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
 
-    state = getState(transition_time)
+    '''state = getState(transition_time)'''
     counter = 0
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
+        '''
         print("Episode # ", episode)
-        # print("Waiting time on lane 1i_0 = ",getWaitingTime("1i_0"))
+
 
         print("Inside episode counter", counter)
 
         counter += 1
         total_t += 1
-        # batch_experience = experience[:batch_history]
+
 
         if total_t % target_update_time == 0:
             target_estimator_model.set_weights(q_estimator_model.get_weights())
 
         q_val = q_estimator_model.predict(state)
         print(q_val)
-        # if random.random() < epsilon:
-        #     phase = np.random.choice(4)
-        #     print("random action chosen",phase)
-        # else:
-        #     phase = np.argmax(q_val)
-        #     print("else action",phase)
+
 
 
 
@@ -391,17 +409,7 @@ for episode in range(num_episode):
         sum_q_lens += np.average(new_state)
 
         samples = random.sample(replay_memory, batch_size)
-        '''
-        states_batch, action_batch, reward_batch, next_states_batch = map(np.array, zip(*samples))
 
-        q_values_next = target_estimator_model.predict(next_states_batch)
-        targets_batch = reward_batch + discount_factor * np.amax(
-            q_values_next, axis=1)
-
-        states_batch = np.array(states_batch)
-        loss = q_estimator_model.update(states_batch, action_batch, targets_batch)
-        '''
-        # CODE FOR UPDATE REMAINING, REST DONE!
         x_batch, y_batch = [], []
         for inst_state, inst_action, inst_reward, inst_next_state in samples:
             y_target = q_estimator_model.predict(inst_state)
@@ -414,24 +422,15 @@ for episode in range(num_episode):
 
         q_estimator_model.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
 
-        ####
 
-        '''
-        oracle = np.zeros((1, nA))
-        oracle[:] = q_val[:]
-        print(reward)
-        oracle[0][action] = (
-                    reward + gamma * np.max(model.predict((np.array(experience)).reshape((1, num_history, 5)))))
-        print(oracle)
-        model.fit((np.array(old_experience)).reshape((1, num_history, 5)), oracle, verbose=1)
-        '''
         state = new_state
-
+        '''
+    '''    
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
         q_estimator_model.save('new_model_1609_2_{}.h5'.format(episode))
-
+    '''
 
 
 print(AVG_Q_len_perepisode)

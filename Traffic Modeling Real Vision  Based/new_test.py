@@ -105,10 +105,10 @@ def generate_routefile():
     <route id="r9" edges="53o 3i 4o 54i"/>
     <route id="r10" edges="53o 3i 1o 51i"/>
     <route id="r11" edges="53o 3i 2o 52i"/>
-    <flow id="mixed1" begin="0" end="350" number="90" route="r0" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed1" begin="0" end="350" number="10" route="r0" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed2" begin="0" end="0" number="0" route="r1" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed3" begin="0" end="0" number="0" route="r2" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="350" number="10" route="r3" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="350" number="90" route="r3" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="0" number="0" route="r4" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed6" begin="0" end="0" number="0" route="r5" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed7" begin="0" end="0" number="0" route="r6" type="mixed" departLane="random" departPosLat="random"/>
@@ -231,7 +231,7 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 500
-q_estimator_model = load_model('new_model_0709_3_20_adapt_0909_2_30.h5')
+q_estimator_model = load_model('new_model_1609_2_240.h5')
 #target_estimator_model = build_model(transition_time)
 replay_memory_init_size = 50
 replay_memory_size = 5000
