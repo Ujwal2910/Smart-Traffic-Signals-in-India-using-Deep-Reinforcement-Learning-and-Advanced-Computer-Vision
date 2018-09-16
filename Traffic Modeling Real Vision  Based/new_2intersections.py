@@ -345,9 +345,9 @@ for episode in range(num_episode):
     '''
     generate_routefile()
     #generate_routefile_random(episode_time, num_vehicles)
-    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
-                "--tripinfo-output", "tripinfo.xml"])
-    traci.trafficlight.setPhase("0", 0)
+    traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+                 "--tripinfo-output", "tripinfo.xml"])
+    '''traci.trafficlight.setPhase("0", 0)'''
 
     '''state = getState(transition_time)'''
     counter = 0
@@ -433,10 +433,11 @@ for episode in range(num_episode):
     '''
 
 
-print(AVG_Q_len_perepisode)
+'''print(AVG_Q_len_perepisode)
 
 # import matplotlib.pyplot as plt
 #
 # plt.plot([x for x in range(num_episode)],[AVG_Q_len_perepisode], 'ro')
 # plt.axis([0, num_episode, 0, 10])
 # plt.show()
+'''
