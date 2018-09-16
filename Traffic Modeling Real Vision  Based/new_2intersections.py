@@ -353,6 +353,7 @@ for episode in range(num_episode):
     counter = 0
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
+        traci.simulationStep()
         '''
         print("Episode # ", episode)
 
