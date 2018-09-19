@@ -231,13 +231,16 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 500
-q_estimator_model = load_model('new_model_1609_2_240.h5')
+q_estimator_model = load_model('new_model_1809_1_120.h5')
 #target_estimator_model = build_model(transition_time)
 replay_memory_init_size = 50
 replay_memory_size = 5000
+action_memory_size = 30
 batch_size = 32
 nA = 2
 print(q_estimator_model.summary())
+
+action_memory = []
 
 #generate_routefile_random(episode_time, num_vehicles)
 generate_routefile()
@@ -265,8 +268,24 @@ for episode in range(num_episode):
         print(q_val)
 
         action = np.argmax(q_val)
+
+        same_action_count = 0
+        for temp in reversed(action_memory):
+            if temp == 0:
+                same_action_count += 1
+            else:
+                break
+        if same_action_count == 20:
+            action = 1
+            print("SAME ACTION PENALTY")
+
         new_state = makeMove(action, transition_time)
         print(new_state)
+
+        if len(action_memory) == action_memory_size:
+            action_memory.pop(0)
+
+        action_memory.append(action)
 
         state = new_state
 
