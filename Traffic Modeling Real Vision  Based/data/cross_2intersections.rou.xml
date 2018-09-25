@@ -1,0 +1,48 @@
+<routes>
+    <vTypeDistribution id="mixed">
+        <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
+        <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
+    </vTypeDistribution>
+    <route id="r10" edges="51o 1i 4o 54i"/>
+    <route id="r11" edges="51o 1i 010i 14o 154i"/>
+    <route id="r12" edges="51o 1i 010i 2o 2i"/>
+    <route id="r13" edges="51o 1i 010i 13o 153i"/>
+    <route id="r14" edges="51o 1i 3o 53i"/>
+    
+    <route id="r20" edges="52o 2i 14o 154i"/>
+    <route id="r21" edges="52o 2i 010o 4o 54i"/>
+    <route id="r22" edges="52o 2i 010o 1o 51i"/>
+    <route id="r23" edges="52o 2i 010o 3o 53i"/>
+    <route id="r24" edges="52o 2i 13o 153i"/>
+    
+    <route id="r30" edges="53o 3i 1o 51i"/>
+    <route id="r31" edges="53o 3i 4o 54i"/>
+    <route id="r32" edges="53o 3i 010i 14o 154i"/>
+    <route id="r33" edges="53o 3i 010i 2o 52i"/>
+    <route id="r34" edges="53o 3i 010i 13o 153i"/>
+    
+    <route id="r40" edges="54o 4i 1o 51i"/>
+    <route id="r41" edges="54o 4i 3o 53i"/>
+    <route id="r42" edges="54o 4i 010i 13o 153i"/>
+    <route id="r43" edges="54o 4i 010i 2o 52i"/>
+    <route id="r44" edges="54o 4i 010i 14o 154i"/>
+    
+    <route id="r130" edges="153o 13i 2o 52i"/>
+    <route id="r131" edges="153o 13i 14o 154i"/>
+    <route id="r132" edges="153o 13i 010o 4o 54i"/>
+    <route id="r133" edges="153o 13i 010o 1o 51i"/>
+    <route id="r134" edges="153o 13i 010o 3o 53i"/>
+    
+    <route id="r140" edges="154o 14i 2o 52i"/>
+    <route id="r141" edges="154o 14i 13o 153i"/>
+    <route id="r142" edges="154o 14i 010o 3o 53i"/>
+    <route id="r143" edges="154o 14i 010o 1o 51i"/>
+    <route id="r144" edges="154o 14i 010o 4o 54i"/>
+    
+    <flow id="mixed1" begin="0" end="350" number="20" route="r12" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="20" route="r22" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="350" number="20" route="r31" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="350" number="20" route="r41" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed5" begin="0" end="350" number="20" route="r131" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed6" begin="0" end="350" number="20" route="r141" type="mixed" departLane="random" departPosLat="random"/>
+</routes>

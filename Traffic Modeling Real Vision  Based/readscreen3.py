@@ -130,10 +130,11 @@ def getCenter(image):
 
 def getUpperQlength():
     image = getScreenImage()
+    cv2.imshow("test",image)
     upper_lane = np.array([(455, 31), (544, 31), (544, 351), (455, 351)], dtype="float32")
     #cv2.imshow("upper",upper_lane)
     warp_upperlane = warped_simulation(upper_lane, image)
-    #cv2.imshow("upper",warp_upperlane)
+    cv2.imshow("upper",warp_upperlane)
     mask_upper = subtractImage(warp_upperlane, "upper")
     #cv2.imshow("upper", mask_upper)
     tail_length_upper = tail_length(mask_upper)
