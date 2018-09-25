@@ -15,7 +15,7 @@ from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
-import readscreen3
+import cross_read
 import numpy as np
 import datetime
 from time import time
