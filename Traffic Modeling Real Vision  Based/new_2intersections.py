@@ -1,24 +1,15 @@
 from __future__ import absolute_import
 from __future__ import print_function
-from select import select
-import termios
-import os
-import sys
+
 import optparse
-import subprocess
+import os
 import random
-import time
-import cv2
-import curses
-from keras.optimizers import RMSprop, Adam
-from keras.layers.recurrent import LSTM
-from keras.models import Sequential
-from keras.layers import Dense, Conv2D, Flatten
-from keras.callbacks import TensorBoard
+import sys
 import cross_read
 import numpy as np
-import datetime
-from time import time
+from keras.layers import Dense, Conv2D, Flatten
+from keras.models import Sequential
+from keras.optimizers import RMSprop
 
 
 def get_options():
@@ -179,14 +170,24 @@ print("TraCI Started")
 # print(Runner().run)
 
 
+def get_floor_number(phase_left, phase_right):
+
+    floor_number = 4*phase_left + phase_right
+    return floor_number
+
+
 def getPhaseState(transition_time):
-    num_lanes = 4
-    num_phases = 4
-    phase = traci.trafficlight.getPhase("0")
+
+    phase_left = traci.trafficlight.getPhase("0")#left and right do
+    phase_right = traci.trafficlight.getPhase("1")
+    #calculate floor number
+    phase = get_floor_number(phase_left,phase_right)
+
     phaseState = np.zeros((transition_time,num_lanes,num_phases))
     for i in range(transition_time):
         for j in range(num_lanes):
             phaseState[i][j][phase] = 1
+
     return phaseState
 
 
@@ -195,18 +196,22 @@ def getState(transition_time):  # made the order changes
     for _ in range(transition_time):
         traci.simulationStep()
 
-        state = [readscreen3.getLowerQlength() / 80,
-             readscreen3.getRightQlength() / 80,
-             readscreen3.getUpperQlength() / 80,
-             readscreen3.getLeftQlength() / 80
-             ]
+        state = [cross_read.leftgetLowerQlength() / 80,# issi sequnce main left and right
+             cross_read.leftgetRightQlength() / 80,
+             cross_read.leftgetUpperQlength() / 80,
+             cross_read.leftgetLeftQlength() / 80,
+
+             cross_read.rightgetLowerQlength() / 80,# issi sequnce main left and right
+             cross_read.rightgetRightQlength() / 80,
+             cross_read.rightgetUpperQlength() / 80,
+             cross_read.rightgetLeftQlength() / 80, ]
 
         newState.insert(0, state)
     # print (state)
     newState = np.array(newState)
     phaseState = getPhaseState(transition_time)
     newState = np.dstack((newState, phaseState))
-    newState = np.expand_dims(newState, axis=0)
+    newState = np.expand_dims(newState, axis=0) #tensor format conversion
     return newState
 
 
@@ -215,8 +220,16 @@ import traci
 
 
 def makeMove(action, transition_time):
+    #new action for 4 diff actions- 00,01,10,11
+
     if action == 1:
+        traci.trafficlight.setPhase("1", (int(traci.trafficlight.getPhase("1")) + 1) % 4)
+    elif action == 2:
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
+    elif action == 3:
+        traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
+        traci.trafficlight.setPhase("1", (int(traci.trafficlight.getPhase("1")) + 1) % 4)
+
 
 
 
@@ -230,7 +243,7 @@ def makeMove(action, transition_time):
 
 
 def getReward(this_state, this_new_state):
-    num_lanes = 4
+    num_lanes = 8
     qLengths1 = []
     qLengths2 = []
     for i in range(num_lanes):
@@ -268,9 +281,9 @@ def getReward(this_state, this_new_state):
 
 def build_model(transition_time):
     num_hidden_units_cnn = 10
-    num_actions = 2
+    num_actions = 4
     model = Sequential()
-    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, 4,5)))
+    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, num_lanes,num_phases)))
     # model.add(LSTM(8))
     model.add(Flatten())
     model.add(Dense(20, activation='relu'))
@@ -284,19 +297,21 @@ def build_model(transition_time):
 def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
+num_lanes = 8
+num_phases = 16
 
 num_episode = 241
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
 epsilon_end = 0.01
-epsilon_decay_steps = 3000
+epsilon_decay_steps = 3000 # 40 mins rn
 
 Average_Q_lengths = []
 sum_q_lens = 0
 AVG_Q_len_perepisode = []
 
-episode_time = 350
+episode_time = 350 #one min episode rl
 num_vehicles = 250
 transition_time = 8
 target_update_time = 20
@@ -309,14 +324,16 @@ print(q_estimator_model.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 #generate_routefile_random(episode_time, num_vehicles)
-'''
+
+
+
 generate_routefile(90,10)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
 
-nA = 2
+nA = 4
 
 target_estimator_model.set_weights(q_estimator_model.get_weights())
 
@@ -326,14 +343,16 @@ for _ in range(replay_memory_init_size):
     if traci.simulation.getMinExpectedNumber() <= 0:
         generate_routefile_random(episode_time, num_vehicles)
         traci.load(["--start", "-c", "data/cross.sumocfg",
-                    "--tripinfo-output", "tripinfo.xml"]) 
+                    "--tripinfo-output", "tripinfo.xml"])
     state = getState(transition_time)
     action = np.random.choice(np.arange(nA))
     new_state = makeMove(action,transition_time)
     reward = getReward(state,new_state)
     replay_memory.append([state,action,reward,new_state])
     print(len(replay_memory))
-'''
+
+
+
 total_t = 0
 for episode in range(num_episode):
     '''
@@ -354,7 +373,7 @@ for episode in range(num_episode):
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        '''
+
         print("Episode # ", episode)
 
 
@@ -425,8 +444,8 @@ for episode in range(num_episode):
 
 
         state = new_state
-        '''
-    '''    
+
+
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
