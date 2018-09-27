@@ -326,12 +326,13 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 #generate_routefile_random(episode_time, num_vehicles)
 
 
-
-generate_routefile(90,10)
-traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+generate_routefile()
+# generate_routefile_random(episode_time, num_vehicles)
+traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
+#traci.trafficlight.setPhase("1", 0)
 
 nA = 4
 
@@ -366,9 +367,11 @@ for episode in range(num_episode):
     #generate_routefile_random(episode_time, num_vehicles)
     traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
                  "--tripinfo-output", "tripinfo.xml"])
-    '''traci.trafficlight.setPhase("0", 0)'''
 
-    '''state = getState(transition_time)'''
+    traci.trafficlight.setPhase("0", 0)
+    #traci.trafficlight.setPhase("1", 0)
+
+    state = getState(transition_time)
     counter = 0
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
@@ -449,15 +452,14 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('new_model_1609_2_{}.h5'.format(episode))
-    '''
+        q_estimator_model.save('cross_model_27_09_{}.h5'.format(episode))
 
 
-'''print(AVG_Q_len_perepisode)
+
+print(AVG_Q_len_perepisode)
 
 # import matplotlib.pyplot as plt
 #
 # plt.plot([x for x in range(num_episode)],[AVG_Q_len_perepisode], 'ro')
 # plt.axis([0, num_episode, 0, 10])
 # plt.show()
-'''
