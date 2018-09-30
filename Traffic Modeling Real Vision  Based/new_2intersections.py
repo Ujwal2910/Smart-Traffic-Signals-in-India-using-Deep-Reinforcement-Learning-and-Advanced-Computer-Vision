@@ -179,7 +179,7 @@ def get_floor_number(phase_left, phase_right):
 def getPhaseState(transition_time):
 
     phase_left = traci.trafficlight.getPhase("0")#left and right do
-    phase_right = traci.trafficlight.getPhase("1")
+    phase_right = traci.trafficlight.getPhase("10")
     #calculate floor number
     phase = get_floor_number(phase_left,phase_right)
 
