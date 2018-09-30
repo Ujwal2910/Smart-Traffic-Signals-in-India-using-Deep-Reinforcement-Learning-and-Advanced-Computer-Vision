@@ -283,7 +283,7 @@ def build_model(transition_time):
     num_hidden_units_cnn = 10
     num_actions = 4
     model = Sequential()
-    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, num_lanes,num_phases)))
+    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, num_lanes,num_phases+1)))
     # model.add(LSTM(8))
     model.add(Flatten())
     model.add(Dense(20, activation='relu'))
@@ -451,7 +451,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('cross_model_27_09_{}.h5'.format(episode))
+        q_estimator_model.save('cross_model_ujwal_27_09_{}.h5'.format(episode))
 
 
 
