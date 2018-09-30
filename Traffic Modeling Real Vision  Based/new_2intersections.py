@@ -223,12 +223,12 @@ def makeMove(action, transition_time):
     #new action for 4 diff actions- 00,01,10,11
 
     if action == 1:
-        traci.trafficlight.setPhase("1", (int(traci.trafficlight.getPhase("1")) + 1) % 4)
+        traci.trafficlight.setPhase("10", (int(traci.trafficlight.getPhase("10")) + 1) % 4)
     elif action == 2:
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
     elif action == 3:
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
-        traci.trafficlight.setPhase("1", (int(traci.trafficlight.getPhase("1")) + 1) % 4)
+        traci.trafficlight.setPhase("10", (int(traci.trafficlight.getPhase("10")) + 1) % 4)
 
 
 
@@ -332,7 +332,7 @@ traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
-#traci.trafficlight.setPhase("1", 0)
+traci.trafficlight.setPhase("10", 0)
 
 nA = 4
 
@@ -369,7 +369,7 @@ for episode in range(num_episode):
                  "--tripinfo-output", "tripinfo.xml"])
 
     traci.trafficlight.setPhase("0", 0)
-    #traci.trafficlight.setPhase("1", 0)
+    traci.trafficlight.setPhase("10", 0)
 
     state = getState(transition_time)
     counter = 0
