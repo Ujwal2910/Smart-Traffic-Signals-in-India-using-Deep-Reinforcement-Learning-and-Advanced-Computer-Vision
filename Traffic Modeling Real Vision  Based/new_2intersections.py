@@ -341,10 +341,10 @@ target_estimator_model.set_weights(q_estimator_model.get_weights())
 replay_memory = []
 
 for _ in range(replay_memory_init_size):
-    if traci.simulation.getMinExpectedNumber() <= 0:
+    '''if traci.simulation.getMinExpectedNumber() <= 0:
         generate_routefile_random(episode_time, num_vehicles)
         traci.load(["--start", "-c", "data/cross.sumocfg",
-                    "--tripinfo-output", "tripinfo.xml"])
+                    "--tripinfo-output", "tripinfo.xml"])'''
     state = getState(transition_time)
     action = np.random.choice(np.arange(nA))
     new_state = makeMove(action,transition_time)
@@ -365,9 +365,8 @@ for episode in range(num_episode):
     '''
     generate_routefile()
     #generate_routefile_random(episode_time, num_vehicles)
-    traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
-                 "--tripinfo-output", "tripinfo.xml"])
-
+    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
+                "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
     traci.trafficlight.setPhase("10", 0)
 
