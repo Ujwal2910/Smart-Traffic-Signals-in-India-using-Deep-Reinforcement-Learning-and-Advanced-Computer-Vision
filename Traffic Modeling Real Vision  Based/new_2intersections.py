@@ -77,7 +77,7 @@ def generate_routefile_random(episode_length, total_vehicles):
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-def generate_routefile(left_qty=20, up_qty=20):
+def generate_routefile():
     with open("data/cross_2intersections.rou.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
@@ -86,7 +86,7 @@ def generate_routefile(left_qty=20, up_qty=20):
     </vTypeDistribution>
     <route id="r10" edges="51o 1i 4o 54i"/>
     <route id="r11" edges="51o 1i 010i 14o 154i"/>
-    <route id="r12" edges="51o 1i 010i 2o 2i"/>
+    <route id="r12" edges="51o 1i 010i 2o 52i"/>
     <route id="r13" edges="51o 1i 010i 13o 153i"/>
     <route id="r14" edges="51o 1i 3o 53i"/>
     
@@ -120,13 +120,13 @@ def generate_routefile(left_qty=20, up_qty=20):
     <route id="r143" edges="154o 14i 010o 1o 51i"/>
     <route id="r144" edges="154o 14i 010o 4o 54i"/>
     
-    <flow id="mixed1" begin="0" end="350" number="%i" route="r12" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="20" route="r22" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="350" number="20" route="r31" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="350" number="%i" route="r41" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed5" begin="0" end="350" number="20" route="r131" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed6" begin="0" end="350" number="20" route="r141" type="mixed" departLane="random" departPosLat="random"/>
-</routes>""" % (left_qty, up_qty), file=routes)
+    <flow id="mixed1" begin="0" end="350" number="150" route="r12" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="0" route="r22" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="350" number="0" route="r31" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed6" begin="0" end="350" number="0" route="r141" type="mixed" departLane="random" departPosLat="random"/>
+</routes>""", file=routes)
         lastVeh = 0
         vehNr = 0
 
@@ -374,7 +374,7 @@ for episode in range(num_episode):
     counter = 0
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
-        traci.simulationStep()
+
 
         print("Episode # ", episode)
 
@@ -410,7 +410,7 @@ for episode in range(num_episode):
             else:
                 break
         if same_action_count == 20:
-            action = 1
+            action = 3
             print("SAME ACTION PENALTY")
 
         if np.argmax(q_val) != action:
@@ -451,7 +451,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('cross_model_ujwal_27_09_{}.h5'.format(episode))
+        q_estimator_model.save('cross_model_ishan_30_09_{}.h5'.format(episode))
 
 
 
