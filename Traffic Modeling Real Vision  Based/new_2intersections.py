@@ -451,7 +451,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('cross_model_ishan_30_09_{}.h5'.format(episode))
+        q_estimator_model.save('cross_model_ishan_02_10_{}.h5'.format(episode))
 
 
 
