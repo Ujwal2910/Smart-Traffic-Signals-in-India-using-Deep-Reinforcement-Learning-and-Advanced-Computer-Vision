@@ -15,6 +15,7 @@ from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
+import cross_read
 import readscreen3
 import numpy as np
 import datetime
@@ -86,38 +87,56 @@ def generate_routefile_random(episode_length, total_vehicles):
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-def generate_routefile(left_qty, up_qty):
-    with open("data/cross.rou.xml", "w") as routes:
+def generate_routefile():
+    with open("data/cross_2intersections.rou.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
         <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
         <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
     </vTypeDistribution>
-    <route id="r0" edges="51o 1i 2o 52i"/>
-    <route id="r1" edges="51o 1i 4o 54i"/>
-    <route id="r2" edges="51o 1i 3o 53i"/>
-    <route id="r3" edges="54o 4i 3o 53i"/>
-    <route id="r4" edges="54o 4i 1o 51i"/>
-    <route id="r5" edges="54o 4i 2o 52i"/>
-    <route id="r6" edges="52o 2i 1o 51i"/>
-    <route id="r7" edges="52o 2i 4o 54i"/>
-    <route id="r8" edges="52o 2i 3o 53i"/>
-    <route id="r9" edges="53o 3i 4o 54i"/>
-    <route id="r10" edges="53o 3i 1o 51i"/>
-    <route id="r11" edges="53o 3i 2o 52i"/>
-    <flow id="mixed1" begin="0" end="350" number="%i" route="r0" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="0" number="0" route="r1" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="0" number="0" route="r2" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="350" number="%i" route="r3" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed5" begin="0" end="0" number="0" route="r4" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed6" begin="0" end="0" number="0" route="r5" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed7" begin="0" end="0" number="0" route="r6" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed8" begin="0" end="0" number="0" route="r7" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed9" begin="0" end="0" number="0" route="r8" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed10" begin="0" end="0" number="0" route="r9" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed11" begin="0" end="0" number="0" route="r10" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed12" begin="0" end="0" number="0" route="r11" type="mixed" departLane="random" departPosLat="random"/>
-</routes>""" % (left_qty, up_qty), file=routes)
+    <route id="r10" edges="51o 1i 4o 54i"/>
+    <route id="r11" edges="51o 1i 010i 14o 154i"/>
+    <route id="r12" edges="51o 1i 010i 2o 52i"/>
+    <route id="r13" edges="51o 1i 010i 13o 153i"/>
+    <route id="r14" edges="51o 1i 3o 53i"/>
+
+    <route id="r20" edges="52o 2i 14o 154i"/>
+    <route id="r21" edges="52o 2i 010o 4o 54i"/>
+    <route id="r22" edges="52o 2i 010o 1o 51i"/>
+    <route id="r23" edges="52o 2i 010o 3o 53i"/>
+    <route id="r24" edges="52o 2i 13o 153i"/>
+
+    <route id="r30" edges="53o 3i 1o 51i"/>
+    <route id="r31" edges="53o 3i 4o 54i"/>
+    <route id="r32" edges="53o 3i 010i 14o 154i"/>
+    <route id="r33" edges="53o 3i 010i 2o 52i"/>
+    <route id="r34" edges="53o 3i 010i 13o 153i"/>
+
+    <route id="r40" edges="54o 4i 1o 51i"/>
+    <route id="r41" edges="54o 4i 3o 53i"/>
+    <route id="r42" edges="54o 4i 010i 13o 153i"/>
+    <route id="r43" edges="54o 4i 010i 2o 52i"/>
+    <route id="r44" edges="54o 4i 010i 14o 154i"/>
+
+    <route id="r130" edges="153o 13i 2o 52i"/>
+    <route id="r131" edges="153o 13i 14o 154i"/>
+    <route id="r132" edges="153o 13i 010o 4o 54i"/>
+    <route id="r133" edges="153o 13i 010o 1o 51i"/>
+    <route id="r134" edges="153o 13i 010o 3o 53i"/>
+
+    <route id="r140" edges="154o 14i 2o 52i"/>
+    <route id="r141" edges="154o 14i 13o 153i"/>
+    <route id="r142" edges="154o 14i 010o 3o 53i"/>
+    <route id="r143" edges="154o 14i 010o 1o 51i"/>
+    <route id="r144" edges="154o 14i 010o 4o 54i"/>
+
+    <flow id="mixed1" begin="0" end="350" number="150" route="r12" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="0" route="r22" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="350" number="0" route="r31" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed6" begin="0" end="350" number="0" route="r141" type="mixed" departLane="random" departPosLat="random"/>
+</routes>""", file=routes)
         lastVeh = 0
         vehNr = 0
 
@@ -161,7 +180,7 @@ print("TraCI Started")
 # print(Runner().run)
 
 
-def getPhaseState(transition_time):
+def getLeftPhaseState(transition_time):
     num_lanes = 4
     num_phases = 4
     phase = traci.trafficlight.getPhase("0")
@@ -171,22 +190,51 @@ def getPhaseState(transition_time):
             phaseState[i][j][phase] = 1
     return phaseState
 
+def getRightPhaseState(transition_time):
+    num_lanes = 4
+    num_phases = 4
+    phase = traci.trafficlight.getPhase("10")
+    phaseState = np.zeros((transition_time,num_lanes,num_phases))
+    for i in range(transition_time):
+        for j in range(num_lanes):
+            phaseState[i][j][phase] = 1
+    return phaseState
 
-def getState(transition_time):  # made the order changes
+
+def getLeftState(transition_time):  # made the order changes
     newState = []
     for _ in range(transition_time):
         traci.simulationStep()
 
-        state = [readscreen3.getLowerQlength() / 80,
-             readscreen3.getRightQlength() / 80,
-             readscreen3.getUpperQlength() / 80,
-             readscreen3.getLeftQlength() / 80
+        state = [cross_read.leftgetLowerQlength() / 80,# issi sequnce main left and right
+             cross_read.leftgetRightQlength() / 80,
+             cross_read.leftgetUpperQlength() / 80,
+             cross_read.leftgetLeftQlength() / 80
              ]
 
         newState.insert(0, state)
     # print (state)
     newState = np.array(newState)
-    phaseState = getPhaseState(transition_time)
+    phaseState = getLeftPhaseState(transition_time)
+    newState = np.dstack((newState, phaseState))
+    newState = np.expand_dims(newState, axis=0)
+    return newState
+
+def getRightState(transition_time):  # made the order changes
+    newState = []
+    for _ in range(transition_time):
+        traci.simulationStep()
+
+        state = [cross_read.rightgetLowerQlength() / 80,# issi sequnce main left and right
+             cross_read.rightgetRightQlength() / 80,
+             cross_read.rightgetUpperQlength() / 80,
+             cross_read.rightgetLeftQlength() / 80
+             ]
+
+        newState.insert(0, state)
+    # print (state)
+    newState = np.array(newState)
+    phaseState = getRightPhaseState(transition_time)
     newState = np.dstack((newState, phaseState))
     newState = np.expand_dims(newState, axis=0)
     return newState
@@ -196,19 +244,17 @@ print("here")
 import traci
 
 
-def makeMove(action, transition_time):
+def makeLeftMove(action, transition_time):
     if action == 1:
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
+    return getLeftState(transition_time)
+
+def makeRightMove(action, transition_time):
+    if action == 1:
+        traci.trafficlight.setPhase("10", (int(traci.trafficlight.getPhase("10")) + 1) % 4)
+    return getRightState(transition_time)
 
 
-
-
-    # traci.simulationStep()
-    # traci.simulationStep()
-    # traci.simulationStep()
-    # traci.simulationStep()
-
-    return getState(transition_time)
 
 
 def getReward(this_state, this_new_state):
@@ -282,12 +328,15 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 20
-q_estimator_model = build_model(transition_time)
-target_estimator_model = build_model(transition_time)
+q_estimator_model_left = build_model(transition_time)
+target_estimator_model_left = build_model(transition_time)
+q_estimator_model_right = build_model(transition_time)
+target_estimator_model_right = build_model(transition_time)
 replay_memory_init_size = 35
 replay_memory_size = 800
 batch_size = 32
-print(q_estimator_model.summary())
+print(q_estimator_model_left.summary())
+print(q_estimator_model_right.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 #generate_routefile_random(episode_time, num_vehicles)
@@ -299,18 +348,20 @@ traci.trafficlight.setPhase("0", 0)
 
 nA = 2
 
-target_estimator_model.set_weights(q_estimator_model.get_weights())
+target_estimator_model_left.set_weights(q_estimator_model_left.get_weights())
+target_estimator_model_right.set_weights(q_estimator_model_right.get_weights())
 
-replay_memory = []
+replay_memory_left = []
+replay_memory_right = []
 
 for _ in range(replay_memory_init_size):
     '''if traci.simulation.getMinExpectedNumber() <= 0:
         generate_routefile_random(episode_time, num_vehicles)
         traci.load(["--start", "-c", "data/cross.sumocfg",
                     "--tripinfo-output", "tripinfo.xml"]) '''
-    state = getState(transition_time)
+    leftState = getLeftState(transition_time)
     action = np.random.choice(np.arange(nA))
-    new_state = makeMove(action,transition_time)
+    new_state = makeLeftMove(action,transition_time)
     reward = getReward(state,new_state)
     replay_memory.append([state,action,reward,new_state])
     print(len(replay_memory))
