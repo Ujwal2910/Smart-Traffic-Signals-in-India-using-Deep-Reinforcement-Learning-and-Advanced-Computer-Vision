@@ -300,12 +300,12 @@ def getWaitingTime(laneID):
 num_lanes = 8
 num_phases = 16
 
-num_episode = 241
+num_episode = 21
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
 epsilon_end = 0.01
-epsilon_decay_steps = 3000 # 40 mins rn
+epsilon_decay_steps = 1500 # 40 mins rn
 
 Average_Q_lengths = []
 sum_q_lens = 0
@@ -419,7 +419,12 @@ for episode in range(num_episode):
             print("POLICY FOLLOWED ")
 
         new_state = makeMove(action, transition_time)
+        print("Old State : ")
+        print(state)
+        print("New State : ")
+        print(new_state)
         reward = getReward(state, new_state)
+        print("Reward : ", reward)
 
         if len(replay_memory) == replay_memory_size:
             replay_memory.pop(0)
@@ -451,7 +456,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('cross_model_ishan_02_10_{}.h5'.format(episode))
+        q_estimator_model.save('cross_model_ishan_03_10_3_{}.h5'.format(episode))
 
 
 
