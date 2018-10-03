@@ -148,7 +148,7 @@ def LeftgetScreenImage():
     sct.get_pixels(mon_left)
     img = Image.frombytes('RGB', (sct.width, sct.height), sct.image)
     image = np.array(img)
-    #cv2.imshow("test",image)
+    #cv2.imshow("left",image)
 
     return image
 
@@ -156,7 +156,7 @@ def RightgetScreenImage():
     sct.get_pixels(mon_right)
     img = Image.frombytes('RGB', (sct.width, sct.height), sct.image)
     image = np.array(img)
-    #cv2.imshow("test",image)
+    #cv2.imshow("right",image)
 
     return image
 
