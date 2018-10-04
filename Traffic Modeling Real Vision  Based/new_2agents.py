@@ -70,13 +70,14 @@ def generate_routefile_random(episode_length, total_vehicles):
         for i in np.arange(len(traffic)):
             print(
                 '<flow id="mixed%i" begin="0" end="%i" number="%i" route="r%i" type="mixed" departLane="random" departPosLat="random"/>' % (
-                i, episode_length, traffic[i], i), file = routes)
+                    i, episode_length, traffic[i], i), file=routes)
 
         print("</routes>", file=routes)
 
     print('TRAFFIC CONFIGURATION - ')
     for i in np.arange(len(traffic)):
-        print('Lane %i - %i' % (i+1, traffic[i]))
+        print('Lane %i - %i' % (i + 1, traffic[i]))
+
 
 # The program looks like this
 #    <tlLogic id="0" type="static" programID="0" offset="0">
@@ -184,77 +185,70 @@ def getLeftPhaseState(transition_time):
     num_lanes = 4
     num_phases = 4
     phase = traci.trafficlight.getPhase("0")
-    phaseState = np.zeros((transition_time,num_lanes,num_phases))
+    phaseState = np.zeros((transition_time, num_lanes, num_phases))
     for i in range(transition_time):
         for j in range(num_lanes):
             phaseState[i][j][phase] = 1
     return phaseState
+
 
 def getRightPhaseState(transition_time):
     num_lanes = 4
     num_phases = 4
     phase = traci.trafficlight.getPhase("10")
-    phaseState = np.zeros((transition_time,num_lanes,num_phases))
+    phaseState = np.zeros((transition_time, num_lanes, num_phases))
     for i in range(transition_time):
         for j in range(num_lanes):
             phaseState[i][j][phase] = 1
     return phaseState
 
+def getStates(transition_time):
+    newLeftState = []
+    newRightState = []
 
-def getLeftState(transition_time):  # made the order changes
-    newState = []
     for _ in range(transition_time):
         traci.simulationStep()
 
-        state = [cross_read.leftgetLowerQlength() / 80,# issi sequnce main left and right
-             cross_read.leftgetRightQlength() / 80,
-             cross_read.leftgetUpperQlength() / 80,
-             cross_read.leftgetLeftQlength() / 80
-             ]
+        leftState = [
+            cross_read.leftgetLowerQlength() / 80,  # issi sequnce main left and right
+            cross_read.leftgetRightQlength() / 80,
+            cross_read.leftgetUpperQlength() / 80,
+            cross_read.leftgetLeftQlength() / 80
+        ]
 
-        newState.insert(0, state)
-    # print (state)
-    newState = np.array(newState)
-    phaseState = getLeftPhaseState(transition_time)
-    newState = np.dstack((newState, phaseState))
-    newState = np.expand_dims(newState, axis=0)
-    return newState
+        rightState = [
+            cross_read.rightgetLowerQlength() / 80,  # issi sequnce main left and right
+            cross_read.rightgetRightQlength() / 80,
+            cross_read.rightgetUpperQlength() / 80,
+            cross_read.rightgetLeftQlength() / 80
+        ]
 
-def getRightState(transition_time):  # made the order changes
-    newState = []
-    for _ in range(transition_time):
-        traci.simulationStep()
+        newLeftState.insert(0, leftState)
+        newRightState.insert(0, rightState)
 
-        state = [cross_read.rightgetLowerQlength() / 80,# issi sequnce main left and right
-             cross_read.rightgetRightQlength() / 80,
-             cross_read.rightgetUpperQlength() / 80,
-             cross_read.rightgetLeftQlength() / 80
-             ]
+    newLeftState = np.array(newLeftState)
+    leftPhaseState = getLeftPhaseState(transition_time)
+    newLeftState = np.dstack((newLeftState, leftPhaseState))
+    newLeftState = np.expand_dims(newLeftState, axis=0)
 
-        newState.insert(0, state)
-    # print (state)
-    newState = np.array(newState)
-    phaseState = getRightPhaseState(transition_time)
-    newState = np.dstack((newState, phaseState))
-    newState = np.expand_dims(newState, axis=0)
-    return newState
+    newRightState = np.array(newRightState)
+    rightPhaseState = getRightPhaseState(transition_time)
+    newRightState = np.dstack((newRightState, rightPhaseState))
+    newRightState = np.expand_dims(newRightState, axis=0)
+
+    return newLeftState, newRightState
 
 
 print("here")
 import traci
 
-
-def makeLeftMove(action, transition_time):
-    if action == 1:
+def makeMoves(leftAction, rightAction, transition_time):
+    if leftAction == 1:
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
-    return getLeftState(transition_time)
-
-def makeRightMove(action, transition_time):
-    if action == 1:
+    if rightAction == 1:
         traci.trafficlight.setPhase("10", (int(traci.trafficlight.getPhase("10")) + 1) % 4)
-    return getRightState(transition_time)
 
-
+    return getStates(transition_time)
 
 
 def getReward(this_state, this_new_state):
@@ -298,7 +292,8 @@ def build_model(transition_time):
     num_hidden_units_cnn = 10
     num_actions = 2
     model = Sequential()
-    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, 4,5)))
+    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu',
+                     input_shape=(transition_time, 4, 5)))
     # model.add(LSTM(8))
     model.add(Flatten())
     model.add(Dense(20, activation='relu'))
@@ -315,7 +310,7 @@ def getWaitingTime(laneID):
 
 num_episode = 241
 discount_factor = 0.9
-#epsilon = 1
+# epsilon = 1
 epsilon_start = 1
 epsilon_end = 0.4
 epsilon_decay_steps = 3000
@@ -339,8 +334,8 @@ print(q_estimator_model_left.summary())
 print(q_estimator_model_right.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
-#generate_routefile_random(episode_time, num_vehicles)
-generate_routefile(90,10)
+# generate_routefile_random(episode_time, num_vehicles)
+generate_routefile(90, 10)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
@@ -351,34 +346,37 @@ nA = 2
 target_estimator_model_left.set_weights(q_estimator_model_left.get_weights())
 target_estimator_model_right.set_weights(q_estimator_model_right.get_weights())
 
-replay_memory_left = []
-replay_memory_right = []
+left_replay_memory = []
+right_replay_memory = []
 
 for _ in range(replay_memory_init_size):
     '''if traci.simulation.getMinExpectedNumber() <= 0:
         generate_routefile_random(episode_time, num_vehicles)
         traci.load(["--start", "-c", "data/cross.sumocfg",
                     "--tripinfo-output", "tripinfo.xml"]) '''
-    leftState = getLeftState(transition_time)
-    action = np.random.choice(np.arange(nA))
-    new_state = makeLeftMove(action,transition_time)
-    reward = getReward(state,new_state)
-    replay_memory.append([state,action,reward,new_state])
-    print(len(replay_memory))
+    leftState, rightState = getStates(transition_time)
+    leftAction = np.random.choice(np.arange(nA))
+    rightAction = np.random.choice(np.arange(nA))
+    newLeftState, newRightState = makeMoves(leftAction, rightAction, transition_time)
+    leftReward = getReward(leftState, newLeftState)
+    rightReward = getReward(rightState, newRightState)
+    left_replay_memory.append([leftState, leftAction, leftReward, newLeftState])
+    right_replay_memory.append([rightState, rightAction, rightReward, newRightState])
+    print(len(left_replay_memory))
 
 total_t = 0
 for episode in range(num_episode):
     num_vehicles += 1
     if episode < 40:
-        generate_routefile(90,10)
+        generate_routefile(90, 10)
     else:
-        generate_routefile(10,90)
-    #generate_routefile_random(episode_time, num_vehicles)
+        generate_routefile(10, 90)
+    # generate_routefile_random(episode_time, num_vehicles)
     traci.load(["--start", "-c", "data/cross.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
 
-    state = getState(transition_time)
+    leftState, rightState = getStates(transition_time)
     counter = 0
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
@@ -392,10 +390,13 @@ for episode in range(num_episode):
         # batch_experience = experience[:batch_history]
 
         if total_t % target_update_time == 0:
-            target_estimator_model.set_weights(q_estimator_model.get_weights())
+            target_estimator_model_left.set_weights(q_estimator_model_left.get_weights())
+            target_estimator_model_right.set_weights(q_estimator_model_right.get_weights())
 
-        q_val = q_estimator_model.predict(state)
-        print(q_val)
+        q_val_left = q_estimator_model_left.predict(leftState)
+        q_val_right = q_estimator_model_right.predict(rightState)
+        print("Left q values : ", q_val_left)
+        print("Right q values : ", q_val_right)
         # if random.random() < epsilon:
         #     phase = np.random.choice(4)
         #     print("random action chosen",phase)
@@ -403,69 +404,92 @@ for episode in range(num_episode):
         #     phase = np.argmax(q_val)
         #     print("else action",phase)
 
-
-
-
-        epsilon = epsilons[min(total_t, epsilon_decay_steps-1)]
+        epsilon = epsilons[min(total_t, epsilon_decay_steps - 1)]
         print("Epsilon -", epsilon)
         policy_s = np.ones(nA) * epsilon / nA
 
-        policy_s[np.argmax(q_val)] = 1 - epsilon + (epsilon / nA)
+        leftPolicy = policy_s
+        leftPolicy[np.argmax(q_val_left)] = 1 - epsilon + (epsilon / nA)
 
-        action = np.random.choice(np.arange(nA), p=policy_s)
+        rightPolicy = policy_s
+        rightPolicy[np.argmax(q_val_right)] = 1 - epsilon + (epsilon / nA)
 
-        same_action_count = 0
-        for temp in reversed(replay_memory):
+        leftAction = np.random.choice(np.arange(nA), p=leftPolicy)
+        rightAction = np.random.choice(np.arange(nA), p=rightPolicy)
+
+        same_left_action_count = 0
+        for temp in reversed(left_replay_memory):
             if temp[1] == 0:
-                same_action_count += 1
+                same_left_action_count += 1
             else:
                 break
-        if same_action_count == 20:
-            action = 1
-            print("SAME ACTION PENALTY")
+        if same_left_action_count == 20:
+            leftAction = 1
+            print("SAME LEFT ACTION PENALTY")
 
-        if np.argmax(q_val) != action:
-            print("RANDOM CHOICE TAKEN")
+        same_right_action_count = 0
+        for temp in reversed(right_replay_memory):
+            if temp[1] == 0:
+                same_right_action_count += 1
+            else:
+                break
+        if same_right_action_count == 20:
+            rightAction = 1
+            print("SAME RIGHT ACTION PENALTY")
+
+        if np.argmax(q_val_left) != leftAction:
+            print("RANDOM LEFT CHOICE TAKEN")
         else:
-            print("POLICY FOLLOWED ")
+            print("LEFT POLICY FOLLOWED ")
 
-        new_state = makeMove(action, transition_time)
-        reward = getReward(state, new_state)
+        if np.argmax(q_val_right) != rightAction:
+            print("RANDOM RIGHT CHOICE TAKEN")
+        else:
+            print("RIGHT POLICY FOLLOWED ")
 
-        if len(replay_memory) == replay_memory_size:
-            replay_memory.pop(0)
+        newLeftState, newRightState = makeMoves(leftAction, rightAction, transition_time)
+        leftReward = getReward(leftState, newLeftState)
+        rightReward = getReward(rightState, newRightState)
 
-        replay_memory.append([state, action, reward, new_state])
+        if len(left_replay_memory) == replay_memory_size:
+            left_replay_memory.pop(0)
+        if len(right_replay_memory) == replay_memory_size:
+            right_replay_memory.pop(0)
 
-        print("Memory Length :", len(replay_memory))
+        left_replay_memory.append([leftState, leftAction, leftReward, newLeftState])
+        right_replay_memory.append([rightState, rightAction, rightReward, newRightState])
 
-        sum_q_lens += np.average(new_state)
+        print("Memory Length :", len(left_replay_memory))
 
-        samples = random.sample(replay_memory, batch_size)
-        '''
-        states_batch, action_batch, reward_batch, next_states_batch = map(np.array, zip(*samples))
+        leftSamples = random.sample(left_replay_memory, batch_size)
+        rightSamples = random.sample(right_replay_memory, batch_size)
 
-        q_values_next = target_estimator_model.predict(next_states_batch)
-        targets_batch = reward_batch + discount_factor * np.amax(
-            q_values_next, axis=1)
-
-        states_batch = np.array(states_batch)
-        loss = q_estimator_model.update(states_batch, action_batch, targets_batch)
-        '''
-        # CODE FOR UPDATE REMAINING, REST DONE!
+        # MODEL FITTING FOR LEFT
         x_batch, y_batch = [], []
-        for inst_state, inst_action, inst_reward, inst_next_state in samples:
-            y_target = q_estimator_model.predict(inst_state)
-            q_val_next = target_estimator_model.predict(inst_next_state)
+        for inst_state, inst_action, inst_reward, inst_next_state in leftSamples:
+            y_target = q_estimator_model_left.predict(inst_state)
+            q_val_next = target_estimator_model_left.predict(inst_next_state)
             y_target[0][inst_action] = inst_reward + discount_factor * np.amax(
                 q_val_next, axis=1
             )
             x_batch.append(inst_state[0])
             y_batch.append(y_target[0])
 
-        q_estimator_model.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
+        q_estimator_model_left.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
 
-        ####
+        # MODEL FITTING FOR RIGHT
+
+        x_batch, y_batch = [], []
+        for inst_state, inst_action, inst_reward, inst_next_state in rightSamples:
+            y_target = q_estimator_model_right.predict(inst_state)
+            q_val_next = target_estimator_model_right.predict(inst_next_state)
+            y_target[0][inst_action] = inst_reward + discount_factor * np.amax(
+                q_val_next, axis=1
+            )
+            x_batch.append(inst_state[0])
+            y_batch.append(y_target[0])
+
+        q_estimator_model_right.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
 
         '''
         oracle = np.zeros((1, nA))
@@ -476,14 +500,14 @@ for episode in range(num_episode):
         print(oracle)
         model.fit((np.array(old_experience)).reshape((1, num_history, 5)), oracle, verbose=1)
         '''
-        state = new_state
+        leftState = newLeftState
+        rightState = newRightState
 
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('new_model_test_1_{}.h5'.format(episode))
-
-
+        q_estimator_model_left.save('new_2agents_model_left_4_10_{}.h5'.format(episode))
+        q_estimator_model_left.save('new_2agents_model_right_4_10_{}.h5'.format(episode))
 
 print(AVG_Q_len_perepisode)
 
