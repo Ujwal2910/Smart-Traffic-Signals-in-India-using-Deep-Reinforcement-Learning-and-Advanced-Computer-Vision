@@ -415,10 +415,10 @@ for episode in range(num_episode):
         print("Epsilon -", epsilon)
         policy_s = np.ones(nA) * epsilon / nA
 
-        leftPolicy = policy_s
+        leftPolicy = np.copy(policy_s)
         leftPolicy[np.argmax(q_val_left)] = 1 - epsilon + (epsilon / nA)
 
-        rightPolicy = policy_s
+        rightPolicy = np.copy(policy_s)
         rightPolicy[np.argmax(q_val_right)] = 1 - epsilon + (epsilon / nA)
 
         leftAction = np.random.choice(np.arange(nA), p=leftPolicy)
