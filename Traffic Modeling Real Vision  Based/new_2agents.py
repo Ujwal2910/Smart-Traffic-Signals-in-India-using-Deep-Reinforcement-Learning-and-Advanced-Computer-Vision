@@ -256,8 +256,8 @@ def getReward(this_state, this_new_state):
     qLengths1 = []
     qLengths2 = []
     for i in range(num_lanes):
-        qLengths1.append(this_state[0][i][0])
-        qLengths2.append(this_new_state[0][i][0])
+        qLengths1.append(this_state[0][0][i][0])
+        qLengths2.append(this_new_state[0][0][i][0])
 
     qLengths11 = [x + 1 for x in qLengths1]
     qLengths21 = [x + 1 for x in qLengths2]

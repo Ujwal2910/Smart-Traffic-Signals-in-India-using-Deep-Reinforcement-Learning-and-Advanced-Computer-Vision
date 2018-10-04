@@ -204,7 +204,7 @@ def getState(transition_time):  # made the order changes
              cross_read.rightgetLowerQlength() / 80,# issi sequnce main left and right
              cross_read.rightgetRightQlength() / 80,
              cross_read.rightgetUpperQlength() / 80,
-             cross_read.rightgetLeftQlength() / 80, ]
+             cross_read.rightgetLeftQlength() / 80 ]
 
         newState.insert(0, state)
     # print (state)
@@ -247,11 +247,17 @@ def getReward(this_state, this_new_state):
     qLengths1 = []
     qLengths2 = []
     for i in range(num_lanes):
-        qLengths1.append(this_state[0][i][0])
-        qLengths2.append(this_new_state[0][i][0])
+        qLengths1.append(this_state[0][0][i][0])
+        qLengths2.append(this_new_state[0][0][i][0])
 
-    qLengths11 = [x + 1 for x in qLengths1]
+    qLengths11 = [x + 1 for x in qLengths1]   # isme bas 8 numbers hone chahiye the...zyaada aare hain usse kaafi zyada
     qLengths21 = [x + 1 for x in qLengths2]
+
+    print("This state - ", this_state)
+    print("New State - ", this_new_state)
+
+    print("qlengths 1 = ", qLengths1)
+    print("qlengths 2 = ", qLengths2)
 
     q1 = np.prod(qLengths11)
     q2 = np.prod(qLengths21)
@@ -265,7 +271,15 @@ def getReward(this_state, this_new_state):
     #     this_reward = 1
     # else:
     #     this_reward = -1
+
+
+
+
     this_reward = q1 - q2
+
+    print("Q1 = ", q1)
+    print("Q2 = ", q2)
+    print("This reward = ", this_reward)
 
     if this_reward > 0:
         this_reward = 1
@@ -300,12 +314,12 @@ def getWaitingTime(laneID):
 num_lanes = 8
 num_phases = 16
 
-num_episode = 21
+num_episode = 81
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
 epsilon_end = 0.01
-epsilon_decay_steps = 1500 # 40 mins rn
+epsilon_decay_steps = 3000 # 40 mins rn
 
 Average_Q_lengths = []
 sum_q_lens = 0
@@ -456,7 +470,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('cross_model_ishan_03_10_3_{}.h5'.format(episode))
+        q_estimator_model.save('cross_model_ishan_04_10_3_{}.h5'.format(episode))
 
 
 
