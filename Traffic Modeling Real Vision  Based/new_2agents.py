@@ -498,15 +498,6 @@ for episode in range(num_episode):
 
         q_estimator_model_right.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
 
-        '''
-        oracle = np.zeros((1, nA))
-        oracle[:] = q_val[:]
-        print(reward)
-        oracle[0][action] = (
-                    reward + gamma * np.max(model.predict((np.array(experience)).reshape((1, num_history, 5)))))
-        print(oracle)
-        model.fit((np.array(old_experience)).reshape((1, num_history, 5)), oracle, verbose=1)
-        '''
         leftState = newLeftState
         rightState = newRightState
 
