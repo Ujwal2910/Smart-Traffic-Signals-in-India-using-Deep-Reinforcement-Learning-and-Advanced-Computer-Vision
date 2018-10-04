@@ -335,11 +335,14 @@ print(q_estimator_model_right.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 # generate_routefile_random(episode_time, num_vehicles)
-generate_routefile(90, 10)
-traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+
+generate_routefile()
+# generate_routefile_random(episode_time, num_vehicles)
+traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
+traci.trafficlight.setPhase("10", 0)
 
 nA = 2
 
@@ -366,15 +369,19 @@ for _ in range(replay_memory_init_size):
 
 total_t = 0
 for episode in range(num_episode):
+    '''
     num_vehicles += 1
     if episode < 40:
         generate_routefile(90, 10)
     else:
         generate_routefile(10, 90)
+    '''
+    generate_routefile()
     # generate_routefile_random(episode_time, num_vehicles)
-    traci.load(["--start", "-c", "data/cross.sumocfg",
+    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
+    traci.trafficlight.setPhase("10", 0)
 
     leftState, rightState = getStates(transition_time)
     counter = 0
