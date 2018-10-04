@@ -5,7 +5,7 @@ from PIL import Image
 
 #mon = {'top': 140, 'left': 50, 'width':1800, 'height': 900}
 
-mon_right = {'top': 140, 'left':933, 'width': 884, 'height': 900}
+mon_right = {'top': 119, 'left':933, 'width': 884, 'height': 900}
 mon_left = {'top': 140, 'left': 100, 'width': 884, 'height': 900}
 
 sct = mss()
@@ -176,9 +176,9 @@ def getCenter(image):
 def leftgetUpperQlength():
     image = LeftgetScreenImage()
     #cv2.imshow("test",image)
-    upper_lane = np.array([(426, 39), (515, 39), (515, 351), (426, 351)], dtype="float32")
+    upper_lane = np.array([(446, 19), (535, 19), (535, 331), (446, 331)], dtype="float32")
     warp_upperlane = warped_simulation(upper_lane, image)
-    #cv2.imshow("test",warp_upperlane)
+    #cv2.imshow("testupper",warp_upperlane)
     mask_upper = leftsubtractImage(warp_upperlane, "upper")
     tail_length_upper = tail_length(mask_upper)
 
@@ -190,9 +190,9 @@ def leftgetLowerQlength():#
     h, w, center = getCenter(image)
     M180 = cv2.getRotationMatrix2D(center, 180, 1.0)
     rotated180 = cv2.warpAffine(image, M180, (w, h))
-    lower_lane = np.array([(456, 28), (544, 28), (544, 346), (456, 346)], dtype="float32")
+    lower_lane = np.array([(440, 33), (528, 33), (528, 351), (440, 351)], dtype="float32")
     warp_lowerlane = warped_simulation(lower_lane, rotated180)
-    #cv2.imshow("lotest",warp_lowerlane)
+    #cv2.imshow("llowertest",warp_lowerlane)
     mask_lower = leftsubtractImage(warp_lowerlane, "lower")
     tail_length_lower = tail_length(mask_lower)
 
@@ -204,7 +204,7 @@ def leftgetRightQlength():
     h, w, center = getCenter(image)
     M90 = cv2.getRotationMatrix2D(center, 90, 1.0)
     rotated90 = cv2.warpAffine(image, M90, (w, h))
-    right_lane = np.array([(446, 36), (534, 36), (534, 363), (446, 363)], dtype="float32")
+    right_lane = np.array([(429, 30), (523, 30), (523, 343), (429, 343)], dtype="float32")
     warp_rightlane = warped_simulation(right_lane, rotated90)
     #cv2.imshow("lrtest",warp_rightlane)
     mask_right = leftsubtractImage(warp_rightlane, "right")
@@ -218,7 +218,7 @@ def leftgetLeftQlength():
     h, w, center = getCenter(image)
     M270 = cv2.getRotationMatrix2D(center, 270, 1.0)
     rotated270 = cv2.warpAffine(image, M270, (w, h))
-    left_lane = np.array([(434, 34), (523, 34), (523, 334), (434, 334)], dtype="float32")
+    left_lane = np.array([(454, 42), (543, 42), (543, 342), (454, 342)], dtype="float32")
     warp_leftlane = warped_simulation(left_lane, rotated270)
     #cv2.imshow("lltest",warp_leftlane)
     mask_left = leftsubtractImage(warp_leftlane, "left")
@@ -234,7 +234,7 @@ def leftgetLeftQlength():
 def rightgetUpperQlength():
     image = RightgetScreenImage()
     #cv2.imshow("test",image)
-    upper_lane = np.array([(455, 31), (544, 31), (544, 351), (455, 351)], dtype="float32")
+    upper_lane = np.array([(500, 31), (599, 31), (599, 351), (500, 351)], dtype="float32")
     #cv2.imshow("upper",upper_lane)
     warp_upperlane = warped_simulation(upper_lane, image)
     #cv2.imshow("upper",warp_upperlane)
@@ -250,7 +250,7 @@ def rightgetLowerQlength():
     h, w, center = getCenter(image)
     M180 = cv2.getRotationMatrix2D(center, 180, 1.0)
     rotated180 = cv2.warpAffine(image, M180, (w, h))
-    lower_lane = np.array([(426, 31), (516, 31), (516, 340), (426, 340)], dtype="float32")
+    lower_lane = np.array([(378, 31), (466, 31), (466, 340), (378, 340)], dtype="float32")
     #cv2.imshow("lower", lower_lane)
     warp_lowerlane = warped_simulation(lower_lane, rotated180)
     #cv2.imshow("lower", warp_lowerlane)
@@ -266,7 +266,7 @@ def rightgetRightQlength():
     h, w, center = getCenter(image)
     M90 = cv2.getRotationMatrix2D(center, 90, 1.0)
     rotated90 = cv2.warpAffine(image, M90, (w, h))
-    right_lane = np.array([(445, 36), (533, 36), (533, 330), (445, 330)], dtype="float32")
+    right_lane = np.array([(450, 0), (540, 0), (540, 281), (450, 281)], dtype="float32")
     #cv2.imshow("right", right_lane)
     warp_rightlane = warped_simulation(right_lane, rotated90)
     #cv2.imshow("right", warp_rightlane)
@@ -282,7 +282,7 @@ def rightgetLeftQlength():
     h, w, center = getCenter(image)
     M270 = cv2.getRotationMatrix2D(center, 270, 1.0)
     rotated270 = cv2.warpAffine(image, M270, (w, h))
-    left_lane = np.array([(436, 38), (525, 38), (525, 358), (436, 358)], dtype="float32")
+    left_lane = np.array([(431, 38), (520, 38), (520, 412), (430, 412)], dtype="float32")
     #cv2.imshow("left", left_lane)
     warp_leftlane = warped_simulation(left_lane, rotated270)
     #cv2.imshow("left", warp_leftlane)
@@ -329,9 +329,9 @@ if __name__ == '__main__':
         print("lower Tail ", tail_length_lower)
         print("right Tail ", tail_length_right)
         print("left Tail ", tail_length_left)
+
         #
-        # #
-        # print("  end")
+        print("  end")
 
         # cv2.imshow('test', image)
         # cv2.imshow("180",rotated180)
