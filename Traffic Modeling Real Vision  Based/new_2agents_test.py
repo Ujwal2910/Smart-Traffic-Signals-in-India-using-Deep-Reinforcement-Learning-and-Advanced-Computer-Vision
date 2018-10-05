@@ -12,7 +12,7 @@ import cv2
 import curses
 from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
 import cross_read
@@ -323,12 +323,13 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 20
-q_estimator_model_left = build_model(transition_time)
-target_estimator_model_left = build_model(transition_time)
-q_estimator_model_right = build_model(transition_time)
-target_estimator_model_right = build_model(transition_time)
+q_estimator_model_left = load_model('new_2agents_model_left_5_10_30.h5')
+#target_estimator_model_left = build_model(transition_time)
+q_estimator_model_right = load_model('new_2agents_model_right_5_10_30.h5')
+#target_estimator_model_right = build_model(transition_time)
 replay_memory_init_size = 35
 replay_memory_size = 800
+action_memory_size = 30
 batch_size = 32
 print(q_estimator_model_left.summary())
 print(q_estimator_model_right.summary())
@@ -346,42 +347,13 @@ traci.trafficlight.setPhase("10", 0)
 
 nA = 2
 
-target_estimator_model_left.set_weights(q_estimator_model_left.get_weights())
-target_estimator_model_right.set_weights(q_estimator_model_right.get_weights())
-
-left_replay_memory = []
-right_replay_memory = []
-
-for _ in range(replay_memory_init_size):
-    '''if traci.simulation.getMinExpectedNumber() <= 0:
-        generate_routefile_random(episode_time, num_vehicles)
-        traci.load(["--start", "-c", "data/cross.sumocfg",
-                    "--tripinfo-output", "tripinfo.xml"]) '''
-    leftState, rightState = getStates(transition_time)
-    leftAction = np.random.choice(np.arange(nA))
-    rightAction = np.random.choice(np.arange(nA))
-    newLeftState, newRightState = makeMoves(leftAction, rightAction, transition_time)
-    leftReward = getReward(leftState, newLeftState)
-    rightReward = getReward(rightState, newRightState)
-    left_replay_memory.append([leftState, leftAction, leftReward, newLeftState])
-    right_replay_memory.append([rightState, rightAction, rightReward, newRightState])
-    print(len(left_replay_memory))
+left_action_memory = []
+right_action_memory = []
 
 total_t = 0
 for episode in range(num_episode):
-    '''
-    num_vehicles += 1
-    if episode < 40:
-        generate_routefile(90, 10)
-    else:
-        generate_routefile(10, 90)
-    '''
-    generate_routefile()
+
     # generate_routefile_random(episode_time, num_vehicles)
-    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
-                "--tripinfo-output", "tripinfo.xml"])
-    traci.trafficlight.setPhase("0", 0)
-    traci.trafficlight.setPhase("10", 0)
 
     leftState, rightState = getStates(transition_time)
     counter = 0
@@ -394,39 +366,19 @@ for episode in range(num_episode):
 
         counter += 1
         total_t += 1
-        # batch_experience = experience[:batch_history]
-
-        if total_t % target_update_time == 0:
-            target_estimator_model_left.set_weights(q_estimator_model_left.get_weights())
-            target_estimator_model_right.set_weights(q_estimator_model_right.get_weights())
 
         q_val_left = q_estimator_model_left.predict(leftState)
         q_val_right = q_estimator_model_right.predict(rightState)
         print("Left q values : ", q_val_left)
         print("Right q values : ", q_val_right)
-        # if random.random() < epsilon:
-        #     phase = np.random.choice(4)
-        #     print("random action chosen",phase)
-        # else:
-        #     phase = np.argmax(q_val)
-        #     print("else action",phase)
+        
 
-        epsilon = epsilons[min(total_t, epsilon_decay_steps - 1)]
-        print("Epsilon -", epsilon)
-        policy_s = np.ones(nA) * epsilon / nA
-
-        leftPolicy = np.copy(policy_s)
-        leftPolicy[np.argmax(q_val_left)] = 1 - epsilon + (epsilon / nA)
-
-        rightPolicy = np.copy(policy_s)
-        rightPolicy[np.argmax(q_val_right)] = 1 - epsilon + (epsilon / nA)
-
-        leftAction = np.random.choice(np.arange(nA), p=leftPolicy)
-        rightAction = np.random.choice(np.arange(nA), p=rightPolicy)
+        leftAction = np.argmax(q_val_left)
+        rightAction = np.argmax(q_val_right)
 
         same_left_action_count = 0
-        for temp in reversed(left_replay_memory):
-            if temp[1] == 0:
+        for temp in reversed(left_action_memory):
+            if temp == 0:
                 same_left_action_count += 1
             else:
                 break
@@ -435,8 +387,8 @@ for episode in range(num_episode):
             print("SAME LEFT ACTION PENALTY")
 
         same_right_action_count = 0
-        for temp in reversed(right_replay_memory):
-            if temp[1] == 0:
+        for temp in reversed(right_action_memory):
+            if temp == 0:
                 same_right_action_count += 1
             else:
                 break
@@ -455,51 +407,24 @@ for episode in range(num_episode):
             print("RIGHT POLICY FOLLOWED ")
 
         newLeftState, newRightState = makeMoves(leftAction, rightAction, transition_time)
-        leftReward = getReward(leftState, newLeftState)
-        rightReward = getReward(rightState, newRightState)
 
-        if len(left_replay_memory) == replay_memory_size:
-            left_replay_memory.pop(0)
-        if len(right_replay_memory) == replay_memory_size:
-            right_replay_memory.pop(0)
+        if len(left_action_memory) == action_memory_size:
+            left_action_memory.pop(0)
 
-        left_replay_memory.append([leftState, leftAction, leftReward, newLeftState])
-        right_replay_memory.append([rightState, rightAction, rightReward, newRightState])
+        left_action_memory.append(leftAction)
 
-        print("Memory Length :", len(left_replay_memory))
+        if len(right_action_memory) == action_memory_size:
+            right_action_memory.pop(0)
 
-        leftSamples = random.sample(left_replay_memory, batch_size)
-        rightSamples = random.sample(right_replay_memory, batch_size)
-
-        # MODEL FITTING FOR LEFT
-        x_batch, y_batch = [], []
-        for inst_state, inst_action, inst_reward, inst_next_state in leftSamples:
-            y_target = q_estimator_model_left.predict(inst_state)
-            q_val_next = target_estimator_model_left.predict(inst_next_state)
-            y_target[0][inst_action] = inst_reward + discount_factor * np.amax(
-                q_val_next, axis=1
-            )
-            x_batch.append(inst_state[0])
-            y_batch.append(y_target[0])
-
-        q_estimator_model_left.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
-
-        # MODEL FITTING FOR RIGHT
-
-        x_batch, y_batch = [], []
-        for inst_state, inst_action, inst_reward, inst_next_state in rightSamples:
-            y_target = q_estimator_model_right.predict(inst_state)
-            q_val_next = target_estimator_model_right.predict(inst_next_state)
-            y_target[0][inst_action] = inst_reward + discount_factor * np.amax(
-                q_val_next, axis=1
-            )
-            x_batch.append(inst_state[0])
-            y_batch.append(y_target[0])
-
-        q_estimator_model_right.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
+        right_action_memory.append(rightAction)
 
         leftState = newLeftState
         rightState = newRightState
+
+    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
+                "--tripinfo-output", "tripinfo.xml"])
+    traci.trafficlight.setPhase("0", 0)
+    traci.trafficlight.setPhase("10", 0)
 
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
