@@ -121,8 +121,8 @@ def generate_routefile():
     <route id="r143" edges="154o 14i 010o 1o 51i"/>
     <route id="r144" edges="154o 14i 010o 4o 54i"/>
 
-    <flow id="mixed1" begin="0" end="350" number="150" route="r12" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="0" route="r22" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed1" begin="0" end="350" number="150" route="r21" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="150" route="r32" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed3" begin="0" end="350" number="0" route="r31" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
@@ -312,7 +312,7 @@ episode_time = 350  # one min episode rl
 num_vehicles = 250
 transition_time = 8
 target_update_time = 20
-q_estimator_model = load_model('cross_model_ishan_03_10_2_15.h5')
+q_estimator_model = load_model('cross_model_ishan_04_10_4_10.h5')
 #target_estimator_model = build_model(transition_time)
 replay_memory_init_size = 35
 replay_memory_size = 800

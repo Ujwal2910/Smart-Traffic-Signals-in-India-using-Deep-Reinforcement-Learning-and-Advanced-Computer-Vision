@@ -131,8 +131,8 @@ def generate_routefile():
     <route id="r143" edges="154o 14i 010o 1o 51i"/>
     <route id="r144" edges="154o 14i 010o 4o 54i"/>
 
-    <flow id="mixed1" begin="0" end="350" number="150" route="r12" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="0" route="r22" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed1" begin="0" end="350" number="150" route="r21" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="150" route="r32" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed3" begin="0" end="350" number="0" route="r31" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
@@ -323,9 +323,9 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 20
-q_estimator_model_left = load_model('new_2agents_model_left_5_10_30.h5')
+q_estimator_model_left = load_model('new_2agents_model_left_5_10_5.h5')
 #target_estimator_model_left = build_model(transition_time)
-q_estimator_model_right = load_model('new_2agents_model_right_5_10_30.h5')
+q_estimator_model_right = load_model('new_2agents_model_right_5_10_5.h5')
 #target_estimator_model_right = build_model(transition_time)
 replay_memory_init_size = 35
 replay_memory_size = 800
@@ -371,7 +371,6 @@ for episode in range(num_episode):
         q_val_right = q_estimator_model_right.predict(rightState)
         print("Left q values : ", q_val_left)
         print("Right q values : ", q_val_right)
-        
 
         leftAction = np.argmax(q_val_left)
         rightAction = np.argmax(q_val_right)
@@ -396,16 +395,6 @@ for episode in range(num_episode):
             rightAction = 1
             print("SAME RIGHT ACTION PENALTY")
 
-        if np.argmax(q_val_left) != leftAction:
-            print("RANDOM LEFT CHOICE TAKEN")
-        else:
-            print("LEFT POLICY FOLLOWED ")
-
-        if np.argmax(q_val_right) != rightAction:
-            print("RANDOM RIGHT CHOICE TAKEN")
-        else:
-            print("RIGHT POLICY FOLLOWED ")
-
         newLeftState, newRightState = makeMoves(leftAction, rightAction, transition_time)
 
         if len(left_action_memory) == action_memory_size:
@@ -428,9 +417,7 @@ for episode in range(num_episode):
 
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
-    if episode % 5 == 0:
-        q_estimator_model_left.save('new_2agents_model_left_5_10_{}.h5'.format(episode))
-        q_estimator_model_left.save('new_2agents_model_right_5_10_{}.h5'.format(episode))
+
 
 print(AVG_Q_len_perepisode)
 
