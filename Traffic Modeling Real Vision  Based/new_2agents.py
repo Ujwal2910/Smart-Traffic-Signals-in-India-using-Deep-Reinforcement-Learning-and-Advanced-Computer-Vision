@@ -131,8 +131,8 @@ def generate_routefile():
     <route id="r143" edges="154o 14i 010o 1o 51i"/>
     <route id="r144" edges="154o 14i 010o 4o 54i"/>
 
-    <flow id="mixed1" begin="0" end="350" number="150" route="r12" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="0" route="r22" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed1" begin="0" end="350" number="80" route="r21" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="80" route="r32" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed3" begin="0" end="350" number="0" route="r31" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
@@ -308,7 +308,7 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 241
+num_episode = 81
 discount_factor = 0.9
 # epsilon = 1
 epsilon_start = 1
@@ -504,8 +504,8 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model_left.save('new_2agents_model_left_4_10_{}.h5'.format(episode))
-        q_estimator_model_left.save('new_2agents_model_right_4_10_{}.h5'.format(episode))
+        q_estimator_model_left.save('new_2agents_model_left_5_10_2_{}.h5'.format(episode))
+        q_estimator_model_left.save('new_2agents_model_right_5_10_2_{}.h5'.format(episode))
 
 print(AVG_Q_len_perepisode)
 
