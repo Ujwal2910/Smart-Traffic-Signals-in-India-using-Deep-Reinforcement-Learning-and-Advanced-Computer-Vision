@@ -171,14 +171,7 @@ else:
 print("TraCI Started")
 
 
-# State = State_Lengths()
-# print(State.get_tails())
 
-# states = State.get_tails
-
-
-# runner = Runner()
-# print(Runner().run)
 
 
 def getLeftPhaseState(transition_time):
@@ -265,15 +258,6 @@ def getReward(this_state, this_new_state):
     q1 = np.prod(qLengths11)
     q2 = np.prod(qLengths21)
 
-    # print("Old State with product : ", q1)
-    #
-    # print("New State with product : ", q2)
-    #
-    #
-    # if q1 > q2:
-    #     this_reward = 1
-    # else:
-    #     this_reward = -1
     this_reward = q1 - q2
 
     if this_reward > 0:
@@ -404,12 +388,7 @@ for episode in range(num_episode):
         q_val_right = q_estimator_model_right.predict(rightState)
         print("Left q values : ", q_val_left)
         print("Right q values : ", q_val_right)
-        # if random.random() < epsilon:
-        #     phase = np.random.choice(4)
-        #     print("random action chosen",phase)
-        # else:
-        #     phase = np.argmax(q_val)
-        #     print("else action",phase)
+
 
         epsilon = epsilons[min(total_t, epsilon_decay_steps - 1)]
         print("Epsilon -", epsilon)
