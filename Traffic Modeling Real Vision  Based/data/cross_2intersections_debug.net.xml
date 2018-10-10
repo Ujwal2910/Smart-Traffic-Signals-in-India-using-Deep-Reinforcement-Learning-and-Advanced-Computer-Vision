@@ -159,24 +159,16 @@
     </edge>
 
     <tlLogic id="0" type="static" programID="0" offset="0">
-        <phase duration="29" state="GGGGgrrrrrrGGGGgrrrrr"/>
-        <phase duration="5" state="yyyygrrrrrryyyygrrrrr"/>
-        <phase duration="6" state="rrrrGrrrrrrrrrrGrrrrr"/>
-        <phase duration="5" state="rrrryrrrrrrrrrryrrrrr"/>
-        <phase duration="29" state="rrrrrGGGGggrrrrrGGGGg"/>
-        <phase duration="5" state="rrrrryyyyggrrrrryyyyg"/>
-        <phase duration="6" state="rrrrrrrrrGGrrrrrrrrrG"/>
-        <phase duration="5" state="rrrrrrrrryyrrrrrrrrry"/>
+        <phase duration="129000" state="GGGGGrrrrrrrrrrrrrrrr"/>
+        <phase duration="129000" state="rrrrrGGGGGGrrrrrrrrrr"/>
+        <phase duration="129000" state="rrrrrrrrrrrGGGGGrrrrr"/>
+        <phase duration="129000" state="rrrrrrrrrrrrrrrrGGGGG"/>
     </tlLogic>
     <tlLogic id="10" type="static" programID="0" offset="0">
-        <phase duration="29" state="GGGGgrrrrrGGGGgrrrrrr"/>
-        <phase duration="5" state="yyyygrrrrryyyygrrrrrr"/>
-        <phase duration="6" state="rrrrGrrrrrrrrrGrrrrrr"/>
-        <phase duration="5" state="rrrryrrrrrrrrryrrrrrr"/>
-        <phase duration="29" state="rrrrrGGGGgrrrrrGGGGgg"/>
-        <phase duration="5" state="rrrrryyyygrrrrryyyygg"/>
-        <phase duration="6" state="rrrrrrrrrGrrrrrrrrrGG"/>
-        <phase duration="5" state="rrrrrrrrryrrrrrrrrryy"/>
+        <phase duration="129000" state="GGGGGrrrrrrrrrrrrrrrr"/>
+        <phase duration="129000" state="rrrrrGGGGGrrrrrrrrrrr"/>
+        <phase duration="129000" state="rrrrrrrrrrGGGGGrrrrrr"/>
+        <phase duration="129000" state="rrrrrrrrrrrrrrrGGGGGG"/>
     </tlLogic>
 
     <junction id="0" type="traffic_light" x="510.00" y="510.00" incLanes="3i_0 3i_1 3i_2 010o_0 010o_1 010o_2 4i_0 4i_1 4i_2 1i_0 1i_1 1i_2" intLanes="" shape="500.15,498.65 519.85,498.65 521.35,500.15 521.35,519.85 519.85,521.35 500.15,521.35 498.65,519.85 498.65,500.15">
