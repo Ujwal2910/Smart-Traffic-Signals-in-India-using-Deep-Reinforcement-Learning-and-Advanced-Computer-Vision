@@ -131,9 +131,9 @@ def generate_routefile():
     <route id="r143" edges="154o 14i 010o 1o 51i"/>
     <route id="r144" edges="154o 14i 010o 4o 54i"/>
 
-    <flow id="mixed1" begin="0" end="350" number="20" route="r21" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="20" route="r32" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="350" number="0" route="r31" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed1" begin="0" end="350" number="0" route="r21" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="100" route="r32" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="350" number="00" route="r12" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed6" begin="0" end="350" number="0" route="r141" type="mixed" departLane="random" departPosLat="random"/>
@@ -292,12 +292,12 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 81
+num_episode = 121
 discount_factor = 0.9
 # epsilon = 1
 epsilon_start = 1
-epsilon_end = 0.4
-epsilon_decay_steps = 3000
+epsilon_end = 0.1
+epsilon_decay_steps = 5000
 
 Average_Q_lengths = []
 sum_q_lens = 0
@@ -322,7 +322,7 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 generate_routefile()
 # generate_routefile_random(episode_time, num_vehicles)
-traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
+traci.start([sumoBinary, "-c", "data/cross_2intersections_nosublane.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
@@ -362,7 +362,7 @@ for episode in range(num_episode):
     '''
     generate_routefile()
     # generate_routefile_random(episode_time, num_vehicles)
-    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
+    traci.load(["--start", "-c", "data/cross_2intersections_nosublane.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
     traci.trafficlight.setPhase("10", 0)
@@ -486,8 +486,8 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model_left.save('new_2agents_model_left_9_10_{}.h5'.format(episode))
-        q_estimator_model_left.save('new_2agents_model_right_9_10_{}.h5'.format(episode))
+        q_estimator_model_left.save('new_2agents_model_left_11_10_4_{}.h5'.format(episode))
+        q_estimator_model_right.save('new_2agents_model_right_11_10_4_{}.h5'.format(episode))
 
 print(AVG_Q_len_perepisode)
 
