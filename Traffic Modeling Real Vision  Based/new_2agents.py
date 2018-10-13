@@ -88,7 +88,7 @@ def generate_routefile_random(episode_length, total_vehicles):
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-def generate_routefile():
+def generate_routefile(flow_one, flow_two):
     with open("data/cross_2intersections.rou.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
@@ -131,13 +131,13 @@ def generate_routefile():
     <route id="r143" edges="154o 14i 010o 1o 51i"/>
     <route id="r144" edges="154o 14i 010o 4o 54i"/>
 
-    <flow id="mixed1" begin="0" end="350" number="0" route="r21" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="100" route="r32" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="350" number="00" route="r12" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed1" begin="0" end="350" number="%i" route="r32" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="%i" route="r21" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="350" number="0" route="r12" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed6" begin="0" end="350" number="0" route="r141" type="mixed" departLane="random" departPosLat="random"/>
-</routes>""", file=routes)
+</routes>""" % (flow_one, flow_two), file=routes)
         lastVeh = 0
         vehNr = 0
 
@@ -296,7 +296,7 @@ num_episode = 121
 discount_factor = 0.9
 # epsilon = 1
 epsilon_start = 1
-epsilon_end = 0.1
+epsilon_end = 0.4
 epsilon_decay_steps = 5000
 
 Average_Q_lengths = []
@@ -320,7 +320,7 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 # generate_routefile_random(episode_time, num_vehicles)
 
-generate_routefile()
+generate_routefile(100, 0)
 # generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross_2intersections_nosublane.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
@@ -353,14 +353,14 @@ for _ in range(replay_memory_init_size):
 
 total_t = 0
 for episode in range(num_episode):
-    '''
-    num_vehicles += 1
-    if episode < 40:
-        generate_routefile(90, 10)
+
+    #num_vehicles += 1
+    if episode < 15:
+        generate_routefile(100, 0)
     else:
-        generate_routefile(10, 90)
-    '''
-    generate_routefile()
+        generate_routefile(0, 100)
+
+    #generate_routefile()
     # generate_routefile_random(episode_time, num_vehicles)
     traci.load(["--start", "-c", "data/cross_2intersections_nosublane.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
@@ -485,9 +485,9 @@ for episode in range(num_episode):
 
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
-    if episode % 5 == 0:
-        q_estimator_model_left.save('new_2agents_model_left_11_10_4_{}.h5'.format(episode))
-        q_estimator_model_right.save('new_2agents_model_right_11_10_4_{}.h5'.format(episode))
+    if episode % 1 == 0:
+        q_estimator_model_left.save('new_2agents_model_left_12_10_4_{}.h5'.format(episode))
+        q_estimator_model_right.save('new_2agents_model_right_12_10_4_{}.h5'.format(episode))
 
 print(AVG_Q_len_perepisode)
 
