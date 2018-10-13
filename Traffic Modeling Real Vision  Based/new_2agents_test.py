@@ -132,7 +132,7 @@ def generate_routefile():
     <route id="r144" edges="154o 14i 010o 4o 54i"/>
 
     <flow id="mixed1" begin="0" end="350" number="0" route="r21" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="150" route="r32" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="100" route="r32" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed3" begin="0" end="350" number="0" route="r31" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
@@ -323,9 +323,10 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 20
-q_estimator_model_left = load_model('new_2agents_model_left_5_10_2_40.h5')
+#testing with same mdoel here
+q_estimator_model_left = load_model('new_2agents_model_left_11_10_4_5.h5')
 #target_estimator_model_left = build_model(transition_time)
-q_estimator_model_right = load_model('new_2agents_model_right_5_10_2_40.h5')
+q_estimator_model_right = load_model('new_2agents_model_right_11_10_4_5.h5')
 #target_estimator_model_right = build_model(transition_time)
 replay_memory_init_size = 35
 replay_memory_size = 800
@@ -339,7 +340,7 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 generate_routefile()
 # generate_routefile_random(episode_time, num_vehicles)
-traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
+traci.start([sumoBinary, "-c", "data/cross_2intersections_nosublane.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
@@ -410,7 +411,7 @@ for episode in range(num_episode):
         leftState = newLeftState
         rightState = newRightState
 
-    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
+    traci.load(["--start", "-c", "data/cross_2intersections_nosublane.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
     traci.trafficlight.setPhase("10", 0)
