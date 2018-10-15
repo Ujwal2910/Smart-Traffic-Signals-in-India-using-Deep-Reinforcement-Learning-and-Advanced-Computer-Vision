@@ -315,12 +315,12 @@ def getWaitingTime(laneID):
 num_lanes = 8
 num_phases = 16
 
-num_episode = 81
+num_episode = 181
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
-epsilon_end = 0.01
-epsilon_decay_steps = 3000 # 40 mins rn
+epsilon_end = 0.4
+epsilon_decay_steps = 8000 # 40 mins rn
 
 Average_Q_lengths = []
 sum_q_lens = 0
@@ -372,7 +372,7 @@ for _ in range(replay_memory_init_size):
 total_t = 0
 for episode in range(num_episode):
 
-    if episode < 15:
+    if episode < 55:
         generate_routefile(100, 0)
     else:
         generate_routefile(0, 100)
@@ -469,8 +469,8 @@ for episode in range(num_episode):
 
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
-    if episode % 5 == 0:
-        q_estimator_model.save('cross_model_ishan_04_10_4_{}.h5'.format(episode))
+    if episode % 1 == 0:
+        q_estimator_model.save('cross_model_ishan_14_10_{}.h5'.format(episode))
 
 
 
