@@ -324,9 +324,9 @@ num_vehicles = 250
 transition_time = 8
 target_update_time = 20
 #testing with same mdoel here
-q_estimator_model_left = load_model('new_2agents_model_left_12_10_4_120.h5')
+q_estimator_model_left = load_model('new_2agents_model_left_12_10_4_100.h5')
 #target_estimator_model_left = build_model(transition_time)
-q_estimator_model_right = load_model('new_2agents_model_right_12_10_4_120.h5')
+q_estimator_model_right = load_model('new_2agents_model_right_12_10_4_100.h5')
 #target_estimator_model_right = build_model(transition_time)
 replay_memory_init_size = 35
 replay_memory_size = 800
