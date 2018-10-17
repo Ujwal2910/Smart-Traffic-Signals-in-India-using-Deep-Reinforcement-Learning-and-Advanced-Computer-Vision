@@ -350,6 +350,7 @@ traci.trafficlight.setPhase("0", 0)
 traci.trafficlight.setPhase("10", 0)
 
 nA = 4
+#Need to re-structure the program having 2 rewards, and independent control at the 2 intersections
 
 target_estimator_model.set_weights(q_estimator_model.get_weights())
 
