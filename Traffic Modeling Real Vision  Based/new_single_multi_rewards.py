@@ -349,12 +349,14 @@ traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
 traci.trafficlight.setPhase("0", 0)
 traci.trafficlight.setPhase("10", 0)
 
-nA = 4
+nOutputs = 4
+nA = 2
 #Need to re-structure the program having 2 rewards, and independent control at the 2 intersections
 
 target_estimator_model.set_weights(q_estimator_model.get_weights())
 
 replay_memory = []
+
 
 for _ in range(replay_memory_init_size):
     '''if traci.simulation.getMinExpectedNumber() <= 0:
@@ -362,10 +364,11 @@ for _ in range(replay_memory_init_size):
         traci.load(["--start", "-c", "data/cross.sumocfg",
                     "--tripinfo-output", "tripinfo.xml"])'''
     state = getState(transition_time)
-    action = np.random.choice(np.arange(nA))
-    new_state = makeMove(action,transition_time)
-    reward = getReward(state,new_state)
-    replay_memory.append([state,action,reward,new_state])
+    leftAction = np.random.choice(np.arange(nA))
+    rightAction = np.random.choice(np.arange(nA))
+    new_state = makeMove(leftAction, rightAction, transition_time)
+    leftReward, rightReward = getReward(state, new_state)
+    replay_memory.append([state, leftAction, rightAction, leftReward, rightReward, new_state])
     print(len(replay_memory))
 
 
@@ -408,16 +411,24 @@ for episode in range(num_episode):
 
         print("SHAPE of q_val : ", q_val.shape)
 
+        q_val_left = q_val[:, [0, 1]]
+        q_val_right = q_val[:, [2, 3]]
 
+        print("SHAPE of q_val_left : ", q_val_left.shape)
 
 
         epsilon = epsilons[min(total_t, epsilon_decay_steps-1)]
         print("Epsilon -", epsilon)
         policy_s = np.ones(nA) * epsilon / nA
 
-        policy_s[np.argmax(q_val)] = 1 - epsilon + (epsilon / nA)
+        leftPolicy = np.copy(policy_s)
+        rightPolicy = np.copy(policy_s)
 
-        action = np.random.choice(np.arange(nA), p=policy_s)
+        leftPolicy[np.argmax(q_val_left)] = 1 - epsilon + (epsilon / nA)
+        rightPolicy[np.argmax(q_val_right)] = 1 - epsilon + (epsilon / nA)
+
+        leftAction = np.random.choice(np.arange(nA), p=leftPolicy)
+        rightAction = np.random.choice(np.arange(nA), p=rightPolicy)
 
         same_action_count = 0
         for temp in reversed(replay_memory):
@@ -426,26 +437,42 @@ for episode in range(num_episode):
             else:
                 break
         if same_action_count == 20:
-            action = 3
-            print("SAME ACTION PENALTY")
+            leftAction = 1
+            print("SAME LEFT ACTION PENALTY")
 
-        if np.argmax(q_val) != action:
-            print("RANDOM CHOICE TAKEN")
+        same_action_count = 0
+        for temp in reversed(replay_memory):
+            if temp[2] == 0:
+                same_action_count += 1
+            else:
+                break
+        if same_action_count == 20:
+            rightAction = 1
+            print("SAME RIGHT ACTION PENALTY")
+
+        if np.argmax(q_val_left) != leftAction:
+            print("RANDOM LEFT CHOICE TAKEN")
         else:
-            print("POLICY FOLLOWED ")
+            print("LEFT POLICY FOLLOWED ")
 
-        new_state = makeMove(action, transition_time)
+        if np.argmax(q_val_right) != rightAction:
+            print("RANDOM RIGHT CHOICE TAKEN")
+        else:
+            print("RIGHT POLICY FOLLOWED ")
+
+        new_state = makeMove(leftAction, rightAction, transition_time)
         print("Old State : ")
         print(state)
         print("New State : ")
         print(new_state)
-        reward = getReward(state, new_state)
-        print("Reward : ", reward)
+        leftReward, rightReward = getReward(state, new_state)
+        print("Left Reward : ", leftReward)
+        print("Right Reward : ", rightReward)
 
         if len(replay_memory) == replay_memory_size:
             replay_memory.pop(0)
 
-        replay_memory.append([state, action, reward, new_state])
+        replay_memory.append([state, leftAction, rightAction, leftReward, rightReward, new_state])
 
         print("Memory Length :", len(replay_memory))
 
@@ -454,11 +481,14 @@ for episode in range(num_episode):
         samples = random.sample(replay_memory, batch_size)
 
         x_batch, y_batch = [], []
-        for inst_state, inst_action, inst_reward, inst_next_state in samples:
+        for inst_state, inst_left_action, inst_right_action, inst_left_reward, inst_right_reward, inst_next_state in samples:
             y_target = q_estimator_model.predict(inst_state)
             q_val_next = target_estimator_model.predict(inst_next_state)
-            y_target[0][inst_action] = inst_reward + discount_factor * np.amax(
-                q_val_next, axis=1
+            y_target[0][inst_left_action] = inst_left_reward + discount_factor * np.amax(
+                q_val_next[:, [0, 1]], axis=1
+            )
+            y_target[0][2 + inst_right_action] = inst_right_reward + discount_factor * np.amax(
+                q_val_next[:, [2, 3]], axis=1
             )
             x_batch.append(inst_state[0])
             y_batch.append(y_target[0])
