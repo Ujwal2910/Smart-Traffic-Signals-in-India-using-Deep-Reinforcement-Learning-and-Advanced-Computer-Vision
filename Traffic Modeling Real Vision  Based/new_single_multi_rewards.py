@@ -220,25 +220,12 @@ print("here")
 import traci
 
 
-def makeMove(action, transition_time):
-    #new action for 4 diff actions- 00,01,10,11
-
-    if action == 1:
-        traci.trafficlight.setPhase("10", (int(traci.trafficlight.getPhase("10")) + 1) % 4)
-    elif action == 2:
+def makeMove(leftAction, rightAction, transition_time):
+    
+    if leftAction == 1:
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
-    elif action == 3:
-        traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
+    if rightAction == 1:
         traci.trafficlight.setPhase("10", (int(traci.trafficlight.getPhase("10")) + 1) % 4)
-
-
-
-
-
-    # traci.simulationStep()
-    # traci.simulationStep()
-    # traci.simulationStep()
-    # traci.simulationStep()
 
     return getState(transition_time)
 
