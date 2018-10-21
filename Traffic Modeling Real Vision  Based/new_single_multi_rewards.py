@@ -221,7 +221,7 @@ import traci
 
 
 def makeMove(leftAction, rightAction, transition_time):
-    
+
     if leftAction == 1:
         traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
     if rightAction == 1:
@@ -231,54 +231,73 @@ def makeMove(leftAction, rightAction, transition_time):
 
 
 def getReward(this_state, this_new_state):
-    num_lanes = 8
-    qLengths1 = []
-    qLengths2 = []
-    for i in range(num_lanes):
-        qLengths1.append(this_state[0][0][i][0])
-        qLengths2.append(this_new_state[0][0][i][0])
 
-    qLengths11 = [x + 1 for x in qLengths1]   # isme bas 8 numbers hone chahiye the...zyaada aare hain usse kaafi zyada
-    qLengths21 = [x + 1 for x in qLengths2]
+    qLengths_old = []
+    qLengths_new = []
+    for i in range(4):
+        qLengths_old.append(this_state[0][0][i][0])
+        qLengths_new.append(this_new_state[0][0][i][0])
+
+    qLengths_old1 = [x + 1 for x in qLengths_old]   # isme bas 8 numbers hone chahiye the...zyaada aare hain usse kaafi zyada
+    qLengths_new1 = [x + 1 for x in qLengths_new]
 
     print("This state - ", this_state)
     print("New State - ", this_new_state)
 
-    print("qlengths 1 = ", qLengths1)
-    print("qlengths 2 = ", qLengths2)
+    print("Left qlengths 1 = ", qLengths_old)
+    print("Left qlengths 2 = ", qLengths_new)
 
-    q1 = np.prod(qLengths11)
-    q2 = np.prod(qLengths21)
+    q1 = np.prod(qLengths_old1)
+    q2 = np.prod(qLengths_new1)
 
-    # print("Old State with product : ", q1)
-    #
-    # print("New State with product : ", q2)
-    #
-    #
-    # if q1 > q2:
-    #     this_reward = 1
-    # else:
-    #     this_reward = -1
-
-
-
-
-    this_reward = q1 - q2
+    leftReward = q1 - q2
 
     print("Q1 = ", q1)
     print("Q2 = ", q2)
-    print("This reward = ", this_reward)
+    print("Left reward = ", leftReward)
 
-    if this_reward > 0:
-        this_reward = 1
-    elif this_reward < 0:
-        this_reward = -1
+    if leftReward > 0:
+        leftReward = 1
+    elif leftReward < 0:
+        leftReward = -1
     elif q2 > 1:
-        this_reward = -1
+        leftReward = -1
     else:
-        this_reward = 0
+        leftReward = 0
 
-    return this_reward
+    qLengths_old = []
+    qLengths_new = []
+    for i in range(4):
+        qLengths_old.append(this_state[0][0][i+4][0])
+        qLengths_new.append(this_new_state[0][0][i+4][0])
+
+    qLengths_old1 = [x + 1 for x in
+                     qLengths_old]  # isme bas 8 numbers hone chahiye the...zyaada aare hain usse kaafi zyada
+    qLengths_new1 = [x + 1 for x in qLengths_new]
+
+
+
+    print("Right qlengths 1 = ", qLengths_old)
+    print("Right qlengths 2 = ", qLengths_new)
+
+    q1 = np.prod(qLengths_old1)
+    q2 = np.prod(qLengths_new1)
+
+    rightReward = q1 - q2
+    print("Q1 = ", q1)
+    print("Q2 = ", q2)
+    print("Right reward = ", rightReward)
+
+    if rightReward > 0:
+        rightReward = 1
+    elif rightReward < 0:
+        rightReward = -1
+    elif q2 > 1:
+        rightReward = -1
+    else:
+        rightReward = 0
+
+    return leftReward, rightReward
 
 
 def build_model(transition_time):
