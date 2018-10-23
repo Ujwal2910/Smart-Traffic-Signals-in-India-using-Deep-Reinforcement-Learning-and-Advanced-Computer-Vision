@@ -255,6 +255,8 @@ def getReward(this_state, this_new_state):
     qLengths11 = [x + 1 for x in qLengths1]
     qLengths21 = [x + 1 for x in qLengths2]
 
+    print(this_new_state)
+
     q1 = np.prod(qLengths11)
     q2 = np.prod(qLengths21)
 
