@@ -15,7 +15,7 @@ from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
-import cross_read
+import cross_read_sequential
 import readscreen3
 import numpy as np
 import datetime
@@ -203,17 +203,17 @@ def getStates(transition_time):
         traci.simulationStep()
 
         leftState = [
-            cross_read.leftgetLowerQlength() / 80,  # issi sequnce main left and right
-            cross_read.leftgetRightQlength() / 80,
-            cross_read.leftgetUpperQlength() / 80,
-            cross_read.leftgetLeftQlength() / 80
+            cross_read_sequential.leftgetLowerQlength() / 80,  # issi sequnce main left and right
+            cross_read_sequential.leftgetRightQlength() / 80,
+            cross_read_sequential.leftgetUpperQlength() / 80,
+            cross_read_sequential.leftgetLeftQlength() / 80
         ]
 
         rightState = [
-            cross_read.rightgetLowerQlength() / 80,  # issi sequnce main left and right
-            cross_read.rightgetRightQlength() / 80,
-            cross_read.rightgetUpperQlength() / 80,
-            cross_read.rightgetLeftQlength() / 80
+            cross_read_sequential.rightgetLowerQlength() / 80,  # issi sequnce main left and right
+            cross_read_sequential.rightgetRightQlength() / 80,
+            cross_read_sequential.rightgetUpperQlength() / 80,
+            cross_read_sequential.rightgetLeftQlength() / 80
         ]
 
         newLeftState.insert(0, leftState)
