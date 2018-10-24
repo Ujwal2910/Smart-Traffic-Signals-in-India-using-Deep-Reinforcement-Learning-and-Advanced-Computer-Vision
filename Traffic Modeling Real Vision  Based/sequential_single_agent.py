@@ -294,12 +294,12 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 121
+num_episode = 361
 discount_factor = 0.9
 # epsilon = 1
 epsilon_start = 1
-epsilon_end = 0.1
-epsilon_decay_steps = 5000
+epsilon_end = 0.01
+epsilon_decay_steps = 25000
 
 Average_Q_lengths = []
 sum_q_lens = 0
@@ -312,7 +312,7 @@ target_update_time = 20
 q_estimator_model_left = build_model(transition_time)
 target_estimator_model_left = build_model(transition_time)
 
-replay_memory_init_size = 35
+replay_memory_init_size = 200
 replay_memory_size = 1800
 batch_size = 32
 print(q_estimator_model_left.summary())
@@ -322,7 +322,7 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 generate_routefile(100, 0)
 # generate_routefile_random(episode_time, num_vehicles)
-traci.start([sumoBinary, "-c", "data/cross_2intersections_nosublane.sumocfg",
+traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
@@ -337,10 +337,10 @@ left_replay_memory = []
 
 
 for _ in range(replay_memory_init_size):
-    '''if traci.simulation.getMinExpectedNumber() <= 0:
-        generate_routefile_random(episode_time, num_vehicles)
-        traci.load(["--start", "-c", "data/cross.sumocfg",
-                    "--tripinfo-output", "tripinfo.xml"]) '''
+    if traci.simulation.getMinExpectedNumber() <= 0:
+        generate_routefile(100, 0)
+        traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
+                    "--tripinfo-output", "tripinfo.xml"])
     leftState, rightState = getStates(transition_time)
     leftAction = np.random.choice(np.arange(nA))
     rightAction = np.random.choice(np.arange(nA))
@@ -362,7 +362,7 @@ for episode in range(num_episode):
 
     #generate_routefile()
     # generate_routefile_random(episode_time, num_vehicles)
-    traci.load(["--start", "-c", "data/cross_2intersections_nosublane.sumocfg",
+    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
     traci.trafficlight.setPhase("10", 0)
@@ -473,7 +473,7 @@ for episode in range(num_episode):
 
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
-    if episode % 1 == 0:
+    if episode % 10 == 0:
         q_estimator_model_left.save('sequential_single_agent_23_10_{}.h5'.format(episode))
 
 
