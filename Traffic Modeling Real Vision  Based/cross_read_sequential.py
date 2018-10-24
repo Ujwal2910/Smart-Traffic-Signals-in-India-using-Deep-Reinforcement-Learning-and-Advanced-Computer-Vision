@@ -285,7 +285,7 @@ def rightgetLeftQlength():
     left_lane = np.array([(431, 38), (520, 38), (520, 412), (430, 412)], dtype="float32")
     #cv2.imshow("left", left_lane)
     warp_leftlane = warped_simulation(left_lane, rotated270)
-    cv2.imshow("left", warp_leftlane)
+    #cv2.imshow("left", warp_leftlane)
     mask_left = rightsubtractImage(warp_leftlane, "left")
     #cv2.imshow("left", mask_left)
     tail_length_left = tail_length(mask_left)
