@@ -88,7 +88,8 @@ def generate_routefile_random(episode_length, total_vehicles):
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-def generate_routefile(flow_one, flow_two):
+def generate_routefile(r10=0, r11=0, r12=0, r13=0, r14=0, r20=0, r21=0, r22=0, r23=0, r24=0, r30=0, r31=0, r32=0, r33=0, r34=0, r40=0, r41=0, r42=0, r43=0, r44=0,
+                       r130=0, r131=0, r132=0, r133=0, r134=0, r140=0, r141=0, r142=0, r143=0, r144=0):
     with open("data/cross_2intersections.rou.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
@@ -131,13 +132,43 @@ def generate_routefile(flow_one, flow_two):
     <route id="r143" edges="154o 14i 010o 1o 51i"/>
     <route id="r144" edges="154o 14i 010o 4o 54i"/>
 
-    <flow id="mixed1" begin="0" end="350" number="%i" route="r32" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="%i" route="r21" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="350" number="0" route="r12" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed6" begin="0" end="350" number="0" route="r141" type="mixed" departLane="random" departPosLat="random"/>
-</routes>""" % (flow_one, flow_two), file=routes)
+    <flow id="mixed1" begin="0" end="350" number="%i" route="r10" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="%i" route="r11" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="350" number="%i" route="r12" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="350" number="%i" route="r13" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed5" begin="0" end="350" number="%i" route="r14" type="mixed" departLane="random" departPosLat="random"/>
+    
+    <flow id="mixed6" begin="0" end="350" number="%i" route="r20" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed7" begin="0" end="350" number="%i" route="r21" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed8" begin="0" end="350" number="%i" route="r22" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed9" begin="0" end="350" number="%i" route="r23" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed10" begin="0" end="350" number="%i" route="r24" type="mixed" departLane="random" departPosLat="random"/>
+    
+    <flow id="mixed11" begin="0" end="350" number="%i" route="r30" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed12" begin="0" end="350" number="%i" route="r31" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed13" begin="0" end="350" number="%i" route="r32" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed14" begin="0" end="350" number="%i" route="r33" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed15" begin="0" end="350" number="%i" route="r34" type="mixed" departLane="random" departPosLat="random"/>
+    
+    <flow id="mixed16" begin="0" end="350" number="%i" route="r40" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed17" begin="0" end="350" number="%i" route="r41" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed18" begin="0" end="350" number="%i" route="r42" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed19" begin="0" end="350" number="%i" route="r43" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed20" begin="0" end="350" number="%i" route="r44" type="mixed" departLane="random" departPosLat="random"/>
+    
+    <flow id="mixed21" begin="0" end="350" number="%i" route="r130" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed22" begin="0" end="350" number="%i" route="r131" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed23" begin="0" end="350" number="%i" route="r132" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed24" begin="0" end="350" number="%i" route="r133" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed25" begin="0" end="350" number="%i" route="r134" type="mixed" departLane="random" departPosLat="random"/>
+    
+    <flow id="mixed26" begin="0" end="350" number="%i" route="r140" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed27" begin="0" end="350" number="%i" route="r141" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed28" begin="0" end="350" number="%i" route="r142" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed29" begin="0" end="350" number="%i" route="r143" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed30" begin="0" end="350" number="%i" route="r144" type="mixed" departLane="random" departPosLat="random"/>
+    
+</routes>""" % (r10, r11, r12, r13, r14, r20, r21, r22, r23, r24, r30, r31, r32, r33, r34, r40, r41, r42, r43, r44, r130, r131, r132, r133, r134, r140, r141, r142, r143, r144), file=routes)
         lastVeh = 0
         vehNr = 0
 
@@ -355,10 +386,10 @@ total_t = 0
 for episode in range(num_episode):
 
     #num_vehicles += 1
-    if episode < 15:
-        generate_routefile(100, 0)
+    if episode < 45:
+        generate_routefile(r14=5, r32=50, r141=5)
     else:
-        generate_routefile(0, 100)
+        generate_routefile(r23=50, r41=5)
 
     #generate_routefile()
     # generate_routefile_random(episode_time, num_vehicles)
@@ -474,7 +505,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 10 == 0:
-        q_estimator_model_left.save('sequential_single_agent_23_10_{}.h5'.format(episode))
+        q_estimator_model_left.save('models/sequential/sequential_single_agent_25_10_{}.h5'.format(episode))
 
 
 print(AVG_Q_len_perepisode)
