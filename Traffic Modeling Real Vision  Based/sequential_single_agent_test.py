@@ -371,8 +371,7 @@ nA = 2
 total_t = 0
 for episode in range(num_episode):
 
-
-    generate_routefile(0, 100)
+    generate_routefile(r14=5, r32=50, r141=5)
 
 
     #generate_routefile()
