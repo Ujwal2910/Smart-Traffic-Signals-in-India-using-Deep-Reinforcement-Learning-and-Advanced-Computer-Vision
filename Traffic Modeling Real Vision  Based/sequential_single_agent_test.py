@@ -343,7 +343,7 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 20
-q_estimator_model_left = load_model("sequential_single_agent_23_10_30.h5")
+q_estimator_model_left = load_model("models/sequential/sequential_single_agent_25_10_20.h5")
 
 
 replay_memory_init_size = 200
