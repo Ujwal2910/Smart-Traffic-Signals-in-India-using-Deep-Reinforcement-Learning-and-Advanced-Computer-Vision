@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<connections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/connections_file.xsd">
+	
+	<connection from="1i" to="3o"/>
+	<connection from="1i" to="010i"/>
+	<connection from="1i" to="010u"/>
+	
+
+	<connection from="2i" to="010o"/>
+	<connection from="2i" to="1110u"/>
+	<connection from="2i" to="13o"/>
+
+
+	<connection from="3i" to="010u"/>
+	<connection from="3i" to="1o"/>
+	<connection from="3i" to="010i"/>
+
+
+	<connection from="010d" to="3o"/>
+	<connection from="010d" to="1o"/>
+	<connection from="010d" to="010i"/>	
+
+	<connection from="4i" to="010d"/>
+	<connection from="4i" to="101o"/>
+	<connection from="4i" to="0111i"/>
+
+	<connection from="13i" to="1110u"/>
+	<connection from="13i" to="010o"/>
+	<connection from="13i" to="2o"/>
+
+	<connection from="1110d" to="13o"/>
+	<connection from="1110d" to="010o"/>
+	<connection from="1110d" to="2o"/>
+
+	<connection from="14i" to="1110d"/>
+	<connection from="14i" to="0111o"/>
+	<connection from="14i" to="102o"/>
+
+</connections>
