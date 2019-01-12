@@ -14,5 +14,5 @@
    <node id="53" x="0.0" y="-510.0" type="priority"/>
    <node id="54" x="0.0" y="+510.0" type="priority"/>  
    <node id="153" x="+100.0" y="-510.0" type="priority"/>
-   <node id="154" x="+100.0" y="-510.0" type="priority"/>
+   <node id="154" x="+100.0" y="+510.0" type="priority"/>
 </nodes>

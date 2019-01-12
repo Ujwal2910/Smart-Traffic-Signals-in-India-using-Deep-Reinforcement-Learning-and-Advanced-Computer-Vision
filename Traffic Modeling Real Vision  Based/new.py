@@ -216,8 +216,8 @@ def getReward(this_state, this_new_state):
     qLengths1 = []
     qLengths2 = []
     for i in range(num_lanes):
-        qLengths1.append(this_state[0][i][0])
-        qLengths2.append(this_new_state[0][i][0])
+        qLengths1.append(this_state[0][0][i][0])
+        qLengths2.append(this_new_state[0][0][i][0])
 
     qLengths11 = [x + 1 for x in qLengths1]
     qLengths21 = [x + 1 for x in qLengths2]
@@ -430,7 +430,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('new_model_1809_1_{}.h5'.format(episode))
+        q_estimator_model.save('new_model_test_1_{}.h5'.format(episode))
 
 
 

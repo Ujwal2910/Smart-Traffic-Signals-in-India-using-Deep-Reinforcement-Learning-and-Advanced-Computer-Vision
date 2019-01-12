@@ -1,0 +1,521 @@
+from __future__ import absolute_import
+from __future__ import print_function
+
+import optparse
+import os
+import random
+import sys
+import cross_read
+import numpy as np
+from keras.layers import Dense, Conv2D, Flatten
+from keras.models import Sequential
+from keras.optimizers import RMSprop
+
+
+def get_options():
+    optParser = optparse.OptionParser()
+    optParser.add_option("--nogui", action="store_true",
+                         default=False, help="run the commandline version of sumo")
+    options, args = optParser.parse_args()
+    return options
+
+
+def constrained_sum_sample_pos(n, total):
+    """Return a randomly chosen list of n positive integers summing to total.
+    Each such list is equally likely to occur."""
+
+    dividers = sorted(random.sample(range(1, total), n - 1))
+    return [a - b for a, b in zip(dividers + [total], [0] + dividers)]
+
+
+def generate_routefile_random(episode_length, total_vehicles):
+    N_ROADS = 4
+    division = constrained_sum_sample_pos(N_ROADS, total_vehicles)
+    traffic = []
+
+    for i in np.arange(len(division)):
+        traffic.append(division[i] * 0.6)
+        traffic.append(division[i] * 0.2)
+        traffic.append(division[i] * 0.2)
+
+    with open("data/cross.rou.xml", "w") as routes:
+        print("""<routes>
+        <vTypeDistribution id="mixed">
+        <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
+        <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
+        </vTypeDistribution>
+        <route id="r0" edges="51o 1i 2o 52i"/>
+        <route id="r1" edges="51o 1i 4o 54i"/>
+        <route id="r2" edges="51o 1i 3o 53i"/>
+        <route id="r3" edges="54o 4i 3o 53i"/>
+        <route id="r4" edges="54o 4i 1o 51i"/>
+        <route id="r5" edges="54o 4i 2o 52i"/>
+        <route id="r6" edges="52o 2i 1o 51i"/>
+        <route id="r7" edges="52o 2i 4o 54i"/>
+        <route id="r8" edges="52o 2i 3o 53i"/>
+        <route id="r9" edges="53o 3i 4o 54i"/>
+        <route id="r10" edges="53o 3i 1o 51i"/>
+        <route id="r11" edges="53o 3i 2o 52i"/>""", file=routes)
+
+        for i in np.arange(len(traffic)):
+            print(
+                '<flow id="mixed%i" begin="0" end="%i" number="%i" route="r%i" type="mixed" departLane="random" departPosLat="random"/>' % (
+                i, episode_length, traffic[i], i), file = routes)
+
+        print("</routes>", file=routes)
+
+    print('TRAFFIC CONFIGURATION - ')
+    for i in np.arange(len(traffic)):
+        print('Lane %i - %i' % (i+1, traffic[i]))
+
+# The program looks like this
+#    <tlLogic id="0" type="static" programID="0" offset="0">
+# the locations of the tls are      NESW
+#        <phase duration="31" state="GrGr"/>
+#        <phase duration="6"  state="yryr"/>
+#        <phase duration="31" state="rGrG"/>
+#        <phase duration="6"  state="ryry"/>
+#    </tlLogic>
+
+def generate_routefile(flow_one, flow_two):
+    with open("data/cross_2intersections.rou.xml", "w") as routes:
+        print("""<routes>
+    <vTypeDistribution id="mixed">
+        <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
+        <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
+    </vTypeDistribution>
+    <route id="r10" edges="51o 1i 4o 54i"/>
+    <route id="r11" edges="51o 1i 010i 14o 154i"/>
+    <route id="r12" edges="51o 1i 010i 2o 52i"/>
+    <route id="r13" edges="51o 1i 010i 13o 153i"/>
+    <route id="r14" edges="51o 1i 3o 53i"/>
+
+    <route id="r20" edges="52o 2i 14o 154i"/>
+    <route id="r21" edges="52o 2i 010o 4o 54i"/>
+    <route id="r22" edges="52o 2i 010o 1o 51i"/>
+    <route id="r23" edges="52o 2i 010o 3o 53i"/>
+    <route id="r24" edges="52o 2i 13o 153i"/>
+
+    <route id="r30" edges="53o 3i 1o 51i"/>
+    <route id="r31" edges="53o 3i 4o 54i"/>
+    <route id="r32" edges="53o 3i 010i 14o 154i"/>
+    <route id="r33" edges="53o 3i 010i 2o 52i"/>
+    <route id="r34" edges="53o 3i 010i 13o 153i"/>
+
+    <route id="r40" edges="54o 4i 1o 51i"/>
+    <route id="r41" edges="54o 4i 3o 53i"/>
+    <route id="r42" edges="54o 4i 010i 13o 153i"/>
+    <route id="r43" edges="54o 4i 010i 2o 52i"/>
+    <route id="r44" edges="54o 4i 010i 14o 154i"/>
+
+    <route id="r130" edges="153o 13i 2o 52i"/>
+    <route id="r131" edges="153o 13i 14o 154i"/>
+    <route id="r132" edges="153o 13i 010o 4o 54i"/>
+    <route id="r133" edges="153o 13i 010o 1o 51i"/>
+    <route id="r134" edges="153o 13i 010o 3o 53i"/>
+
+    <route id="r140" edges="154o 14i 2o 52i"/>
+    <route id="r141" edges="154o 14i 13o 153i"/>
+    <route id="r142" edges="154o 14i 010o 3o 53i"/>
+    <route id="r143" edges="154o 14i 010o 1o 51i"/>
+    <route id="r144" edges="154o 14i 010o 4o 54i"/>
+
+    <flow id="mixed1" begin="0" end="350" number="%i" route="r32" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="%i" route="r21" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="350" number="0" route="r12" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="350" number="0" route="r41" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed5" begin="0" end="350" number="0" route="r131" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed6" begin="0" end="350" number="0" route="r141" type="mixed" departLane="random" departPosLat="random"/>
+</routes>""" % (flow_one, flow_two), file=routes)
+        lastVeh = 0
+        vehNr = 0
+
+
+
+try:
+    sys.path.append(os.path.join(os.path.dirname(
+        __file__), '..', '..', '..', '..', "tools"))  # tutorial in tests
+    sys.path.append(os.path.join(os.environ.get("SUMO_HOME", os.path.join(
+        os.path.dirname(__file__), "..", "..", "..")), "tools"))  # tutorial in docs
+    from sumolib import checkBinary  # noqa-f
+except ImportError:
+    sys.exit(
+        "please declare environment variable 'SUMO_HOME' as the root directory of your sumo installation (it should contain folders 'bin', 'tools' and 'docs')")
+
+options = get_options()
+
+# this script has been called from the command line. It will start sumo as a
+# server, then connect and run
+
+if options.nogui:
+    sumoBinary = checkBinary('sumo')
+else:
+    sumoBinary = checkBinary('sumo-gui')
+
+# first, generate the route file for this simulation
+
+# this is the normal way of using traci. sumo is started as a
+# subprocess and then the python script connects and runs
+
+
+print("TraCI Started")
+
+
+# State = State_Lengths()
+# print(State.get_tails())
+
+# states = State.get_tails
+
+
+# runner = Runner()
+# print(Runner().run)
+
+
+def get_floor_number(phase_left, phase_right):
+
+    floor_number = 4*phase_left + phase_right
+    return floor_number
+
+
+def getPhaseState(transition_time):
+
+    phase_left = traci.trafficlight.getPhase("0")#left and right do
+    phase_right = traci.trafficlight.getPhase("10")
+    #calculate floor number
+    phase = get_floor_number(phase_left,phase_right)
+
+    phaseState = np.zeros((transition_time,num_lanes,num_phases))
+    for i in range(transition_time):
+        for j in range(num_lanes):
+            phaseState[i][j][phase] = 1
+
+    return phaseState
+
+
+def getState(transition_time):  # made the order changes
+    newState = []
+    for _ in range(transition_time):
+        traci.simulationStep()
+
+        state = [cross_read.leftgetLowerQlength() / 80,# issi sequnce main left and right
+             cross_read.leftgetRightQlength() / 80,
+             cross_read.leftgetUpperQlength() / 80,
+             cross_read.leftgetLeftQlength() / 80,
+
+             cross_read.rightgetLowerQlength() / 80,# issi sequnce main left and right
+             cross_read.rightgetRightQlength() / 80,
+             cross_read.rightgetUpperQlength() / 80,
+             cross_read.rightgetLeftQlength() / 80 ]
+
+        newState.insert(0, state)
+    # print (state)
+    newState = np.array(newState)
+    phaseState = getPhaseState(transition_time)
+    newState = np.dstack((newState, phaseState))
+    newState = np.expand_dims(newState, axis=0) #tensor format conversion
+    return newState
+
+
+print("here")
+import traci
+
+
+def makeMove(leftAction, rightAction, transition_time):
+
+    if leftAction == 1:
+        traci.trafficlight.setPhase("0", (int(traci.trafficlight.getPhase("0")) + 1) % 4)
+    if rightAction == 1:
+        traci.trafficlight.setPhase("10", (int(traci.trafficlight.getPhase("10")) + 1) % 4)
+
+    return getState(transition_time)
+
+
+def getReward(this_state, this_new_state):
+
+    qLengths_old = []
+    qLengths_new = []
+    for i in range(4):
+        qLengths_old.append(this_state[0][0][i][0])
+        qLengths_new.append(this_new_state[0][0][i][0])
+
+    qLengths_old1 = [x + 1 for x in qLengths_old]   # isme bas 8 numbers hone chahiye the...zyaada aare hain usse kaafi zyada
+    qLengths_new1 = [x + 1 for x in qLengths_new]
+
+    print("This state - ", this_state)
+    print("New State - ", this_new_state)
+
+    print("Left qlengths 1 = ", qLengths_old)
+    print("Left qlengths 2 = ", qLengths_new)
+
+    q1 = np.prod(qLengths_old1)
+    q2 = np.prod(qLengths_new1)
+
+    leftReward = q1 - q2
+
+    print("Q1 = ", q1)
+    print("Q2 = ", q2)
+    print("Left reward = ", leftReward)
+
+    if leftReward > 0:
+        leftReward = 1
+    elif leftReward < 0:
+        leftReward = -1
+    elif q2 > 1:
+        leftReward = -1
+    else:
+        leftReward = 0
+
+    qLengths_old = []
+    qLengths_new = []
+    for i in range(4):
+        qLengths_old.append(this_state[0][0][i+4][0])
+        qLengths_new.append(this_new_state[0][0][i+4][0])
+
+    qLengths_old1 = [x + 1 for x in
+                     qLengths_old]  # isme bas 8 numbers hone chahiye the...zyaada aare hain usse kaafi zyada
+    qLengths_new1 = [x + 1 for x in qLengths_new]
+
+
+
+    print("Right qlengths 1 = ", qLengths_old)
+    print("Right qlengths 2 = ", qLengths_new)
+
+    q1 = np.prod(qLengths_old1)
+    q2 = np.prod(qLengths_new1)
+
+    rightReward = q1 - q2
+    print("Q1 = ", q1)
+    print("Q2 = ", q2)
+    print("Right reward = ", rightReward)
+
+    if rightReward > 0:
+        rightReward = 1
+    elif rightReward < 0:
+        rightReward = -1
+    elif q2 > 1:
+        rightReward = -1
+    else:
+        rightReward = 0
+
+    return leftReward, rightReward
+
+
+def build_model(transition_time):
+    num_hidden_units_cnn = 10
+    num_actions = 4
+    model = Sequential()
+    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, num_lanes,num_phases+1)))
+    # model.add(LSTM(8))
+    model.add(Flatten())
+    model.add(Dense(20, activation='relu'))
+    model.add(Dense(num_actions, activation='linear'))
+    opt = RMSprop(lr=0.00025)
+    model.compile(loss='mse', optimizer=opt)
+
+    return model
+
+
+def getWaitingTime(laneID):
+    return traci.lane.getWaitingTime(laneID)
+
+num_lanes = 8
+num_phases = 16
+
+num_episode = 181
+discount_factor = 0.9
+#epsilon = 1
+epsilon_start = 1
+epsilon_end = 0.4
+epsilon_decay_steps = 8000 # 40 mins rn
+
+Average_Q_lengths = []
+sum_q_lens = 0
+AVG_Q_len_perepisode = []
+
+episode_time = 350 #one min episode rl
+num_vehicles = 250
+transition_time = 8
+target_update_time = 20
+q_estimator_model = build_model(transition_time)
+target_estimator_model = build_model(transition_time)
+replay_memory_init_size = 35
+replay_memory_size = 800
+batch_size = 32
+print(q_estimator_model.summary())
+epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
+
+#generate_routefile_random(episode_time, num_vehicles)
+
+
+generate_routefile(100, 0)
+# generate_routefile_random(episode_time, num_vehicles)
+traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
+             "--tripinfo-output", "tripinfo.xml"])
+
+traci.trafficlight.setPhase("0", 0)
+traci.trafficlight.setPhase("10", 0)
+
+nOutputs = 4
+nA = 2
+#Need to re-structure the program having 2 rewards, and independent control at the 2 intersections
+
+target_estimator_model.set_weights(q_estimator_model.get_weights())
+
+replay_memory = []
+
+
+for _ in range(replay_memory_init_size):
+    '''if traci.simulation.getMinExpectedNumber() <= 0:
+        generate_routefile_random(episode_time, num_vehicles)
+        traci.load(["--start", "-c", "data/cross.sumocfg",
+                    "--tripinfo-output", "tripinfo.xml"])'''
+    state = getState(transition_time)
+    leftAction = np.random.choice(np.arange(nA))
+    rightAction = np.random.choice(np.arange(nA))
+    new_state = makeMove(leftAction, rightAction, transition_time)
+    leftReward, rightReward = getReward(state, new_state)
+    replay_memory.append([state, leftAction, rightAction, leftReward, rightReward, new_state])
+    print(len(replay_memory))
+
+
+
+total_t = 0
+for episode in range(num_episode):
+
+    if episode < 55:
+        generate_routefile(100, 0)
+    else:
+        generate_routefile(0, 100)
+
+    #generate_routefile()
+    #generate_routefile_random(episode_time, num_vehicles)
+    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
+                "--tripinfo-output", "tripinfo.xml"])
+    traci.trafficlight.setPhase("0", 0)
+    traci.trafficlight.setPhase("10", 0)
+
+    state = getState(transition_time)
+    counter = 0
+    stride = 0
+    while traci.simulation.getMinExpectedNumber() > 0:
+
+
+        print("Episode # ", episode)
+
+
+        print("Inside episode counter", counter)
+
+        counter += 1
+        total_t += 1
+
+
+        if total_t % target_update_time == 0:
+            target_estimator_model.set_weights(q_estimator_model.get_weights())
+
+        q_val = q_estimator_model.predict(state)
+        print(q_val)
+
+        print("SHAPE of q_val : ", q_val.shape)
+
+        q_val_left = q_val[:, [0, 1]]
+        q_val_right = q_val[:, [2, 3]]
+
+        print("SHAPE of q_val_left : ", q_val_left.shape)
+
+
+        epsilon = epsilons[min(total_t, epsilon_decay_steps-1)]
+        print("Epsilon -", epsilon)
+        policy_s = np.ones(nA) * epsilon / nA
+
+        leftPolicy = np.copy(policy_s)
+        rightPolicy = np.copy(policy_s)
+
+        leftPolicy[np.argmax(q_val_left)] = 1 - epsilon + (epsilon / nA)
+        rightPolicy[np.argmax(q_val_right)] = 1 - epsilon + (epsilon / nA)
+
+        leftAction = np.random.choice(np.arange(nA), p=leftPolicy)
+        rightAction = np.random.choice(np.arange(nA), p=rightPolicy)
+
+        same_action_count = 0
+        for temp in reversed(replay_memory):
+            if temp[1] == 0:
+                same_action_count += 1
+            else:
+                break
+        if same_action_count == 20:
+            leftAction = 1
+            print("SAME LEFT ACTION PENALTY")
+
+        same_action_count = 0
+        for temp in reversed(replay_memory):
+            if temp[2] == 0:
+                same_action_count += 1
+            else:
+                break
+        if same_action_count == 20:
+            rightAction = 1
+            print("SAME RIGHT ACTION PENALTY")
+
+        if np.argmax(q_val_left) != leftAction:
+            print("RANDOM LEFT CHOICE TAKEN")
+        else:
+            print("LEFT POLICY FOLLOWED ")
+
+        if np.argmax(q_val_right) != rightAction:
+            print("RANDOM RIGHT CHOICE TAKEN")
+        else:
+            print("RIGHT POLICY FOLLOWED ")
+
+        new_state = makeMove(leftAction, rightAction, transition_time)
+        print("Old State : ")
+        print(state)
+        print("New State : ")
+        print(new_state)
+        leftReward, rightReward = getReward(state, new_state)
+        print("Left Reward : ", leftReward)
+        print("Right Reward : ", rightReward)
+
+        if len(replay_memory) == replay_memory_size:
+            replay_memory.pop(0)
+
+        replay_memory.append([state, leftAction, rightAction, leftReward, rightReward, new_state])
+
+        print("Memory Length :", len(replay_memory))
+
+        sum_q_lens += np.average(new_state)
+
+        samples = random.sample(replay_memory, batch_size)
+
+        x_batch, y_batch = [], []
+        for inst_state, inst_left_action, inst_right_action, inst_left_reward, inst_right_reward, inst_next_state in samples:
+            y_target = q_estimator_model.predict(inst_state)
+            q_val_next = target_estimator_model.predict(inst_next_state)
+            y_target[0][inst_left_action] = inst_left_reward + discount_factor * np.amax(
+                q_val_next[:, [0, 1]], axis=1
+            )
+            y_target[0][2 + inst_right_action] = inst_right_reward + discount_factor * np.amax(
+                q_val_next[:, [2, 3]], axis=1
+            )
+            x_batch.append(inst_state[0])
+            y_batch.append(y_target[0])
+
+        q_estimator_model.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
+
+
+        state = new_state
+
+
+    AVG_Q_len_perepisode.append(sum_q_lens / 702)
+    sum_q_lens = 0
+    if episode % 1 == 0:
+        q_estimator_model.save('singleAgent_multiReward_21_10_{}.h5'.format(episode))
+
+
+
+print(AVG_Q_len_perepisode)
+
+# import matplotlib.pyplot as plt
+#
+# plt.plot([x for x in range(num_episode)],[AVG_Q_len_perepisode], 'ro')
+# plt.axis([0, num_episode, 0, 10])
+# plt.show()

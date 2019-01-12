@@ -130,6 +130,7 @@ def getCenter(image):
 
 def getUpperQlength():
     image = getScreenImage()
+    #cv2.imshow("test",image)
     upper_lane = np.array([(455, 31), (544, 31), (544, 351), (455, 351)], dtype="float32")
     #cv2.imshow("upper",upper_lane)
     warp_upperlane = warped_simulation(upper_lane, image)

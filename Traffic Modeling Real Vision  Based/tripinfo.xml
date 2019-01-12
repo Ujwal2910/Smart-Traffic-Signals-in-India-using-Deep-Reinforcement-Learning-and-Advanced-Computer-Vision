@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Sunday 16 September 2018 10:58:05 PM IST by SUMO gui Version 0.32.0
+<!-- generated on Sunday 21 October 2018 09:13:01 PM IST by SUMO gui Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="data/cross_2lanes.net.xml"/>
-        <route-files value="data/cross.rou.xml"/>
-        <additional-files value="data/cross.det.xml"/>
+        <net-file value="data/cross_2intersections_debug.net.xml"/>
+        <route-files value="data/cross_2intersections.rou.xml"/>
     </input>
 
     <output>
@@ -28,9 +27,9 @@
         <no-step-log value="true"/>
     </report>
 
-    <traci_server>
-        <remote-port value="47479"/>
-    </traci_server>
+    <gui_only>
+        <start value="true"/>
+    </gui_only>
 
 </configuration>
 -->
