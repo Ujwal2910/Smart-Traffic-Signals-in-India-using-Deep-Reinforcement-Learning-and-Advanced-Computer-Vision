@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Sunday 30 September 2018 10:36:17 PM IST by SUMO gui Version 0.32.0
+<!-- generated on Thursday 17 January 2019 08:32:35 PM IST by SUMO gui Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
@@ -29,25 +29,7 @@
     </report>
 
     <traci_server>
-        <remote-port value="44449"/>
+        <remote-port value="57109"/>
     </traci_server>
 
 </configuration>
--->
-
-<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e1_file.xsd">
-    <interval begin="0.00" end="30.00" id="0" nVehContrib="1" flow="120.00" occupancy="0.92" speed="18.02" length="5.00" nVehEntered="1"/>
-    <interval begin="30.00" end="60.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
-    <interval begin="60.00" end="90.00" id="0" nVehContrib="1" flow="120.00" occupancy="0.51" speed="13.63" length="2.10" nVehEntered="1"/>
-    <interval begin="90.00" end="120.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
-    <interval begin="120.00" end="150.00" id="0" nVehContrib="1" flow="120.00" occupancy="0.42" speed="16.52" length="2.10" nVehEntered="1"/>
-    <interval begin="150.00" end="180.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
-    <interval begin="180.00" end="210.00" id="0" nVehContrib="2" flow="240.00" occupancy="1.62" speed="13.96" length="3.55" nVehEntered="2"/>
-    <interval begin="210.00" end="240.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
-    <interval begin="240.00" end="270.00" id="0" nVehContrib="1" flow="120.00" occupancy="0.43" speed="16.35" length="2.10" nVehEntered="1"/>
-    <interval begin="270.00" end="300.00" id="0" nVehContrib="1" flow="120.00" occupancy="0.43" speed="16.38" length="2.10" nVehEntered="1"/>
-    <interval begin="300.00" end="330.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
-    <interval begin="330.00" end="360.00" id="0" nVehContrib="2" flow="240.00" occupancy="1.76" speed="13.00" length="3.55" nVehEntered="2"/>
-    <interval begin="360.00" end="390.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
-    <interval begin="390.00" end="418.00" id="0" nVehContrib="0" flow="0.00" occupancy="0.00" speed="-1.00" length="-1.00" nVehEntered="0"/>
-</detector>
