@@ -105,19 +105,19 @@ def generate_routefile(left_qty, up_qty):
     <route id="r9" edges="53o 3i 4o 54i"/>
     <route id="r10" edges="53o 3i 1o 51i"/>
     <route id="r11" edges="53o 3i 2o 52i"/>
-    <flow id="mixed1" begin="0" end="350" number="%i" route="r0" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed1" begin="0" end="350" number="150" route="r0" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed2" begin="0" end="0" number="0" route="r1" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed3" begin="0" end="0" number="0" route="r2" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="350" number="%i" route="r3" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="0" number="150" route="r3" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="0" number="0" route="r4" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed6" begin="0" end="0" number="0" route="r5" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed7" begin="0" end="0" number="0" route="r6" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed7" begin="0" end="0" number="150" route="r6" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed8" begin="0" end="0" number="0" route="r7" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed9" begin="0" end="0" number="0" route="r8" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed10" begin="0" end="0" number="0" route="r9" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed10" begin="0" end="0" number="150" route="r9" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed11" begin="0" end="0" number="0" route="r10" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed12" begin="0" end="0" number="0" route="r11" type="mixed" departLane="random" departPosLat="random"/>
-</routes>""" % (left_qty, up_qty), file=routes)
+</routes>""", file=routes)
         lastVeh = 0
         vehNr = 0
 
@@ -177,11 +177,43 @@ def getState(transition_time):  # made the order changes
     for _ in range(transition_time):
         traci.simulationStep()
 
-        state = [readscreen3.getLowerQlength() / 80,
-             readscreen3.getRightQlength() / 80,
-             readscreen3.getUpperQlength() / 80,
-             readscreen3.getLeftQlength() / 80
-             ]
+
+
+
+        leftcount = 0
+        rightcount = 0
+        topcount = 0
+        bottomcount = 0
+        vehicleList = traci.vehicle.getIDList()
+
+        print("Traffic : ")
+
+        for id in vehicleList:
+            x, y = traci.vehicle.getPosition(id)
+
+            if x<500 and x>450 and y<520 and y>510:
+                leftcount+=1
+            else :
+                if x<510 and x>500 and y<500 and y>450:
+                    bottomcount+=1
+                else :
+                    if x<570 and x>520 and y<510 and y>500:
+                        rightcount+=1
+                    else :
+                        if x<520 and x>510 and y<570 and y>520:
+                            topcount+=1
+
+        print("Left : ", leftcount)
+        print("Right : ", rightcount)
+        print("Top : ", topcount)
+        print("Bottom : ", bottomcount)
+
+        state = [bottomcount / 40,
+                 rightcount / 40,
+                 topcount / 40,
+                 leftcount / 40
+                 ]
+
 
         newState.insert(0, state)
     # print (state)
@@ -291,7 +323,7 @@ print(q_estimator_model.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 #generate_routefile_random(episode_time, num_vehicles)
-generate_routefile(90,10)
+generate_routefile(290,10)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
