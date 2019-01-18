@@ -232,7 +232,7 @@ def getStates(transition_time):
 
     for _ in range(transition_time):
         traci.simulationStep()
-
+        '''
         leftState = [
             cross_read_sequential.leftgetLowerQlength() / 80,  # issi sequnce main left and right
             cross_read_sequential.leftgetRightQlength() / 80,
@@ -246,6 +246,65 @@ def getStates(transition_time):
             cross_read_sequential.rightgetUpperQlength() / 80,
             cross_read_sequential.rightgetLeftQlength() / 80
         ]
+        '''
+        l_leftcount = 0
+        l_rightcount = 0
+        l_topcount = 0
+        l_bottomcount = 0
+
+        r_leftcount = 0
+        r_rightcount = 0
+        r_topcount = 0
+        r_bottomcount = 0
+
+        vehicleList = traci.vehicle.getIDList()
+
+        for id in vehicleList:
+            x, y = traci.vehicle.getPosition(id)
+
+            if x < 500 and x > 450 and y < 520 and y > 510:
+                l_leftcount += 1
+            else:
+                if x < 510 and x > 500 and y < 500 and y > 450:
+                    l_bottomcount += 1
+                else:
+                    if x < 570 and x > 520 and y < 510 and y > 500:
+                        l_rightcount += 1
+                    else:
+                        if x < 520 and x > 510 and y < 570 and y > 520:
+                            l_topcount += 1
+
+            if x < 600 and x > 550 and y < 520 and y > 510:
+                r_leftcount += 1
+            else:
+                if x < 610 and x > 600 and y < 500 and y > 450:
+                    r_bottomcount += 1
+                else:
+                    if x < 670 and x > 620 and y < 510 and y > 500:
+                        r_rightcount += 1
+                    else:
+                        if x < 620 and x > 610 and y < 570 and y > 520:
+                            r_topcount += 1
+
+        print("Left Intersection Left Lane : ", l_leftcount)
+        print("Left Intersection Right Lane : ", l_rightcount)
+        print("Left Intersection Top Lane : ", l_topcount)
+        print("Left Intersection Bottom Lane : ", l_bottomcount)
+
+        print("Right Intersection Left Lane : ", r_leftcount)
+        print("Right Intersection Right Lane : ", r_rightcount)
+        print("Right Intersection Top Lane : ", r_topcount)
+        print("Right Intersection Bottom Lane : ", r_bottomcount)
+
+        leftState = [l_bottomcount / 40,
+                    l_rightcount / 40,
+                    l_topcount / 40,
+                    l_leftcount / 40]
+
+        rightState = [r_bottomcount / 40,
+                 r_rightcount / 40,
+                 r_topcount / 40,
+                 r_leftcount / 40]
 
         newLeftState.insert(0, leftState)
         newRightState.insert(0, rightState)
