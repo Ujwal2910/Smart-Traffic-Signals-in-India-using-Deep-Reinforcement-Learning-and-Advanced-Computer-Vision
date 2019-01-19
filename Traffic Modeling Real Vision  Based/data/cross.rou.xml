@@ -3,6 +3,7 @@
         <!--<vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>-->
         <!--<vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>-->
     <!--</vTypeDistribution>-->
+    <vType id="type1" vClass="motorcycle"/>
     <route id="r0" edges="51o 1i 2o 52i"/>
     <route id="r1" edges="51o 1i 4o 54i"/>
     <route id="r2" edges="51o 1i 3o 53i"/>
@@ -15,7 +16,7 @@
     <route id="r9" edges="53o 3i 4o 54i"/>
     <route id="r10" edges="53o 3i 1o 51i"/>
     <route id="r11" edges="53o 3i 2o 52i"/>
-    <vehicle id='motorcycle0' type='motorcycle' route='r0' depart='5'/>
+    <vehicle id='motorcycle0' type='type1' route='r0' depart='5'/>
     <vehicle id='motorcycle1' type='motorcycle' route='r1' depart='5'/>
     <vehicle id='motorcycle2' type='motorcycle' route='r2' depart='5'/>
     <vehicle id='motorcycle3' type='motorcycle' route='r3' depart='5'/>
