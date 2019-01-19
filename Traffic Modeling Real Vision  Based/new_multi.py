@@ -87,56 +87,90 @@ def generate_routefile_random(episode_length, total_vehicles):
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-def generate_routefile(left_qty=20, up_qty=20):
-    with open("data/cross_multi.rou.xml", "w") as routes:
+def generate_routefile(r10=0, r11=0, r12=0, r13=0, r14=0, r20=0, r21=0, r22=0, r23=0, r24=0, r30=0, r31=0, r32=0, r33=0,
+                       r34=0, r40=0, r41=0, r42=0, r43=0, r44=0,
+                       r130=0, r131=0, r132=0, r133=0, r134=0, r140=0, r141=0, r142=0, r143=0, r144=0):
+    with open("data/cross_2intersections.rou.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
         <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
         <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
     </vTypeDistribution>
-    <route id="r10" edges="51o 1i 010u 4o 54i"/>
-    <route id="r11" edges="51o 1i 010i 1110u 14o 154i"/>
-    <route id="r12" edges="51o 1i 010i 2o 2i"/>
+    <route id="r10" edges="51o 1i 4o 54i"/>
+    <route id="r11" edges="51o 1i 010i 14o 154i"/>
+    <route id="r12" edges="51o 1i 010i 2o 52i"/>
     <route id="r13" edges="51o 1i 010i 13o 153i"/>
     <route id="r14" edges="51o 1i 3o 53i"/>
 
-    <route id="r20" edges="52o 2i 1110u 14o 154i"/>
-    <route id="r21" edges="52o 2i 010o 010u 4o 54i"/>
+    <route id="r20" edges="52o 2i 14o 154i"/>
+    <route id="r21" edges="52o 2i 010o 4o 54i"/>
     <route id="r22" edges="52o 2i 010o 1o 51i"/>
     <route id="r23" edges="52o 2i 010o 3o 53i"/>
     <route id="r24" edges="52o 2i 13o 153i"/>
 
     <route id="r30" edges="53o 3i 1o 51i"/>
-    <route id="r31" edges="53o 3i 010u 4o 54i"/>
-    <route id="r32" edges="53o 3i 010i 1110u 14o 154i"/>
+    <route id="r31" edges="53o 3i 4o 54i"/>
+    <route id="r32" edges="53o 3i 010i 14o 154i"/>
     <route id="r33" edges="53o 3i 010i 2o 52i"/>
     <route id="r34" edges="53o 3i 010i 13o 153i"/>
 
-    <route id="r40" edges="54o 4i 010d 1o 51i"/>
-    <route id="r41" edges="54o 4i 010d 3o 53i"/>
-    <route id="r42" edges="54o 4i 010d 010i 13o 153i"/>
-    <route id="r43" edges="54o 4i 010d 010i 2o 52i"/>
-    <route id="r44" edges="54o 4i 010d 010i 1110u 14o 154i"/>
+    <route id="r40" edges="54o 4i 1o 51i"/>
+    <route id="r41" edges="54o 4i 3o 53i"/>
+    <route id="r42" edges="54o 4i 010i 13o 153i"/>
+    <route id="r43" edges="54o 4i 010i 2o 52i"/>
+    <route id="r44" edges="54o 4i 010i 14o 154i"/>
 
     <route id="r130" edges="153o 13i 2o 52i"/>
-    <route id="r131" edges="153o 13i 1110u 14o 154i"/>
-    <route id="r132" edges="153o 13i 010o 010u 4o 54i"/>
+    <route id="r131" edges="153o 13i 14o 154i"/>
+    <route id="r132" edges="153o 13i 010o 4o 54i"/>
     <route id="r133" edges="153o 13i 010o 1o 51i"/>
     <route id="r134" edges="153o 13i 010o 3o 53i"/>
 
-    <route id="r140" edges="154o 14i 1110d 2o 52i"/>
-    <route id="r141" edges="154o 14i 1110d 13o 153i"/>
-    <route id="r142" edges="154o 14i 1110d 010o 3o 53i"/>
-    <route id="r143" edges="154o 14i 1110d 010o 1o 51i"/>
-    <route id="r144" edges="154o 14i 1110d 010o 010u 4o 54i"/>
+    <route id="r140" edges="154o 14i 2o 52i"/>
+    <route id="r141" edges="154o 14i 13o 153i"/>
+    <route id="r142" edges="154o 14i 010o 3o 53i"/>
+    <route id="r143" edges="154o 14i 010o 1o 51i"/>
+    <route id="r144" edges="154o 14i 010o 4o 54i"/>
 
-    <flow id="mixed1" begin="0" end="350" number="%i" route="r12" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="20" route="r22" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="350" number="20" route="r31" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="350" number="%i" route="r41" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed5" begin="0" end="350" number="20" route="r131" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed6" begin="0" end="350" number="20" route="r141" type="mixed" departLane="random" departPosLat="random"/>
-</routes>""" % (left_qty, up_qty), file=routes)
+    <flow id="mixed1" begin="0" end="350" number="%i" route="r10" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed2" begin="0" end="350" number="%i" route="r11" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed3" begin="0" end="350" number="%i" route="r12" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed4" begin="0" end="350" number="%i" route="r13" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed5" begin="0" end="350" number="%i" route="r14" type="mixed" departLane="random" departPosLat="random"/>
+
+    <flow id="mixed6" begin="0" end="350" number="%i" route="r20" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed7" begin="0" end="350" number="%i" route="r21" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed8" begin="0" end="350" number="%i" route="r22" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed9" begin="0" end="350" number="%i" route="r23" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed10" begin="0" end="350" number="%i" route="r24" type="mixed" departLane="random" departPosLat="random"/>
+
+    <flow id="mixed11" begin="0" end="350" number="%i" route="r30" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed12" begin="0" end="350" number="%i" route="r31" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed13" begin="0" end="350" number="%i" route="r32" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed14" begin="0" end="350" number="%i" route="r33" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed15" begin="0" end="350" number="%i" route="r34" type="mixed" departLane="random" departPosLat="random"/>
+
+    <flow id="mixed16" begin="0" end="350" number="%i" route="r40" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed17" begin="0" end="350" number="%i" route="r41" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed18" begin="0" end="350" number="%i" route="r42" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed19" begin="0" end="350" number="%i" route="r43" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed20" begin="0" end="350" number="%i" route="r44" type="mixed" departLane="random" departPosLat="random"/>
+
+    <flow id="mixed21" begin="0" end="350" number="%i" route="r130" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed22" begin="0" end="350" number="%i" route="r131" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed23" begin="0" end="350" number="%i" route="r132" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed24" begin="0" end="350" number="%i" route="r133" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed25" begin="0" end="350" number="%i" route="r134" type="mixed" departLane="random" departPosLat="random"/>
+
+    <flow id="mixed26" begin="0" end="350" number="%i" route="r140" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed27" begin="0" end="350" number="%i" route="r141" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed28" begin="0" end="350" number="%i" route="r142" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed29" begin="0" end="350" number="%i" route="r143" type="mixed" departLane="random" departPosLat="random"/>
+    <flow id="mixed30" begin="0" end="350" number="%i" route="r144" type="mixed" departLane="random" departPosLat="random"/>
+
+</routes>""" % (
+        r10, r11, r12, r13, r14, r20, r21, r22, r23, r24, r30, r31, r32, r33, r34, r40, r41, r42, r43, r44, r130, r131,
+        r132, r133, r134, r140, r141, r142, r143, r144), file=routes)
         lastVeh = 0
         vehNr = 0
 
@@ -472,6 +506,8 @@ traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
 
 traci.trafficlight.setPhase("0", 0)
 traci.trafficlight.setPhase("10", 0)
+traci.trafficlight.setPhase("01", 0)
+traci.trafficlight.setPhase("11", 0)
 
 nA = 2
 
@@ -484,16 +520,22 @@ left_replay_memory = []
 for _ in range(replay_memory_init_size):
     if traci.simulation.getMinExpectedNumber() <= 0:
         generate_routefile(100, 0)
-        traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
+        traci.load(["--start", "-c", "data/cross_multi.sumocfg",
                     "--tripinfo-output", "tripinfo.xml"])
-    leftState, rightState = getStates(transition_time)
+    leftState, rightState, upperLeftState, upperRightState = getStates(transition_time)
     leftAction = np.random.choice(np.arange(nA))
     rightAction = np.random.choice(np.arange(nA))
-    newLeftState, newRightState = makeMoves(leftAction, rightAction, transition_time)
+    upperLeftAction = np.random.choice(np.arange(nA))
+    upperRightAction = np.random.choice(np.arange(nA))
+    newLeftState, newRightState, newUpperLeftState, newUpperRightState = makeMoves(leftAction, rightAction, upperLeftAction, upperRightAction,transition_time)
     leftReward = getReward(leftState, newLeftState)
     rightReward = getReward(rightState, newRightState)
+    upperLeftReward = getReward(upperLeftState, newUpperLeftState)
+    upperRightReward = getReward(upperRightState, newUpperRightState)
     left_replay_memory.append([leftState, leftAction, leftReward, newLeftState])
     left_replay_memory.append([rightState, rightAction, rightReward, newRightState])
+    left_replay_memory.append([upperLeftState, upperLeftAction, upperLeftReward, newUpperLeftState])
+    left_replay_memory.append([upperRightState, upperRightAction, upperRightReward, newUpperRightState])
     print(len(left_replay_memory))
 
 total_t = 0
@@ -511,8 +553,10 @@ for episode in range(num_episode):
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
     traci.trafficlight.setPhase("10", 0)
+    traci.trafficlight.setPhase("01", 0)
+    traci.trafficlight.setPhase("11", 0)
 
-    leftState, rightState = getStates(transition_time)
+    leftState, rightState, upperLeftState, upperRightState = getStates(transition_time)
     counter = 0
     stride = 0
     while traci.simulation.getMinExpectedNumber() > 0:
@@ -531,8 +575,13 @@ for episode in range(num_episode):
 
         q_val_left = q_estimator_model_left.predict(leftState)
         q_val_right = q_estimator_model_left.predict(rightState)
+        q_val_upper_left = q_estimator_model_left.predict(upperLeftState)
+        q_val_upper_right = q_estimator_model_left.predict(upperRightState)
+
         print("Left q values : ", q_val_left)
         print("Right q values : ", q_val_right)
+        print("Upper Left q values : ", q_val_upper_left)
+        print("Upper Right q values : ", q_val_upper_right)
 
 
         epsilon = epsilons[min(total_t, epsilon_decay_steps - 1)]
@@ -545,8 +594,17 @@ for episode in range(num_episode):
         rightPolicy = np.copy(policy_s)
         rightPolicy[np.argmax(q_val_right)] = 1 - epsilon + (epsilon / nA)
 
+        upperLeftPolicy = np.copy(policy_s)
+        upperLeftPolicy[np.argmax(q_val_upper_left)] = 1 - epsilon + (epsilon / nA)
+
+        upperRightPolicy = np.copy(policy_s)
+        upperRightPolicy[np.argmax(q_val_upper_right)] = 1 - epsilon + (epsilon / nA)
+
         leftAction = np.random.choice(np.arange(nA), p=leftPolicy)
         rightAction = np.random.choice(np.arange(nA), p=rightPolicy)
+        upperLeftAction = np.random.choice(np.arange(nA), p=upperLeftPolicy)
+        upperRightAction = np.random.choice(np.arange(nA), p=upperRightPolicy)
+
         '''
         same_left_action_count = 0
         for temp in reversed(left_replay_memory):
@@ -578,12 +636,26 @@ for episode in range(num_episode):
         else:
             print("RIGHT POLICY FOLLOWED ")
 
-        newLeftState, newRightState = makeMoves(leftAction, rightAction, transition_time)
+        if np.argmax(q_val_upper_left) != upperLeftAction:
+            print("RANDOM UPPER LEFT CHOICE TAKEN")
+        else:
+            print("UPPER LEFT POLICY FOLLOWED ")
+
+        if np.argmax(q_val_upper_right) != upperRightAction:
+            print("RANDOM UPPER RIGHT CHOICE TAKEN")
+        else:
+            print("UPPER RIGHT POLICY FOLLOWED ")
+
+        newLeftState, newRightState, newUpperLeftState, newUpperRightState = makeMoves(leftAction, rightAction, upperLeftAction, upperRightAction, transition_time)
         leftReward = getReward(leftState, newLeftState)
         rightReward = getReward(rightState, newRightState)
+        upperLeftReward = getReward(upperLeftState, newUpperLeftState)
+        upperRightReward = getReward(upperRightState, newUpperRightState)
 
         print("Left reward : ", leftReward)
         print("Right reward : ", rightReward)
+        print("Upper Left reward : ", upperLeftReward)
+        print("Upper Right reward : ", upperRightReward)
 
         if len(left_replay_memory) == replay_memory_size:
             left_replay_memory.pop(0)
@@ -594,6 +666,16 @@ for episode in range(num_episode):
             left_replay_memory.pop(0)
 
         left_replay_memory.append([rightState, rightAction, rightReward, newRightState])
+
+        if len(left_replay_memory) == replay_memory_size:
+            left_replay_memory.pop(0)
+
+        left_replay_memory.append([upperLeftState, upperLeftAction, upperLeftReward, newUpperLeftState])
+
+        if len(left_replay_memory) == replay_memory_size:
+            left_replay_memory.pop(0)
+
+        left_replay_memory.append([upperRightState, upperRightAction, upperRightReward, newUpperRightState])
 
         print("Memory Length :", len(left_replay_memory))
 
@@ -619,7 +701,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 10 == 0:
-        q_estimator_model_left.save('models/sequential/sequential_single_agent_25_10_{}.h5'.format(episode))
+        q_estimator_model_left.save('models/sequential/multi_intersection_{}.h5'.format(episode))
 
 
 print(AVG_Q_len_perepisode)
