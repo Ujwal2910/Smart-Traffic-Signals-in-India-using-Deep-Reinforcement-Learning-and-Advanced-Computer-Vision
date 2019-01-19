@@ -510,7 +510,7 @@ print(q_estimator_model.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 #generate_routefile_random(episode_time, num_vehicles)
-generate_routefile(290,10)
+#generate_routefile(290,10)
 traci.start([sumoBinary, "-c", "data/cross.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
@@ -537,10 +537,10 @@ for _ in range(replay_memory_init_size):
 total_t = 0
 for episode in range(num_episode):
     num_vehicles += 1
-    if episode < 40:
-        generate_routefile(90,10)
-    else:
-        generate_routefile(10,90)
+    # if episode < 40:
+    #     generate_routefile(90,10)
+    # else:
+    #     generate_routefile(10,90)
     #generate_routefile_random(episode_time, num_vehicles)
     traci.load(["--start", "-c", "data/cross.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
