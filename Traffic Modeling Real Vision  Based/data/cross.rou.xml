@@ -15,16 +15,18 @@
     <route id="r9" edges="53o 3i 4o 54i"/>
     <route id="r10" edges="53o 3i 1o 51i"/>
     <route id="r11" edges="53o 3i 2o 52i"/>
-    <flow id="mixed1" begin="0" end="350" number="150" route="r0" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="0" number="0" route="r1" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="0" number="0" route="r2" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="0" number="150" route="r3" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed5" begin="0" end="0" number="0" route="r4" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed6" begin="0" end="0" number="0" route="r5" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed7" begin="0" end="0" number="150" route="r6" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed8" begin="0" end="0" number="0" route="r7" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed9" begin="0" end="0" number="0" route="r8" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed10" begin="0" end="0" number="150" route="r9" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed11" begin="0" end="0" number="0" route="r10" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed12" begin="0" end="0" number="0" route="r11" type="mixed" departLane="random" departPosLat="random"/>
+    <!--<flow id="mixed1" begin="0" end="350" number="150" route="r0" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed2" begin="0" end="0" number="0" route="r1" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed3" begin="0" end="0" number="0" route="r2" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed4" begin="0" end="0" number="150" route="r3" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed5" begin="0" end="0" number="0" route="r4" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed6" begin="0" end="0" number="0" route="r5" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed7" begin="0" end="0" number="150" route="r6" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed8" begin="0" end="0" number="0" route="r7" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed9" begin="0" end="0" number="0" route="r8" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed10" begin="0" end="0" number="150" route="r9" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed11" begin="0" end="0" number="0" route="r10" type="mixed" departLane="random" departPosLat="random"/>-->
+    <!--<flow id="mixed12" begin="0" end="0" number="0" route="r11" type="mixed" departLane="random" departPosLat="random"/>-->
+
+
 </routes>
