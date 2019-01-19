@@ -1,8 +1,8 @@
 <routes>
-    <vTypeDistribution id="mixed">
-        <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
-        <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
-    </vTypeDistribution>
+    <!--<vTypeDistribution id="mixed">-->
+        <!--<vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>-->
+        <!--<vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>-->
+    <!--</vTypeDistribution>-->
     <route id="r0" edges="51o 1i 2o 52i"/>
     <route id="r1" edges="51o 1i 4o 54i"/>
     <route id="r2" edges="51o 1i 3o 53i"/>
@@ -15,18 +15,207 @@
     <route id="r9" edges="53o 3i 4o 54i"/>
     <route id="r10" edges="53o 3i 1o 51i"/>
     <route id="r11" edges="53o 3i 2o 52i"/>
-    <!--<flow id="mixed1" begin="0" end="350" number="150" route="r0" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed2" begin="0" end="0" number="0" route="r1" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed3" begin="0" end="0" number="0" route="r2" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed4" begin="0" end="0" number="150" route="r3" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed5" begin="0" end="0" number="0" route="r4" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed6" begin="0" end="0" number="0" route="r5" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed7" begin="0" end="0" number="150" route="r6" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed8" begin="0" end="0" number="0" route="r7" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed9" begin="0" end="0" number="0" route="r8" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed10" begin="0" end="0" number="150" route="r9" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed11" begin="0" end="0" number="0" route="r10" type="mixed" departLane="random" departPosLat="random"/>-->
-    <!--<flow id="mixed12" begin="0" end="0" number="0" route="r11" type="mixed" departLane="random" departPosLat="random"/>-->
-
-
+    <vehicle id='motorcycle0' type='motorcycle' route='r0' depart='5'/>
+    <vehicle id='motorcycle1' type='motorcycle' route='r1' depart='5'/>
+    <vehicle id='motorcycle2' type='motorcycle' route='r2' depart='5'/>
+    <vehicle id='motorcycle3' type='motorcycle' route='r3' depart='5'/>
+    <vehicle id='motorcycle4' type='motorcycle' route='r4' depart='5'/>
+    <vehicle id='motorcycle5' type='motorcycle' route='r5' depart='10'/>
+    <vehicle id='motorcycle6' type='motorcycle' route='r6' depart='10'/>
+    <vehicle id='motorcycle7' type='motorcycle' route='r7' depart='10'/>
+    <vehicle id='motorcycle8' type='motorcycle' route='r8' depart='10'/>
+    <vehicle id='motorcycle9' type='motorcycle' route='r9' depart='10'/>
+    <vehicle id='passenger10' type='passenger' route='r10' depart='15'/>
+    <vehicle id='passenger11' type='passenger' route='r11' depart='15'/>
+    <vehicle id='passenger12' type='passenger' route='r0' depart='15'/>
+    <vehicle id='passenger13' type='passenger' route='r1' depart='15'/>
+    <vehicle id='passenger14' type='passenger' route='r2' depart='15'/>
+    <vehicle id='passenger15' type='passenger' route='r3' depart='20'/>
+    <vehicle id='passenger16' type='passenger' route='r4' depart='20'/>
+    <vehicle id='passenger17' type='passenger' route='r5' depart='20'/>
+    <vehicle id='passenger18' type='passenger' route='r6' depart='20'/>
+    <vehicle id='passenger19' type='passenger' route='r7' depart='20'/>
+    <vehicle id='passenger/van20' type='passenger/van' route='r8' depart='25'/>
+    <vehicle id='passenger/van21' type='passenger/van' route='r9' depart='25'/>
+    <vehicle id='passenger/van22' type='passenger/van' route='r10' depart='25'/>
+    <vehicle id='passenger/van23' type='passenger/van' route='r11' depart='25'/>
+    <vehicle id='passenger/van24' type='passenger/van' route='r0' depart='25'/>
+    <vehicle id='passenger/van25' type='passenger/van' route='r1' depart='30'/>
+    <vehicle id='passenger/van26' type='passenger/van' route='r2' depart='30'/>
+    <vehicle id='passenger/van27' type='passenger/van' route='r3' depart='30'/>
+    <vehicle id='passenger/van28' type='passenger/van' route='r4' depart='30'/>
+    <vehicle id='passenger/van29' type='passenger/van' route='r5' depart='30'/>
+    <vehicle id='truck30' type='truck' route='r6' depart='35'/>
+    <vehicle id='truck31' type='truck' route='r7' depart='35'/>
+    <vehicle id='truck32' type='truck' route='r8' depart='35'/>
+    <vehicle id='truck33' type='truck' route='r9' depart='35'/>
+    <vehicle id='truck34' type='truck' route='r10' depart='35'/>
+    <vehicle id='truck35' type='truck' route='r11' depart='40'/>
+    <vehicle id='truck36' type='truck' route='r0' depart='40'/>
+    <vehicle id='truck37' type='truck' route='r1' depart='40'/>
+    <vehicle id='truck38' type='truck' route='r2' depart='40'/>
+    <vehicle id='truck39' type='truck' route='r3' depart='40'/>
+    <vehicle id='bus40' type='bus' route='r4' depart='45'/>
+    <vehicle id='bus41' type='bus' route='r5' depart='45'/>
+    <vehicle id='bus42' type='bus' route='r6' depart='45'/>
+    <vehicle id='bus43' type='bus' route='r7' depart='45'/>
+    <vehicle id='bus44' type='bus' route='r8' depart='45'/>
+    <vehicle id='bus45' type='bus' route='r9' depart='50'/>
+    <vehicle id='bus46' type='bus' route='r10' depart='50'/>
+    <vehicle id='bus47' type='bus' route='r11' depart='50'/>
+    <vehicle id='bus48' type='bus' route='r0' depart='50'/>
+    <vehicle id='bus49' type='bus' route='r1' depart='50'/>
+    <vehicle id='bicycle50' type='bicycle' route='r2' depart='55'/>
+    <vehicle id='bicycle51' type='bicycle' route='r3' depart='55'/>
+    <vehicle id='bicycle52' type='bicycle' route='r4' depart='55'/>
+    <vehicle id='bicycle53' type='bicycle' route='r5' depart='55'/>
+    <vehicle id='bicycle54' type='bicycle' route='r6' depart='55'/>
+    <vehicle id='bicycle55' type='bicycle' route='r7' depart='60'/>
+    <vehicle id='bicycle56' type='bicycle' route='r8' depart='60'/>
+    <vehicle id='bicycle57' type='bicycle' route='r9' depart='60'/>
+    <vehicle id='bicycle58' type='bicycle' route='r10' depart='60'/>
+    <vehicle id='bicycle59' type='bicycle' route='r11' depart='60'/>
+    <vehicle id='motorcycle60' type='motorcycle' route='r0' depart='65'/>
+    <vehicle id='motorcycle61' type='motorcycle' route='r1' depart='65'/>
+    <vehicle id='motorcycle62' type='motorcycle' route='r2' depart='65'/>
+    <vehicle id='motorcycle63' type='motorcycle' route='r3' depart='65'/>
+    <vehicle id='motorcycle64' type='motorcycle' route='r4' depart='65'/>
+    <vehicle id='motorcycle65' type='motorcycle' route='r5' depart='70'/>
+    <vehicle id='motorcycle66' type='motorcycle' route='r6' depart='70'/>
+    <vehicle id='motorcycle67' type='motorcycle' route='r7' depart='70'/>
+    <vehicle id='motorcycle68' type='motorcycle' route='r8' depart='70'/>
+    <vehicle id='motorcycle69' type='motorcycle' route='r9' depart='70'/>
+    <vehicle id='passenger70' type='passenger' route='r10' depart='75'/>
+    <vehicle id='passenger71' type='passenger' route='r11' depart='75'/>
+    <vehicle id='passenger72' type='passenger' route='r0' depart='75'/>
+    <vehicle id='passenger73' type='passenger' route='r1' depart='75'/>
+    <vehicle id='passenger74' type='passenger' route='r2' depart='75'/>
+    <vehicle id='passenger75' type='passenger' route='r3' depart='80'/>
+    <vehicle id='passenger76' type='passenger' route='r4' depart='80'/>
+    <vehicle id='passenger77' type='passenger' route='r5' depart='80'/>
+    <vehicle id='passenger78' type='passenger' route='r6' depart='80'/>
+    <vehicle id='passenger79' type='passenger' route='r7' depart='80'/>
+    <vehicle id='passenger/van80' type='passenger/van' route='r8' depart='85'/>
+    <vehicle id='passenger/van81' type='passenger/van' route='r9' depart='85'/>
+    <vehicle id='passenger/van82' type='passenger/van' route='r10' depart='85'/>
+    <vehicle id='passenger/van83' type='passenger/van' route='r11' depart='85'/>
+    <vehicle id='passenger/van84' type='passenger/van' route='r0' depart='85'/>
+    <vehicle id='passenger/van85' type='passenger/van' route='r1' depart='90'/>
+    <vehicle id='passenger/van86' type='passenger/van' route='r2' depart='90'/>
+    <vehicle id='passenger/van87' type='passenger/van' route='r3' depart='90'/>
+    <vehicle id='passenger/van88' type='passenger/van' route='r4' depart='90'/>
+    <vehicle id='passenger/van89' type='passenger/van' route='r5' depart='90'/>
+    <vehicle id='truck90' type='truck' route='r6' depart='95'/>
+    <vehicle id='truck91' type='truck' route='r7' depart='95'/>
+    <vehicle id='truck92' type='truck' route='r8' depart='95'/>
+    <vehicle id='truck93' type='truck' route='r9' depart='95'/>
+    <vehicle id='truck94' type='truck' route='r10' depart='95'/>
+    <vehicle id='truck95' type='truck' route='r11' depart='100'/>
+    <vehicle id='truck96' type='truck' route='r0' depart='100'/>
+    <vehicle id='truck97' type='truck' route='r1' depart='100'/>
+    <vehicle id='truck98' type='truck' route='r2' depart='100'/>
+    <vehicle id='truck99' type='truck' route='r3' depart='100'/>
+    <vehicle id='bus100' type='bus' route='r4' depart='105'/>
+    <vehicle id='bus101' type='bus' route='r5' depart='105'/>
+    <vehicle id='bus102' type='bus' route='r6' depart='105'/>
+    <vehicle id='bus103' type='bus' route='r7' depart='105'/>
+    <vehicle id='bus104' type='bus' route='r8' depart='105'/>
+    <vehicle id='bus105' type='bus' route='r9' depart='110'/>
+    <vehicle id='bus106' type='bus' route='r10' depart='110'/>
+    <vehicle id='bus107' type='bus' route='r11' depart='110'/>
+    <vehicle id='bus108' type='bus' route='r0' depart='110'/>
+    <vehicle id='bus109' type='bus' route='r1' depart='110'/>
+    <vehicle id='bicycle110' type='bicycle' route='r2' depart='115'/>
+    <vehicle id='bicycle111' type='bicycle' route='r3' depart='115'/>
+    <vehicle id='bicycle112' type='bicycle' route='r4' depart='115'/>
+    <vehicle id='bicycle113' type='bicycle' route='r5' depart='115'/>
+    <vehicle id='bicycle114' type='bicycle' route='r6' depart='115'/>
+    <vehicle id='bicycle115' type='bicycle' route='r7' depart='120'/>
+    <vehicle id='bicycle116' type='bicycle' route='r8' depart='120'/>
+    <vehicle id='bicycle117' type='bicycle' route='r9' depart='120'/>
+    <vehicle id='bicycle118' type='bicycle' route='r10' depart='120'/>
+    <vehicle id='bicycle119' type='bicycle' route='r11' depart='120'/>
+    <vehicle id='motorcycle120' type='motorcycle' route='r0' depart='125'/>
+    <vehicle id='motorcycle121' type='motorcycle' route='r1' depart='125'/>
+    <vehicle id='motorcycle122' type='motorcycle' route='r2' depart='125'/>
+    <vehicle id='motorcycle123' type='motorcycle' route='r3' depart='125'/>
+    <vehicle id='motorcycle124' type='motorcycle' route='r4' depart='125'/>
+    <vehicle id='motorcycle125' type='motorcycle' route='r5' depart='130'/>
+    <vehicle id='motorcycle126' type='motorcycle' route='r6' depart='130'/>
+    <vehicle id='motorcycle127' type='motorcycle' route='r7' depart='130'/>
+    <vehicle id='motorcycle128' type='motorcycle' route='r8' depart='130'/>
+    <vehicle id='motorcycle129' type='motorcycle' route='r9' depart='130'/>
+    <vehicle id='passenger130' type='passenger' route='r10' depart='135'/>
+    <vehicle id='passenger131' type='passenger' route='r11' depart='135'/>
+    <vehicle id='passenger132' type='passenger' route='r0' depart='135'/>
+    <vehicle id='passenger133' type='passenger' route='r1' depart='135'/>
+    <vehicle id='passenger134' type='passenger' route='r2' depart='135'/>
+    <vehicle id='passenger135' type='passenger' route='r3' depart='140'/>
+    <vehicle id='passenger136' type='passenger' route='r4' depart='140'/>
+    <vehicle id='passenger137' type='passenger' route='r5' depart='140'/>
+    <vehicle id='passenger138' type='passenger' route='r6' depart='140'/>
+    <vehicle id='passenger139' type='passenger' route='r7' depart='140'/>
+    <vehicle id='passenger/van140' type='passenger/van' route='r8' depart='145'/>
+    <vehicle id='passenger/van141' type='passenger/van' route='r9' depart='145'/>
+    <vehicle id='passenger/van142' type='passenger/van' route='r10' depart='145'/>
+    <vehicle id='passenger/van143' type='passenger/van' route='r11' depart='145'/>
+    <vehicle id='passenger/van144' type='passenger/van' route='r0' depart='145'/>
+    <vehicle id='passenger/van145' type='passenger/van' route='r1' depart='150'/>
+    <vehicle id='passenger/van146' type='passenger/van' route='r2' depart='150'/>
+    <vehicle id='passenger/van147' type='passenger/van' route='r3' depart='150'/>
+    <vehicle id='passenger/van148' type='passenger/van' route='r4' depart='150'/>
+    <vehicle id='passenger/van149' type='passenger/van' route='r5' depart='150'/>
+    <vehicle id='truck150' type='truck' route='r6' depart='155'/>
+    <vehicle id='truck151' type='truck' route='r7' depart='155'/>
+    <vehicle id='truck152' type='truck' route='r8' depart='155'/>
+    <vehicle id='truck153' type='truck' route='r9' depart='155'/>
+    <vehicle id='truck154' type='truck' route='r10' depart='155'/>
+    <vehicle id='truck155' type='truck' route='r11' depart='160'/>
+    <vehicle id='truck156' type='truck' route='r0' depart='160'/>
+    <vehicle id='truck157' type='truck' route='r1' depart='160'/>
+    <vehicle id='truck158' type='truck' route='r2' depart='160'/>
+    <vehicle id='truck159' type='truck' route='r3' depart='160'/>
+    <vehicle id='bus160' type='bus' route='r4' depart='165'/>
+    <vehicle id='bus161' type='bus' route='r5' depart='165'/>
+    <vehicle id='bus162' type='bus' route='r6' depart='165'/>
+    <vehicle id='bus163' type='bus' route='r7' depart='165'/>
+    <vehicle id='bus164' type='bus' route='r8' depart='165'/>
+    <vehicle id='bus165' type='bus' route='r9' depart='170'/>
+    <vehicle id='bus166' type='bus' route='r10' depart='170'/>
+    <vehicle id='bus167' type='bus' route='r11' depart='170'/>
+    <vehicle id='bus168' type='bus' route='r0' depart='170'/>
+    <vehicle id='bus169' type='bus' route='r1' depart='170'/>
+    <vehicle id='bicycle170' type='bicycle' route='r2' depart='175'/>
+    <vehicle id='bicycle171' type='bicycle' route='r3' depart='175'/>
+    <vehicle id='bicycle172' type='bicycle' route='r4' depart='175'/>
+    <vehicle id='bicycle173' type='bicycle' route='r5' depart='175'/>
+    <vehicle id='bicycle174' type='bicycle' route='r6' depart='175'/>
+    <vehicle id='bicycle175' type='bicycle' route='r7' depart='180'/>
+    <vehicle id='bicycle176' type='bicycle' route='r8' depart='180'/>
+    <vehicle id='bicycle177' type='bicycle' route='r9' depart='180'/>
+    <vehicle id='bicycle178' type='bicycle' route='r10' depart='180'/>
+    <vehicle id='bicycle179' type='bicycle' route='r11' depart='180'/>
+    <vehicle id='motorcycle180' type='motorcycle' route='r0' depart='185'/>
+    <vehicle id='motorcycle181' type='motorcycle' route='r1' depart='185'/>
+    <vehicle id='motorcycle182' type='motorcycle' route='r2' depart='185'/>
+    <vehicle id='motorcycle183' type='motorcycle' route='r3' depart='185'/>
+    <vehicle id='motorcycle184' type='motorcycle' route='r4' depart='185'/>
+    <vehicle id='motorcycle185' type='motorcycle' route='r5' depart='190'/>
+    <vehicle id='motorcycle186' type='motorcycle' route='r6' depart='190'/>
+    <vehicle id='motorcycle187' type='motorcycle' route='r7' depart='190'/>
+    <vehicle id='motorcycle188' type='motorcycle' route='r8' depart='190'/>
+    <vehicle id='motorcycle189' type='motorcycle' route='r9' depart='190'/>
+    <vehicle id='passenger190' type='passenger' route='r10' depart='195'/>
+    <vehicle id='passenger191' type='passenger' route='r11' depart='195'/>
+    <vehicle id='passenger192' type='passenger' route='r0' depart='195'/>
+    <vehicle id='passenger193' type='passenger' route='r1' depart='195'/>
+    <vehicle id='passenger194' type='passenger' route='r2' depart='195'/>
+    <vehicle id='passenger195' type='passenger' route='r3' depart='200'/>
+    <vehicle id='passenger196' type='passenger' route='r4' depart='200'/>
+    <vehicle id='passenger197' type='passenger' route='r5' depart='200'/>
+    <vehicle id='passenger198' type='passenger' route='r6' depart='200'/>
+    <vehicle id='passenger199' type='passenger' route='r7' depart='200'/>
 </routes>
+
+
+
