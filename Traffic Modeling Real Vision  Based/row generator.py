@@ -1,6 +1,6 @@
 
 counter = 0
-vehicles = ["bicycle","motorcycle","passenger","passenger/van","truck","bus"]
+vehicles = ["type1","type2","type3","type4","type5","type6"]
 vcounter = 0
 rcounter = 0
 
@@ -22,5 +22,5 @@ for i in range(200):
 
     vehcile_id = vehicles[vcounter]+str(int(i))
     route_id = "r"+str(rcounter)
-    print("<vehicle id='"'{}'"' type='"'{}'"' route='"'{}'"' depart='"'{}'"'/>".format(vehcile_id,vehicles[vcounter],route_id,counter))
+    print("<vehicle id='"'{}'"' type='"'{}'"' route='"'{}'"' depart='"'{}'"'/>".format(i,vehicles[vcounter],route_id,counter))
     rcounter += 1
