@@ -87,50 +87,62 @@ def generate_routefile_random(episode_length, total_vehicles):
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-def generate_routefile(r10=0, r11=0, r12=0, r13=0, r14=0, r20=0, r21=0, r22=0, r23=0, r24=0, r30=0, r31=0, r32=0, r33=0,
-                       r34=0, r40=0, r41=0, r42=0, r43=0, r44=0,
-                       r130=0, r131=0, r132=0, r133=0, r134=0, r140=0, r141=0, r142=0, r143=0, r144=0):
-    with open("data/cross_2intersections.rou.xml", "w") as routes:
+def generate_routefile():
+    with open("data/cross_multi.rou.xml", "w") as routes:
         print("""<routes>
     <vTypeDistribution id="mixed">
         <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
         <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
     </vTypeDistribution>
-    <route id="r10" edges="51o 1i 4o 54i"/>
-    <route id="r11" edges="51o 1i 010i 14o 154i"/>
+    <route id="r10" edges="51o 1i 010u 4o 54i"/>
+    <route id="r11" edges="51o 1i 010i 1110u 14o 154i"/>
     <route id="r12" edges="51o 1i 010i 2o 52i"/>
     <route id="r13" edges="51o 1i 010i 13o 153i"/>
     <route id="r14" edges="51o 1i 3o 53i"/>
-
-    <route id="r20" edges="52o 2i 14o 154i"/>
-    <route id="r21" edges="52o 2i 010o 4o 54i"/>
+    
+    <route id="r1010" edges="1051o 101i 4o 54i"/>
+    <route id="r1011" edges="1051o 101i 0111i 14o 154i"/>
+    <route id="r1012" edges="1051o 101i 0111i 102o 1052i"/>
+    <route id="r1013" edges="1051o 101i 0111i 1110d 13o 153i"/>
+    <route id="r1014" edges="1051o 101i 010d 3o 53i"/>
+    
+    <route id="r20" edges="52o 2i 1110u 14o 154i"/>
+    <route id="r21" edges="52o 2i 010o 010u 4o 54i"/>
     <route id="r22" edges="52o 2i 010o 1o 51i"/>
     <route id="r23" edges="52o 2i 010o 3o 53i"/>
     <route id="r24" edges="52o 2i 13o 153i"/>
-
+    
+    <route id="r1020" edges="1052o 102i 14o 154i"/>
+    <route id="r1021" edges="1052o 102i 0111o 4o 54i"/>
+    <route id="r1022" edges="1052o 102i 0111o 101o 1051i"/>
+    <route id="r1023" edges="1052o 102i 0111o 010d 3o 53i"/>
+    <route id="r1024" edges="1052o 102i 1110d 13o 153i"/>
+    
+    
+    
     <route id="r30" edges="53o 3i 1o 51i"/>
-    <route id="r31" edges="53o 3i 4o 54i"/>
-    <route id="r32" edges="53o 3i 010i 14o 154i"/>
+    <route id="r31" edges="53o 3i 010u 4o 54i"/>
+    <route id="r32" edges="53o 3i 010i 1110u 14o 154i"/>
     <route id="r33" edges="53o 3i 010i 2o 52i"/>
     <route id="r34" edges="53o 3i 010i 13o 153i"/>
-
-    <route id="r40" edges="54o 4i 1o 51i"/>
-    <route id="r41" edges="54o 4i 3o 53i"/>
-    <route id="r42" edges="54o 4i 010i 13o 153i"/>
-    <route id="r43" edges="54o 4i 010i 2o 52i"/>
-    <route id="r44" edges="54o 4i 010i 14o 154i"/>
-
+    
+    <route id="r40" edges="54o 4i 010d 1o 51i"/>
+    <route id="r41" edges="54o 4i 010d 3o 53i"/>
+    <route id="r42" edges="54o 4i 010d 010i 13o 153i"/>
+    <route id="r43" edges="54o 4i 010d 010i 2o 52i"/>
+    <route id="r44" edges="54o 4i 010d 010i 1110u 14o 154i"/>
+    
     <route id="r130" edges="153o 13i 2o 52i"/>
-    <route id="r131" edges="153o 13i 14o 154i"/>
-    <route id="r132" edges="153o 13i 010o 4o 54i"/>
+    <route id="r131" edges="153o 13i 1110u 14o 154i"/>
+    <route id="r132" edges="153o 13i 010o 010u 4o 54i"/>
     <route id="r133" edges="153o 13i 010o 1o 51i"/>
     <route id="r134" edges="153o 13i 010o 3o 53i"/>
-
-    <route id="r140" edges="154o 14i 2o 52i"/>
-    <route id="r141" edges="154o 14i 13o 153i"/>
-    <route id="r142" edges="154o 14i 010o 3o 53i"/>
-    <route id="r143" edges="154o 14i 010o 1o 51i"/>
-    <route id="r144" edges="154o 14i 010o 4o 54i"/>
+    
+    <route id="r140" edges="154o 14i 1110d 2o 52i"/>
+    <route id="r141" edges="154o 14i 1110d 13o 153i"/>
+    <route id="r142" edges="154o 14i 1110d 010o 3o 53i"/>
+    <route id="r143" edges="154o 14i 1110d 010o 1o 51i"/>
+    <route id="r144" edges="154o 14i 1110d 010o 010u 4o 54i"/>
 
     <flow id="mixed1" begin="0" end="350" number="%i" route="r10" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed2" begin="0" end="350" number="%i" route="r11" type="mixed" departLane="random" departPosLat="random"/>
@@ -168,9 +180,7 @@ def generate_routefile(r10=0, r11=0, r12=0, r13=0, r14=0, r20=0, r21=0, r22=0, r
     <flow id="mixed29" begin="0" end="350" number="%i" route="r143" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed30" begin="0" end="350" number="%i" route="r144" type="mixed" departLane="random" departPosLat="random"/>
 
-</routes>""" % (
-        r10, r11, r12, r13, r14, r20, r21, r22, r23, r24, r30, r31, r32, r33, r34, r40, r41, r42, r43, r44, r130, r131,
-        r132, r133, r134, r140, r141, r142, r143, r144), file=routes)
+</routes>""", file=routes)
         lastVeh = 0
         vehNr = 0
 
@@ -499,7 +509,7 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 # generate_routefile_random(episode_time, num_vehicles)
 
-generate_routefile(100, 0)
+generate_routefile()
 # generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
@@ -541,11 +551,7 @@ for _ in range(replay_memory_init_size):
 total_t = 0
 for episode in range(num_episode):
 
-    #num_vehicles += 1
-    if episode < 45:
-        generate_routefile(r14=5, r32=50, r141=5)
-    else:
-        generate_routefile(r23=50, r41=5)
+
 
     #generate_routefile()
     # generate_routefile_random(episode_time, num_vehicles)
