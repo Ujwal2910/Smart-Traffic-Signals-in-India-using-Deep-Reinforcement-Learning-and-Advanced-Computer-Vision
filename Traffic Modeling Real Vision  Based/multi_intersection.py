@@ -509,7 +509,7 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 # generate_routefile_random(episode_time, num_vehicles)
 
-generate_routefile()
+#generate_routefile()
 # generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
