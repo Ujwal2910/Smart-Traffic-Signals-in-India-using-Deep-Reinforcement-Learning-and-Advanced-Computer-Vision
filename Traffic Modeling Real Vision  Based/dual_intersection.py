@@ -410,7 +410,7 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 # generate_routefile_random(episode_time, num_vehicles)
 
-generate_routefile(100, 0)
+#generate_routefile(100, 0)
 # generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
@@ -428,7 +428,7 @@ left_replay_memory = []
 
 for _ in range(replay_memory_init_size):
     if traci.simulation.getMinExpectedNumber() <= 0:
-        generate_routefile(100, 0)
+        #generate_routefile(100, 0)
         traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
                     "--tripinfo-output", "tripinfo.xml"])
     leftState, rightState = getStates(transition_time)
@@ -444,11 +444,11 @@ for _ in range(replay_memory_init_size):
 total_t = 0
 for episode in range(num_episode):
 
-    #num_vehicles += 1
-    if episode < 45:
-        generate_routefile(r14=5, r32=50, r141=5)
-    else:
-        generate_routefile(r23=50, r41=5)
+    # #num_vehicles += 1
+    # if episode < 45:
+    #     generate_routefile(r14=5, r32=50, r141=5)
+    # else:
+    #     generate_routefile(r23=50, r41=5)
 
     #generate_routefile()
     # generate_routefile_random(episode_time, num_vehicles)

@@ -6,9 +6,10 @@
     <vType id="type1" vClass="bicycle"/>
     <vType id="type2" vClass="motorcycle"/>
     <vType id="type3" vClass="passenger"/>
-    <vType id="type4" vClass="passenger/van"/>
+    <vType id="type4" vClass="passenger"/>
     <vType id="type5" vClass="truck"/>
     <vType id="type6" vClass="bus"/>
+
     <route id="r0" edges="51o 1i 2o 52i"/>
     <route id="r1" edges="51o 1i 4o 54i"/>
     <route id="r2" edges="51o 1i 3o 53i"/>
