@@ -1,8 +1,12 @@
 <routes>
-    <vTypeDistribution id="mixed">
-        <vType id="car" vClass="passenger" speedDev="0.2" latAlignment="compact" probability="0.3"/>
-        <vType id="moped" vClass="moped" speedDev="0.4" latAlignment="compact" probability="0.7"/>
-    </vTypeDistribution>
+
+    <vType id="type1" vClass="bicycle"/>
+    <vType id="type2" vClass="motorcycle"/>
+    <vType id="type3" vClass="passenger"/>
+    <vType id="type4" vClass="passenger"/>
+    <vType id="type5" vClass="truck"/>
+    <vType id="type6" vClass="bus"/>
+
     <route id="r10" edges="51o 1i 010u 4o 54i"/>
     <route id="r11" edges="51o 1i 010i 1110u 14o 154i"/>
     <route id="r12" edges="51o 1i 010i 2o 2i"/>
@@ -39,10 +43,255 @@
     <route id="r143" edges="154o 14i 1110d 010o 1o 51i"/>
     <route id="r144" edges="154o 14i 1110d 010o 010u 4o 54i"/>
 
-    <flow id="mixed1" begin="0" end="350" number="20" route="r12" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed2" begin="0" end="350" number="20" route="r22" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed3" begin="0" end="350" number="20" route="r31" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed4" begin="0" end="350" number="20" route="r41" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed5" begin="0" end="350" number="20" route="r131" type="mixed" departLane="random" departPosLat="random"/>
-    <flow id="mixed6" begin="0" end="350" number="20" route="r141" type="mixed" departLane="random" departPosLat="random"/>
+    <vehicle id='0' type='type2' route='r10' depart='5'/>
+    <vehicle id='1' type='type2' route='r11' depart='5'/>
+    <vehicle id='2' type='type2' route='r12' depart='5'/>
+    <vehicle id='3' type='type2' route='r13' depart='5'/>
+    <vehicle id='4' type='type2' route='r14' depart='5'/>
+    <vehicle id='5' type='type2' route='r20' depart='10'/>
+    <vehicle id='6' type='type2' route='r21' depart='10'/>
+    <vehicle id='7' type='type2' route='r22' depart='10'/>
+    <vehicle id='8' type='type2' route='r23' depart='10'/>
+    <vehicle id='9' type='type2' route='r24' depart='10'/>
+    <vehicle id='10' type='type3' route='r30' depart='15'/>
+    <vehicle id='11' type='type3' route='r31' depart='15'/>
+    <vehicle id='12' type='type3' route='r32' depart='15'/>
+    <vehicle id='13' type='type3' route='r33' depart='15'/>
+    <vehicle id='14' type='type3' route='r34' depart='15'/>
+    <vehicle id='15' type='type3' route='r40' depart='20'/>
+    <vehicle id='16' type='type3' route='r41' depart='20'/>
+    <vehicle id='17' type='type3' route='r42' depart='20'/>
+    <vehicle id='18' type='type3' route='r43' depart='20'/>
+    <vehicle id='19' type='type3' route='r44' depart='20'/>
+    <vehicle id='20' type='type4' route='r130' depart='25'/>
+    <vehicle id='21' type='type4' route='r131' depart='25'/>
+    <vehicle id='22' type='type4' route='r132' depart='25'/>
+    <vehicle id='23' type='type4' route='r133' depart='25'/>
+    <vehicle id='24' type='type4' route='r134' depart='25'/>
+    <vehicle id='25' type='type4' route='r140' depart='30'/>
+    <vehicle id='26' type='type4' route='r141' depart='30'/>
+    <vehicle id='27' type='type4' route='r142' depart='30'/>
+    <vehicle id='28' type='type4' route='r143' depart='30'/>
+    <vehicle id='29' type='type4' route='r144' depart='30'/>
+    <vehicle id='30' type='type5' route='r10' depart='35'/>
+    <vehicle id='31' type='type5' route='r11' depart='35'/>
+    <vehicle id='32' type='type5' route='r12' depart='35'/>
+    <vehicle id='33' type='type5' route='r13' depart='35'/>
+    <vehicle id='34' type='type5' route='r14' depart='35'/>
+    <vehicle id='35' type='type5' route='r20' depart='40'/>
+    <vehicle id='36' type='type5' route='r21' depart='40'/>
+    <vehicle id='37' type='type5' route='r22' depart='40'/>
+    <vehicle id='38' type='type5' route='r23' depart='40'/>
+    <vehicle id='39' type='type5' route='r24' depart='40'/>
+    <vehicle id='40' type='type6' route='r30' depart='45'/>
+    <vehicle id='41' type='type6' route='r31' depart='45'/>
+    <vehicle id='42' type='type6' route='r32' depart='45'/>
+    <vehicle id='43' type='type6' route='r33' depart='45'/>
+    <vehicle id='44' type='type6' route='r34' depart='45'/>
+    <vehicle id='45' type='type6' route='r40' depart='50'/>
+    <vehicle id='46' type='type6' route='r41' depart='50'/>
+    <vehicle id='47' type='type6' route='r42' depart='50'/>
+    <vehicle id='48' type='type6' route='r43' depart='50'/>
+    <vehicle id='49' type='type6' route='r44' depart='50'/>
+    <vehicle id='50' type='type1' route='r130' depart='55'/>
+    <vehicle id='51' type='type1' route='r131' depart='55'/>
+    <vehicle id='52' type='type1' route='r132' depart='55'/>
+    <vehicle id='53' type='type1' route='r133' depart='55'/>
+    <vehicle id='54' type='type1' route='r134' depart='55'/>
+    <vehicle id='55' type='type1' route='r140' depart='60'/>
+    <vehicle id='56' type='type1' route='r141' depart='60'/>
+    <vehicle id='57' type='type1' route='r142' depart='60'/>
+    <vehicle id='58' type='type1' route='r143' depart='60'/>
+    <vehicle id='59' type='type1' route='r144' depart='60'/>
+    <vehicle id='60' type='type2' route='r10' depart='65'/>
+    <vehicle id='61' type='type2' route='r11' depart='65'/>
+    <vehicle id='62' type='type2' route='r12' depart='65'/>
+    <vehicle id='63' type='type2' route='r13' depart='65'/>
+    <vehicle id='64' type='type2' route='r14' depart='65'/>
+    <vehicle id='65' type='type2' route='r20' depart='70'/>
+    <vehicle id='66' type='type2' route='r21' depart='70'/>
+    <vehicle id='67' type='type2' route='r22' depart='70'/>
+    <vehicle id='68' type='type2' route='r23' depart='70'/>
+    <vehicle id='69' type='type2' route='r24' depart='70'/>
+    <vehicle id='70' type='type3' route='r30' depart='75'/>
+    <vehicle id='71' type='type3' route='r31' depart='75'/>
+    <vehicle id='72' type='type3' route='r32' depart='75'/>
+    <vehicle id='73' type='type3' route='r33' depart='75'/>
+    <vehicle id='74' type='type3' route='r34' depart='75'/>
+    <vehicle id='75' type='type3' route='r40' depart='80'/>
+    <vehicle id='76' type='type3' route='r41' depart='80'/>
+    <vehicle id='77' type='type3' route='r42' depart='80'/>
+    <vehicle id='78' type='type3' route='r43' depart='80'/>
+    <vehicle id='79' type='type3' route='r44' depart='80'/>
+    <vehicle id='80' type='type4' route='r130' depart='85'/>
+    <vehicle id='81' type='type4' route='r131' depart='85'/>
+    <vehicle id='82' type='type4' route='r132' depart='85'/>
+    <vehicle id='83' type='type4' route='r133' depart='85'/>
+    <vehicle id='84' type='type4' route='r134' depart='85'/>
+    <vehicle id='85' type='type4' route='r140' depart='90'/>
+    <vehicle id='86' type='type4' route='r141' depart='90'/>
+    <vehicle id='87' type='type4' route='r142' depart='90'/>
+    <vehicle id='88' type='type4' route='r143' depart='90'/>
+    <vehicle id='89' type='type4' route='r144' depart='90'/>
+    <vehicle id='90' type='type5' route='r10' depart='95'/>
+    <vehicle id='91' type='type5' route='r11' depart='95'/>
+    <vehicle id='92' type='type5' route='r12' depart='95'/>
+    <vehicle id='93' type='type5' route='r13' depart='95'/>
+    <vehicle id='94' type='type5' route='r14' depart='95'/>
+    <vehicle id='95' type='type5' route='r20' depart='100'/>
+    <vehicle id='96' type='type5' route='r21' depart='100'/>
+    <vehicle id='97' type='type5' route='r22' depart='100'/>
+    <vehicle id='98' type='type5' route='r23' depart='100'/>
+    <vehicle id='99' type='type5' route='r24' depart='100'/>
+    <vehicle id='100' type='type6' route='r30' depart='105'/>
+    <vehicle id='101' type='type6' route='r31' depart='105'/>
+    <vehicle id='102' type='type6' route='r32' depart='105'/>
+    <vehicle id='103' type='type6' route='r33' depart='105'/>
+    <vehicle id='104' type='type6' route='r34' depart='105'/>
+    <vehicle id='105' type='type6' route='r40' depart='110'/>
+    <vehicle id='106' type='type6' route='r41' depart='110'/>
+    <vehicle id='107' type='type6' route='r42' depart='110'/>
+    <vehicle id='108' type='type6' route='r43' depart='110'/>
+    <vehicle id='109' type='type6' route='r44' depart='110'/>
+    <vehicle id='110' type='type1' route='r130' depart='115'/>
+    <vehicle id='111' type='type1' route='r131' depart='115'/>
+    <vehicle id='112' type='type1' route='r132' depart='115'/>
+    <vehicle id='113' type='type1' route='r133' depart='115'/>
+    <vehicle id='114' type='type1' route='r134' depart='115'/>
+    <vehicle id='115' type='type1' route='r140' depart='120'/>
+    <vehicle id='116' type='type1' route='r141' depart='120'/>
+    <vehicle id='117' type='type1' route='r142' depart='120'/>
+    <vehicle id='118' type='type1' route='r143' depart='120'/>
+    <vehicle id='119' type='type1' route='r144' depart='120'/>
+    <vehicle id='120' type='type2' route='r10' depart='125'/>
+    <vehicle id='121' type='type2' route='r11' depart='125'/>
+    <vehicle id='122' type='type2' route='r12' depart='125'/>
+    <vehicle id='123' type='type2' route='r13' depart='125'/>
+    <vehicle id='124' type='type2' route='r14' depart='125'/>
+    <vehicle id='125' type='type2' route='r20' depart='130'/>
+    <vehicle id='126' type='type2' route='r21' depart='130'/>
+    <vehicle id='127' type='type2' route='r22' depart='130'/>
+    <vehicle id='128' type='type2' route='r23' depart='130'/>
+    <vehicle id='129' type='type2' route='r24' depart='130'/>
+    <vehicle id='130' type='type3' route='r30' depart='135'/>
+    <vehicle id='131' type='type3' route='r31' depart='135'/>
+    <vehicle id='132' type='type3' route='r32' depart='135'/>
+    <vehicle id='133' type='type3' route='r33' depart='135'/>
+    <vehicle id='134' type='type3' route='r34' depart='135'/>
+    <vehicle id='135' type='type3' route='r40' depart='140'/>
+    <vehicle id='136' type='type3' route='r41' depart='140'/>
+    <vehicle id='137' type='type3' route='r42' depart='140'/>
+    <vehicle id='138' type='type3' route='r43' depart='140'/>
+    <vehicle id='139' type='type3' route='r44' depart='140'/>
+    <vehicle id='140' type='type4' route='r130' depart='145'/>
+    <vehicle id='141' type='type4' route='r131' depart='145'/>
+    <vehicle id='142' type='type4' route='r132' depart='145'/>
+    <vehicle id='143' type='type4' route='r133' depart='145'/>
+    <vehicle id='144' type='type4' route='r134' depart='145'/>
+    <vehicle id='145' type='type4' route='r140' depart='150'/>
+    <vehicle id='146' type='type4' route='r141' depart='150'/>
+    <vehicle id='147' type='type4' route='r142' depart='150'/>
+    <vehicle id='148' type='type4' route='r143' depart='150'/>
+    <vehicle id='149' type='type4' route='r144' depart='150'/>
+    <vehicle id='150' type='type5' route='r10' depart='155'/>
+    <vehicle id='151' type='type5' route='r11' depart='155'/>
+    <vehicle id='152' type='type5' route='r12' depart='155'/>
+    <vehicle id='153' type='type5' route='r13' depart='155'/>
+    <vehicle id='154' type='type5' route='r14' depart='155'/>
+    <vehicle id='155' type='type5' route='r20' depart='160'/>
+    <vehicle id='156' type='type5' route='r21' depart='160'/>
+    <vehicle id='157' type='type5' route='r22' depart='160'/>
+    <vehicle id='158' type='type5' route='r23' depart='160'/>
+    <vehicle id='159' type='type5' route='r24' depart='160'/>
+    <vehicle id='160' type='type6' route='r30' depart='165'/>
+    <vehicle id='161' type='type6' route='r31' depart='165'/>
+    <vehicle id='162' type='type6' route='r32' depart='165'/>
+    <vehicle id='163' type='type6' route='r33' depart='165'/>
+    <vehicle id='164' type='type6' route='r34' depart='165'/>
+    <vehicle id='165' type='type6' route='r40' depart='170'/>
+    <vehicle id='166' type='type6' route='r41' depart='170'/>
+    <vehicle id='167' type='type6' route='r42' depart='170'/>
+    <vehicle id='168' type='type6' route='r43' depart='170'/>
+    <vehicle id='169' type='type6' route='r44' depart='170'/>
+    <vehicle id='170' type='type1' route='r130' depart='175'/>
+    <vehicle id='171' type='type1' route='r131' depart='175'/>
+    <vehicle id='172' type='type1' route='r132' depart='175'/>
+    <vehicle id='173' type='type1' route='r133' depart='175'/>
+    <vehicle id='174' type='type1' route='r134' depart='175'/>
+    <vehicle id='175' type='type1' route='r140' depart='180'/>
+    <vehicle id='176' type='type1' route='r141' depart='180'/>
+    <vehicle id='177' type='type1' route='r142' depart='180'/>
+    <vehicle id='178' type='type1' route='r143' depart='180'/>
+    <vehicle id='179' type='type1' route='r144' depart='180'/>
+    <vehicle id='180' type='type2' route='r10' depart='185'/>
+    <vehicle id='181' type='type2' route='r11' depart='185'/>
+    <vehicle id='182' type='type2' route='r12' depart='185'/>
+    <vehicle id='183' type='type2' route='r13' depart='185'/>
+    <vehicle id='184' type='type2' route='r14' depart='185'/>
+    <vehicle id='185' type='type2' route='r20' depart='190'/>
+    <vehicle id='186' type='type2' route='r21' depart='190'/>
+    <vehicle id='187' type='type2' route='r22' depart='190'/>
+    <vehicle id='188' type='type2' route='r23' depart='190'/>
+    <vehicle id='189' type='type2' route='r24' depart='190'/>
+    <vehicle id='190' type='type3' route='r30' depart='195'/>
+    <vehicle id='191' type='type3' route='r31' depart='195'/>
+    <vehicle id='192' type='type3' route='r32' depart='195'/>
+    <vehicle id='193' type='type3' route='r33' depart='195'/>
+    <vehicle id='194' type='type3' route='r34' depart='195'/>
+    <vehicle id='195' type='type3' route='r40' depart='200'/>
+    <vehicle id='196' type='type3' route='r41' depart='200'/>
+    <vehicle id='197' type='type3' route='r42' depart='200'/>
+    <vehicle id='198' type='type3' route='r43' depart='200'/>
+    <vehicle id='199' type='type3' route='r44' depart='200'/>
+    <vehicle id='200' type='type4' route='r130' depart='205'/>
+    <vehicle id='201' type='type4' route='r131' depart='205'/>
+    <vehicle id='202' type='type4' route='r132' depart='205'/>
+    <vehicle id='203' type='type4' route='r133' depart='205'/>
+    <vehicle id='204' type='type4' route='r134' depart='205'/>
+    <vehicle id='205' type='type4' route='r140' depart='210'/>
+    <vehicle id='206' type='type4' route='r141' depart='210'/>
+    <vehicle id='207' type='type4' route='r142' depart='210'/>
+    <vehicle id='208' type='type4' route='r143' depart='210'/>
+    <vehicle id='209' type='type4' route='r144' depart='210'/>
+    <vehicle id='210' type='type5' route='r10' depart='215'/>
+    <vehicle id='211' type='type5' route='r11' depart='215'/>
+    <vehicle id='212' type='type5' route='r12' depart='215'/>
+    <vehicle id='213' type='type5' route='r13' depart='215'/>
+    <vehicle id='214' type='type5' route='r14' depart='215'/>
+    <vehicle id='215' type='type5' route='r20' depart='220'/>
+    <vehicle id='216' type='type5' route='r21' depart='220'/>
+    <vehicle id='217' type='type5' route='r22' depart='220'/>
+    <vehicle id='218' type='type5' route='r23' depart='220'/>
+    <vehicle id='219' type='type5' route='r24' depart='220'/>
+    <vehicle id='220' type='type6' route='r30' depart='225'/>
+    <vehicle id='221' type='type6' route='r31' depart='225'/>
+    <vehicle id='222' type='type6' route='r32' depart='225'/>
+    <vehicle id='223' type='type6' route='r33' depart='225'/>
+    <vehicle id='224' type='type6' route='r34' depart='225'/>
+    <vehicle id='225' type='type6' route='r40' depart='230'/>
+    <vehicle id='226' type='type6' route='r41' depart='230'/>
+    <vehicle id='227' type='type6' route='r42' depart='230'/>
+    <vehicle id='228' type='type6' route='r43' depart='230'/>
+    <vehicle id='229' type='type6' route='r44' depart='230'/>
+    <vehicle id='230' type='type1' route='r130' depart='235'/>
+    <vehicle id='231' type='type1' route='r131' depart='235'/>
+    <vehicle id='232' type='type1' route='r132' depart='235'/>
+    <vehicle id='233' type='type1' route='r133' depart='235'/>
+    <vehicle id='234' type='type1' route='r134' depart='235'/>
+    <vehicle id='235' type='type1' route='r140' depart='240'/>
+    <vehicle id='236' type='type1' route='r141' depart='240'/>
+    <vehicle id='237' type='type1' route='r142' depart='240'/>
+    <vehicle id='238' type='type1' route='r143' depart='240'/>
+    <vehicle id='239' type='type1' route='r144' depart='240'/>
+    <vehicle id='240' type='type2' route='r10' depart='245'/>
+    <vehicle id='241' type='type2' route='r11' depart='245'/>
+    <vehicle id='242' type='type2' route='r12' depart='245'/>
+    <vehicle id='243' type='type2' route='r13' depart='245'/>
+    <vehicle id='244' type='type2' route='r14' depart='245'/>
+    <vehicle id='245' type='type2' route='r20' depart='250'/>
+    <vehicle id='246' type='type2' route='r21' depart='250'/>
+    <vehicle id='247' type='type2' route='r22' depart='250'/>
+    <vehicle id='248' type='type2' route='r23' depart='250'/>
+    <vehicle id='249' type='type2' route='r24' depart='250'/>
+
 </routes>
