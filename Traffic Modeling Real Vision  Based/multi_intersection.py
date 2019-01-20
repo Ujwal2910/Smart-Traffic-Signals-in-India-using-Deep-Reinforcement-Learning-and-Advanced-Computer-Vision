@@ -511,7 +511,7 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 #generate_routefile()
 # generate_routefile_random(episode_time, num_vehicles)
-traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
+traci.start([sumoBinary, "-c", "data/cross_multi.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
 
 traci.trafficlight.setPhase("0", 0)
@@ -555,7 +555,7 @@ for episode in range(num_episode):
 
     #generate_routefile()
     # generate_routefile_random(episode_time, num_vehicles)
-    traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
+    traci.load(["--start", "-c", "data/cross_multi.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
     traci.trafficlight.setPhase("10", 0)
