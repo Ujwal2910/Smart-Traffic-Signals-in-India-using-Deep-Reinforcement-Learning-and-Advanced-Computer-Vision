@@ -486,7 +486,7 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 241
+num_episode = 30
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
@@ -497,14 +497,12 @@ Average_Q_lengths = []
 sum_q_lens = 0
 AVG_Q_len_perepisode = []
 
-episode_time = 350
-num_vehicles = 250
 transition_time = 8
 target_update_time = 20
 q_estimator_model = build_model(transition_time)
 target_estimator_model = build_model(transition_time)
-replay_memory_init_size = 35
-replay_memory_size = 800
+replay_memory_init_size = 350
+replay_memory_size = 8000
 batch_size = 32
 print(q_estimator_model.summary())
 epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
@@ -523,10 +521,9 @@ target_estimator_model.set_weights(q_estimator_model.get_weights())
 replay_memory = []
 
 for _ in range(replay_memory_init_size):
-    '''if traci.simulation.getMinExpectedNumber() <= 0:
-        generate_routefile_random(episode_time, num_vehicles)
+    if traci.simulation.getMinExpectedNumber() <= 0:
         traci.load(["--start", "-c", "data/cross.sumocfg",
-                    "--tripinfo-output", "tripinfo.xml"]) '''
+                    "--tripinfo-output", "tripinfo.xml"])
     state = getState(transition_time)
     action = np.random.choice(np.arange(nA))
     new_state = makeMove(action,transition_time)
@@ -536,12 +533,7 @@ for _ in range(replay_memory_init_size):
 
 total_t = 0
 for episode in range(num_episode):
-    num_vehicles += 1
-    # if episode < 40:
-    #     generate_routefile(90,10)
-    # else:
-    #     generate_routefile(10,90)
-    #generate_routefile_random(episode_time, num_vehicles)
+
     traci.load(["--start", "-c", "data/cross.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
@@ -564,15 +556,6 @@ for episode in range(num_episode):
 
         q_val = q_estimator_model.predict(state)
         print(q_val)
-        # if random.random() < epsilon:
-        #     phase = np.random.choice(4)
-        #     print("random action chosen",phase)
-        # else:
-        #     phase = np.argmax(q_val)
-        #     print("else action",phase)
-
-
-
 
         epsilon = epsilons[min(total_t, epsilon_decay_steps-1)]
         print("Epsilon -", epsilon)
@@ -649,7 +632,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
     if episode % 5 == 0:
-        q_estimator_model.save('new_model_test_1_{}.h5'.format(episode))
+        q_estimator_model.save('two_lane_model_{}.h5'.format(episode))
 
 
 
