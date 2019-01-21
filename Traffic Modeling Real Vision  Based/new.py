@@ -17,6 +17,7 @@ from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
 import readscreen3
 import numpy as np
+import pandas as pd
 import datetime
 from time import time
 
@@ -361,6 +362,10 @@ def getPhaseState(transition_time):
 
 def getState(transition_time):  # made the order changes
     newState = []
+    # transition_time_step_leftcount = 0
+    # transition_time_step_rightcount = 0
+    # transition_time_step_topcount = 0
+    # transition_time_step_bottomcount = 0
     for _ in range(transition_time):
         traci.simulationStep()
 
@@ -395,6 +400,11 @@ def getState(transition_time):  # made the order changes
         print("Top : ", topcount)
         print("Bottom : ", bottomcount)
 
+        # transition_time_step_bottomcount+= bottomcount
+        # transition_time_step_leftcount+= leftcount
+        # transition_time_step_rightcount+= rightcount
+        # transition_time_step_topcount+= topcount
+
         state = [bottomcount / 40,
                  rightcount / 40,
                  topcount / 40,
@@ -404,6 +414,9 @@ def getState(transition_time):  # made the order changes
 
         newState.insert(0, state)
     # print (state)
+
+    # df = pd.DataFrame([[, 2]], columns=['a', 'b'])
+    # params_dict =
     newState = np.array(newState)
     phaseState = getPhaseState(transition_time)
     newState = np.dstack((newState, phaseState))
@@ -494,6 +507,8 @@ epsilon_end = 0.4
 epsilon_decay_steps = 3000
 
 Average_Q_lengths = []
+
+params_dict = [] #for graph writing
 sum_q_lens = 0
 AVG_Q_len_perepisode = []
 
