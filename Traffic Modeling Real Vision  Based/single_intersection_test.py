@@ -515,7 +515,7 @@ AVG_Q_len_perepisode = []
 
 transition_time = 8
 target_update_time = 20
-q_estimator_model = load_model("models/single intersection models/two lane traffic models/two_lane_model_15.h5")
+q_estimator_model = load_model("models/single intersection models/four lane traffic models/four_lane_model_15.h5")
 replay_memory_init_size = 150
 replay_memory_size = 8000
 batch_size = 32

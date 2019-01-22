@@ -4,7 +4,7 @@
 
     <input>
         <net-file value="cross_2lanes.net.xml"/>
-        <route-files value="single_2lane.rou.xml"/>
+        <route-files value="single_4lane.rou.xml"/>
         <additional-files value="cross.det.xml"/>
     </input>
 
