@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 import datetime
 from time import time
-
+import matplotlib.pyplot as plt
 
 def get_options():
     optParser = optparse.OptionParser()
@@ -499,7 +499,7 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 30
+num_episode = 1
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
@@ -512,7 +512,7 @@ params_dict = [] #for graph writing
 sum_q_lens = 0
 AVG_Q_len_perepisode = []
 
-transition_time = 8
+transition_time = 16
 target_update_time = 20
 q_estimator_model = build_model(transition_time)
 target_estimator_model = build_model(transition_time)
@@ -544,6 +544,12 @@ for episode in range(num_episode):
 
     counter = 0
     stride = 0
+
+    delay_data_avg = []
+    delay_data_min = []
+    delay_data_max = []
+    delay_data_time = []
+
     while traci.simulation.getMinExpectedNumber() > 0:
         print("Episode # ", episode)
         # print("Waiting time on lane 1i_0 = ",getWaitingTime("1i_0"))
@@ -557,6 +563,35 @@ for episode in range(num_episode):
 
 
         new_state = makeMove(1, transition_time)
+
+        vehicleList = traci.vehicle.getIDList()
+        num_vehicles = len(vehicleList)
+        if num_vehicles:
+            avg = 0
+            max = 0
+            mini = 100
+            for id in vehicleList:
+                time = traci.vehicle.getAccumulatedWaitingTime(id)
+                if time > max:
+                    max = time
+
+                if time < mini:
+                    mini = time
+
+                avg += time
+            avg /= num_vehicles
+            delay_data_avg.append(avg)
+            delay_data_max.append(max)
+            delay_data_min.append(mini)
+            delay_data_time.append(traci.simulation.getCurrentTime() / 1000)
+
+    plt.plot(delay_data_time, delay_data_avg, 'b-', label='avg')
+    plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
+    plt.plot(delay_data_time, delay_data_max, 'r-', label='max')
+    plt.legend(loc='upper left')
+    plt.ylabel('Waiting time per minute')
+    plt.xlabel('Time in simulation (in s)')
+    plt.show()
 
 
 
