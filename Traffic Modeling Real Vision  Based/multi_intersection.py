@@ -589,7 +589,6 @@ for episode in range(num_episode):
         print("Upper Left q values : ", q_val_upper_left)
         print("Upper Right q values : ", q_val_upper_right)
 
-
         epsilon = epsilons[min(total_t, epsilon_decay_steps - 1)]
         print("Epsilon -", epsilon)
         policy_s = np.ones(nA) * epsilon / nA

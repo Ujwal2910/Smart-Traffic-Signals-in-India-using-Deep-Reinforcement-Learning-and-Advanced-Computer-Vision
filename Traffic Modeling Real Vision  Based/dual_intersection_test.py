@@ -12,7 +12,7 @@ import cv2
 import curses
 from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
 import cross_read_sequential
@@ -20,6 +20,7 @@ import readscreen3
 import numpy as np
 import datetime
 from time import time
+import matplotlib.pyplot as plt
 
 
 def get_options():
@@ -88,7 +89,8 @@ def generate_routefile_random(episode_length, total_vehicles):
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-def generate_routefile(r10=0, r11=0, r12=0, r13=0, r14=0, r20=0, r21=0, r22=0, r23=0, r24=0, r30=0, r31=0, r32=0, r33=0, r34=0, r40=0, r41=0, r42=0, r43=0, r44=0,
+def generate_routefile(r10=0, r11=0, r12=0, r13=0, r14=0, r20=0, r21=0, r22=0, r23=0, r24=0, r30=0, r31=0, r32=0, r33=0,
+                       r34=0, r40=0, r41=0, r42=0, r43=0, r44=0,
                        r130=0, r131=0, r132=0, r133=0, r134=0, r140=0, r141=0, r142=0, r143=0, r144=0):
     with open("data/cross_2intersections.rou.xml", "w") as routes:
         print("""<routes>
@@ -137,38 +139,40 @@ def generate_routefile(r10=0, r11=0, r12=0, r13=0, r14=0, r20=0, r21=0, r22=0, r
     <flow id="mixed3" begin="0" end="350" number="%i" route="r12" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed4" begin="0" end="350" number="%i" route="r13" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed5" begin="0" end="350" number="%i" route="r14" type="mixed" departLane="random" departPosLat="random"/>
-    
+
     <flow id="mixed6" begin="0" end="350" number="%i" route="r20" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed7" begin="0" end="350" number="%i" route="r21" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed8" begin="0" end="350" number="%i" route="r22" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed9" begin="0" end="350" number="%i" route="r23" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed10" begin="0" end="350" number="%i" route="r24" type="mixed" departLane="random" departPosLat="random"/>
-    
+
     <flow id="mixed11" begin="0" end="350" number="%i" route="r30" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed12" begin="0" end="350" number="%i" route="r31" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed13" begin="0" end="350" number="%i" route="r32" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed14" begin="0" end="350" number="%i" route="r33" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed15" begin="0" end="350" number="%i" route="r34" type="mixed" departLane="random" departPosLat="random"/>
-    
+
     <flow id="mixed16" begin="0" end="350" number="%i" route="r40" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed17" begin="0" end="350" number="%i" route="r41" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed18" begin="0" end="350" number="%i" route="r42" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed19" begin="0" end="350" number="%i" route="r43" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed20" begin="0" end="350" number="%i" route="r44" type="mixed" departLane="random" departPosLat="random"/>
-    
+
     <flow id="mixed21" begin="0" end="350" number="%i" route="r130" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed22" begin="0" end="350" number="%i" route="r131" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed23" begin="0" end="350" number="%i" route="r132" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed24" begin="0" end="350" number="%i" route="r133" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed25" begin="0" end="350" number="%i" route="r134" type="mixed" departLane="random" departPosLat="random"/>
-    
+
     <flow id="mixed26" begin="0" end="350" number="%i" route="r140" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed27" begin="0" end="350" number="%i" route="r141" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed28" begin="0" end="350" number="%i" route="r142" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed29" begin="0" end="350" number="%i" route="r143" type="mixed" departLane="random" departPosLat="random"/>
     <flow id="mixed30" begin="0" end="350" number="%i" route="r144" type="mixed" departLane="random" departPosLat="random"/>
-    
-</routes>""" % (r10, r11, r12, r13, r14, r20, r21, r22, r23, r24, r30, r31, r32, r33, r34, r40, r41, r42, r43, r44, r130, r131, r132, r133, r134, r140, r141, r142, r143, r144), file=routes)
+
+</routes>""" % (
+        r10, r11, r12, r13, r14, r20, r21, r22, r23, r24, r30, r31, r32, r33, r34, r40, r41, r42, r43, r44, r130, r131,
+        r132, r133, r134, r140, r141, r142, r143, r144), file=routes)
         lastVeh = 0
         vehNr = 0
 
@@ -202,9 +206,6 @@ else:
 print("TraCI Started")
 
 
-
-
-
 def getLeftPhaseState(transition_time):
     num_lanes = 4
     num_phases = 4
@@ -226,9 +227,11 @@ def getRightPhaseState(transition_time):
             phaseState[i][j][phase] = 1
     return phaseState
 
+
 def getStates(transition_time):
     newLeftState = []
     newRightState = []
+    avg_qlength = 0
 
     for _ in range(transition_time):
         traci.simulationStep()
@@ -297,18 +300,22 @@ def getStates(transition_time):
         print("Right Intersection Bottom Lane : ", r_bottomcount)
 
         leftState = [l_bottomcount / 40,
-                    l_rightcount / 40,
-                    l_topcount / 40,
-                    l_leftcount / 40]
+                     l_rightcount / 40,
+                     l_topcount / 40,
+                     l_leftcount / 40]
 
         rightState = [r_bottomcount / 40,
-                 r_rightcount / 40,
-                 r_topcount / 40,
-                 r_leftcount / 40]
+                      r_rightcount / 40,
+                      r_topcount / 40,
+                      r_leftcount / 40]
+
+        avg_qlength += ((l_bottomcount + l_rightcount + l_topcount + l_leftcount +
+                         r_bottomcount + r_leftcount + r_rightcount + r_topcount) / 8)
 
         newLeftState.insert(0, leftState)
         newRightState.insert(0, rightState)
 
+    avg_qlength /= transition_time
     newLeftState = np.array(newLeftState)
     leftPhaseState = getLeftPhaseState(transition_time)
     newLeftState = np.dstack((newLeftState, leftPhaseState))
@@ -319,11 +326,12 @@ def getStates(transition_time):
     newRightState = np.dstack((newRightState, rightPhaseState))
     newRightState = np.expand_dims(newRightState, axis=0)
 
-    return newLeftState, newRightState
+    return newLeftState, newRightState, avg_qlength
 
 
 print("here")
 import traci
+
 
 def makeMoves(leftAction, rightAction, transition_time):
     if leftAction == 1:
@@ -384,7 +392,7 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 30
+num_episode = 1
 discount_factor = 0.9
 # epsilon = 1
 epsilon_start = 1
@@ -399,7 +407,7 @@ episode_time = 350
 num_vehicles = 250
 transition_time = 8
 target_update_time = 20
-q_estimator_model_left = build_model(transition_time)
+q_estimator_model_left = load_model("models/dual intersection models/switching traffic models/model_15.h5")
 target_estimator_model_left = build_model(transition_time)
 
 replay_memory_init_size = 350
@@ -410,7 +418,7 @@ epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
 # generate_routefile_random(episode_time, num_vehicles)
 
-#generate_routefile(100, 0)
+# generate_routefile(100, 0)
 # generate_routefile_random(episode_time, num_vehicles)
 traci.start([sumoBinary, "-c", "data/cross_2intersections.sumocfg",
              "--tripinfo-output", "tripinfo.xml"])
@@ -420,26 +428,6 @@ traci.trafficlight.setPhase("10", 0)
 
 nA = 2
 
-target_estimator_model_left.set_weights(q_estimator_model_left.get_weights())
-
-
-left_replay_memory = []
-
-
-for _ in range(replay_memory_init_size):
-    if traci.simulation.getMinExpectedNumber() <= 0:
-        #generate_routefile(100, 0)
-        traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
-                    "--tripinfo-output", "tripinfo.xml"])
-    leftState, rightState = getStates(transition_time)
-    leftAction = np.random.choice(np.arange(nA))
-    rightAction = np.random.choice(np.arange(nA))
-    newLeftState, newRightState = makeMoves(leftAction, rightAction, transition_time)
-    leftReward = getReward(leftState, newLeftState)
-    rightReward = getReward(rightState, newRightState)
-    left_replay_memory.append([leftState, leftAction, leftReward, newLeftState])
-    left_replay_memory.append([rightState, rightAction, rightReward, newRightState])
-    print(len(left_replay_memory))
 
 total_t = 0
 for episode in range(num_episode):
@@ -450,16 +438,23 @@ for episode in range(num_episode):
     # else:
     #     generate_routefile(r23=50, r41=5)
 
-    #generate_routefile()
+    # generate_routefile()
     # generate_routefile_random(episode_time, num_vehicles)
     traci.load(["--start", "-c", "data/cross_2intersections.sumocfg",
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
     traci.trafficlight.setPhase("10", 0)
 
-    leftState, rightState = getStates(transition_time)
+    leftState, rightState, _ = getStates(transition_time)
     counter = 0
     stride = 0
+
+    length_data_avg = []
+    delay_data_avg = []
+    delay_data_min = []
+    delay_data_max = []
+    delay_data_time = []
+
     while traci.simulation.getMinExpectedNumber() > 0:
         print("Episode # ", episode)
         # print("Waiting time on lane 1i_0 = ",getWaitingTime("1i_0"))
@@ -470,101 +465,56 @@ for episode in range(num_episode):
         total_t += 1
         # batch_experience = experience[:batch_history]
 
-        if total_t % target_update_time == 0:
-            target_estimator_model_left.set_weights(q_estimator_model_left.get_weights())
-
-
         q_val_left = q_estimator_model_left.predict(leftState)
         q_val_right = q_estimator_model_left.predict(rightState)
         print("Left q values : ", q_val_left)
         print("Right q values : ", q_val_right)
 
+        leftAction = np.argmax(q_val_left)
+        rightAction = np.argmax(q_val_right)
 
-        epsilon = epsilons[min(total_t, epsilon_decay_steps - 1)]
-        print("Epsilon -", epsilon)
-        policy_s = np.ones(nA) * epsilon / nA
+        newLeftState, newRightState, qlength = makeMoves(leftAction, rightAction, transition_time)
 
-        leftPolicy = np.copy(policy_s)
-        leftPolicy[np.argmax(q_val_left)] = 1 - epsilon + (epsilon / nA)
+        vehicleList = traci.vehicle.getIDList()
+        num_vehicles = len(vehicleList)
+        if num_vehicles:
+            avg = 0
+            max = 0
+            mini = 100
+            for id in vehicleList:
+                time = traci.vehicle.getAccumulatedWaitingTime(id)
+                if time > max:
+                    max = time
 
-        rightPolicy = np.copy(policy_s)
-        rightPolicy[np.argmax(q_val_right)] = 1 - epsilon + (epsilon / nA)
+                if time < mini:
+                    mini = time
 
-        leftAction = np.random.choice(np.arange(nA), p=leftPolicy)
-        rightAction = np.random.choice(np.arange(nA), p=rightPolicy)
-        '''
-        same_left_action_count = 0
-        for temp in reversed(left_replay_memory):
-            if temp[1] == 0:
-                same_left_action_count += 1
-            else:
-                break
-        if same_left_action_count == 20:
-            leftAction = 1
-            print("SAME LEFT ACTION PENALTY")
-
-        same_right_action_count = 0
-        for temp in reversed(right_replay_memory):
-            if temp[1] == 0:
-                same_right_action_count += 1
-            else:
-                break
-        if same_right_action_count == 20:
-            rightAction = 1
-            print("SAME RIGHT ACTION PENALTY")
-        '''
-        if np.argmax(q_val_left) != leftAction:
-            print("RANDOM LEFT CHOICE TAKEN")
-        else:
-            print("LEFT POLICY FOLLOWED ")
-
-        if np.argmax(q_val_right) != rightAction:
-            print("RANDOM RIGHT CHOICE TAKEN")
-        else:
-            print("RIGHT POLICY FOLLOWED ")
-
-        newLeftState, newRightState = makeMoves(leftAction, rightAction, transition_time)
-        leftReward = getReward(leftState, newLeftState)
-        rightReward = getReward(rightState, newRightState)
-
-        print("Left reward : ", leftReward)
-        print("Right reward : ", rightReward)
-
-        if len(left_replay_memory) == replay_memory_size:
-            left_replay_memory.pop(0)
-
-        left_replay_memory.append([leftState, leftAction, leftReward, newLeftState])
-
-        if len(left_replay_memory) == replay_memory_size:
-            left_replay_memory.pop(0)
-
-        left_replay_memory.append([rightState, rightAction, rightReward, newRightState])
-
-        print("Memory Length :", len(left_replay_memory))
-
-        leftSamples = random.sample(left_replay_memory, batch_size)
-
-
-        # MODEL FITTING FOR LEFT
-        x_batch, y_batch = [], []
-        for inst_state, inst_action, inst_reward, inst_next_state in leftSamples:
-            y_target = q_estimator_model_left.predict(inst_state)
-            q_val_next = target_estimator_model_left.predict(inst_next_state)
-            y_target[0][inst_action] = inst_reward + discount_factor * np.amax(
-                q_val_next, axis=1
-            )
-            x_batch.append(inst_state[0])
-            y_batch.append(y_target[0])
-
-        q_estimator_model_left.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
+                avg += time
+            avg /= num_vehicles
+            delay_data_avg.append(avg)
+            delay_data_max.append(max)
+            delay_data_min.append(mini)
+            length_data_avg.append(qlength)
+            delay_data_time.append(traci.simulation.getCurrentTime() / 1000)
 
         leftState = newLeftState
         rightState = newRightState
 
+    plt.plot(delay_data_time, delay_data_avg, 'b-', label='avg')
+    # plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
+    # plt.plot(delay_data_time, delay_data_max,'r-', label='max')
+    plt.legend(loc='upper left')
+    plt.ylabel('Waiting time per minute')
+    plt.xlabel('Time in simulation (in s)')
+
+    plt.figure()
+    plt.plot(delay_data_time, length_data_avg, 'b-', label='avg')
+    plt.legend(loc='upper left')
+    plt.ylabel('Average Queue Length')
+    plt.xlabel('Time in simulation (in s)')
+    plt.show()
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
-    if episode % 5 == 0:
-        q_estimator_model_left.save('models/dual intersection models/switching traffic models/model_{}.h5'.format(episode))
 
 
 print(AVG_Q_len_perepisode)

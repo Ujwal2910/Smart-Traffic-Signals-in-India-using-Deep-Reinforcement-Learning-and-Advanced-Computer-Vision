@@ -4,7 +4,7 @@
 
     <input>
         <net-file value="cross_2intersections_debug.net.xml"/>
-        <route-files value="cross_2intersections.rou.xml"/>
+        <route-files value="dual_2routes_switching.rou.xml"/>
     </input>
 
     <time>
@@ -13,6 +13,7 @@
 
     <processing>
         <lateral-resolution value="0.64"/>
+        <waiting-time-memory value="60" />
     </processing>
 
     <report>
