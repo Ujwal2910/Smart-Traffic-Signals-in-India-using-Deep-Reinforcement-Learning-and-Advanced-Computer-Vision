@@ -8,20 +8,24 @@ import optparse
 import subprocess
 import random
 import time
-import cv2
+#import cv2
 import curses
 from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
-import readscreen3
+#import readscreen3
 import numpy as np
 import pandas as pd
 import datetime
 from time import time
 import matplotlib.pyplot as plt
 
+
+
+
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 def get_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--nogui", action="store_true",
