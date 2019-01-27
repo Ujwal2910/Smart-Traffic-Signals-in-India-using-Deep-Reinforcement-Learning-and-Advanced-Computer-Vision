@@ -12,7 +12,7 @@ import cv2
 import curses
 from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
 import readscreen3
@@ -500,11 +500,11 @@ def getWaitingTime(laneID):
     return traci.lane.getWaitingTime(laneID)
 
 
-num_episode = 1
+num_episode = 16
 discount_factor = 0.9
 #epsilon = 1
 epsilon_start = 1
-epsilon_end = 0.01
+epsilon_end = 0.4
 epsilon_decay_steps = 3000
 
 Average_Q_lengths = []
@@ -517,7 +517,7 @@ transition_time = 8
 target_update_time = 20
 q_estimator_model = build_model(transition_time)
 target_estimator_model = build_model(transition_time)
-replay_memory_init_size = 150
+replay_memory_init_size = 350
 replay_memory_size = 8000
 batch_size = 32
 print(q_estimator_model.summary())
@@ -676,17 +676,11 @@ for episode in range(num_episode):
         '''
         state = new_state
 
-    plt.plot(delay_data_time, delay_data_avg, 'b-', label='avg')
-    plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
-    plt.plot(delay_data_time, delay_data_max,'r-', label='max')
-    plt.legend(loc='upper left')
-    plt.ylabel('Waiting time per minute')
-    plt.xlabel('Time in simulation (in s)')
-    plt.show()
+
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
 
-    q_estimator_model.save('models/single intersection models/four lane traffic models with graphs/four_lane_model_{}.h5'.format(episode))
+    q_estimator_model.save('models/single intersection models/swapping models/10mins/7to3/model_{}.h5'.format(episode))
 
 
 

@@ -362,6 +362,7 @@ def getPhaseState(transition_time):
 
 def getState(transition_time):  # made the order changes
     newState = []
+    avg_qlength = 0
     # transition_time_step_leftcount = 0
     # transition_time_step_rightcount = 0
     # transition_time_step_topcount = 0
@@ -411,17 +412,18 @@ def getState(transition_time):  # made the order changes
                  leftcount / 40
                  ]
 
-
+        avg_qlength += ((bottomcount + rightcount + topcount + leftcount)/4)
         newState.insert(0, state)
     # print (state)
 
     # df = pd.DataFrame([[, 2]], columns=['a', 'b'])
     # params_dict =
+    avg_qlength /= transition_time
     newState = np.array(newState)
     phaseState = getPhaseState(transition_time)
     newState = np.dstack((newState, phaseState))
     newState = np.expand_dims(newState, axis=0)
-    return newState
+    return newState, avg_qlength
 
 
 print("here")
@@ -531,9 +533,6 @@ traci.trafficlight.setPhase("0", 0)
 
 nA = 2
 
-
-
-
 total_t = 0
 for episode in range(num_episode):
 
@@ -545,6 +544,7 @@ for episode in range(num_episode):
     counter = 0
     stride = 0
 
+    length_data_avg = []
     delay_data_avg = []
     delay_data_min = []
     delay_data_max = []
@@ -560,9 +560,7 @@ for episode in range(num_episode):
         total_t += 1
         # batch_experience = experience[:batch_history]
 
-
-
-        new_state = makeMove(1, transition_time)
+        new_state, qlength = makeMove(1, transition_time)
 
         vehicleList = traci.vehicle.getIDList()
         num_vehicles = len(vehicleList)
@@ -583,13 +581,20 @@ for episode in range(num_episode):
             delay_data_avg.append(avg)
             delay_data_max.append(max)
             delay_data_min.append(mini)
+            length_data_avg.append(qlength)
             delay_data_time.append(traci.simulation.getCurrentTime() / 1000)
 
     plt.plot(delay_data_time, delay_data_avg, 'b-', label='avg')
-    plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
-    plt.plot(delay_data_time, delay_data_max, 'r-', label='max')
+    #plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
+    #plt.plot(delay_data_time, delay_data_max, 'r-', label='max')
     plt.legend(loc='upper left')
     plt.ylabel('Waiting time per minute')
+    plt.xlabel('Time in simulation (in s)')
+
+    plt.figure()
+    plt.plot(delay_data_time, length_data_avg, 'b-', label='avg')
+    plt.legend(loc='upper left')
+    plt.ylabel('Average Queue Length')
     plt.xlabel('Time in simulation (in s)')
     plt.show()
 

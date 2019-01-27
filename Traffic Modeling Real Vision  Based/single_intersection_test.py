@@ -363,6 +363,7 @@ def getPhaseState(transition_time):
 
 def getState(transition_time):  # made the order changes
     newState = []
+    avg_qlength = 0
     # transition_time_step_leftcount = 0
     # transition_time_step_rightcount = 0
     # transition_time_step_topcount = 0
@@ -412,17 +413,18 @@ def getState(transition_time):  # made the order changes
                  leftcount / 40
                  ]
 
-
+        avg_qlength += ((bottomcount + rightcount + topcount + leftcount)/4)
         newState.insert(0, state)
     # print (state)
 
     # df = pd.DataFrame([[, 2]], columns=['a', 'b'])
     # params_dict =
+    avg_qlength /= transition_time
     newState = np.array(newState)
     phaseState = getPhaseState(transition_time)
     newState = np.dstack((newState, phaseState))
     newState = np.expand_dims(newState, axis=0)
-    return newState
+    return newState, avg_qlength
 
 
 print("here")
@@ -515,7 +517,7 @@ AVG_Q_len_perepisode = []
 
 transition_time = 8
 target_update_time = 20
-q_estimator_model = load_model("models/single intersection models/four lane traffic models/four_lane_model_15.h5")
+q_estimator_model = load_model("models/single intersection models/two lane switching traffic models/switching_model_15.h5")
 replay_memory_init_size = 150
 replay_memory_size = 8000
 batch_size = 32
@@ -543,10 +545,11 @@ for episode in range(num_episode):
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
 
-    state = getState(transition_time)
+    state, _ = getState(transition_time)
     counter = 0
     stride = 0
 
+    length_data_avg = []
     delay_data_avg = []
     delay_data_min = []
     delay_data_max = []
@@ -564,7 +567,7 @@ for episode in range(num_episode):
 
         action = np.argmax(q_estimator_model.predict(state))
 
-        new_state = makeMove(action, transition_time)
+        new_state, qlength = makeMove(action, transition_time)
 
         vehicleList = traci.vehicle.getIDList()
         num_vehicles = len(vehicleList)
@@ -585,15 +588,23 @@ for episode in range(num_episode):
             delay_data_avg.append(avg)
             delay_data_max.append(max)
             delay_data_min.append(mini)
+            length_data_avg.append(qlength)
             delay_data_time.append(traci.simulation.getCurrentTime() / 1000)
+
 
         state = new_state
 
     plt.plot(delay_data_time, delay_data_avg, 'b-', label='avg')
-    plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
-    plt.plot(delay_data_time, delay_data_max,'r-', label='max')
+    #plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
+    #plt.plot(delay_data_time, delay_data_max,'r-', label='max')
     plt.legend(loc='upper left')
     plt.ylabel('Waiting time per minute')
+    plt.xlabel('Time in simulation (in s)')
+
+    plt.figure()
+    plt.plot(delay_data_time, length_data_avg, 'b-', label='avg')
+    plt.legend(loc='upper left')
+    plt.ylabel('Average Queue Length')
     plt.xlabel('Time in simulation (in s)')
     plt.show()
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
