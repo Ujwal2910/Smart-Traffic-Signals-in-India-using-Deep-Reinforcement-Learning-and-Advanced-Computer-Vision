@@ -8,19 +8,24 @@ import optparse
 import subprocess
 import random
 import time
-import cv2
+#import cv2
 import curses
+
+from awscli.customizations.emr.constants import TRUE
 from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential, load_model
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
-import readscreen3
+#import readscreen3
 import numpy as np
 import pandas as pd
 import datetime
 from time import time
 import matplotlib.pyplot as plt
+
+
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 
 def get_options():
@@ -517,7 +522,7 @@ AVG_Q_len_perepisode = []
 
 transition_time = 8
 target_update_time = 20
-q_estimator_model = load_model("models/single intersection models/two lane switching traffic models/switching_model_15.h5")
+q_estimator_model = load_model("models/single intersection models/swapping models/30mins/7to3/model_15.h5")
 replay_memory_init_size = 150
 replay_memory_size = 8000
 batch_size = 32
