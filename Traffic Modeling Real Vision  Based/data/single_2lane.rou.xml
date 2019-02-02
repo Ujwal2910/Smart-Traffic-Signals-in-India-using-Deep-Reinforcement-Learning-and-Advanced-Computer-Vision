@@ -12,10 +12,13 @@
 
     <route id="r1" edges="51o 1i 2o 52i"/>
     <route id="r4" edges="54o 4i 1o 51i"/>
+    <route id="r1_stop" edges="51o 1i 2o 52i">
+        <stop lane="1i_1" endPos="50" duration="30"/>
+    </route>
 
-<vehicle id='0' type='type2' route='r1' depart='5'/>
+<vehicle id='0' type='type2' route='r1_stop' depart='5'/>
 <vehicle id='1' type='type2' route='r4' depart='5'/>
-<vehicle id='2' type='type2' route='r1' depart='5'/>
+<vehicle id='2' type='type2' route='r1_stop' depart='5'/>
 <vehicle id='3' type='type2' route='r4' depart='5'/>
 <vehicle id='4' type='type2' route='r1' depart='5'/>
 <vehicle id='5' type='type2' route='r4' depart='10'/>
