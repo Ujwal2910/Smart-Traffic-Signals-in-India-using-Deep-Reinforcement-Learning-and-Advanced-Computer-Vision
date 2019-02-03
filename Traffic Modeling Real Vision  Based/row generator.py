@@ -67,7 +67,7 @@ for i in range(2000):
 
 
     #obstacle introduction-
-    if i%66==0:
+    if i%333==0:
 
         #666 is for 10 min change
         #333 is for 5 min change
