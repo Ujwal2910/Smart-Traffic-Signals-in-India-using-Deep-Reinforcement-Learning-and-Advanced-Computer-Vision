@@ -680,7 +680,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
 
-    #q_estimator_model.save('models/single intersection models/swapping models/1min/7to3/model_{}.h5'.format(episode))
+    q_estimator_model.save('models/single intersection models/obstacle/15mins/model_{}.h5'.format(episode))
 
 
 
