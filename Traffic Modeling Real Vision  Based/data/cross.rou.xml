@@ -11,12 +11,21 @@
     <vType id="type6" vClass="bus"/>
 
     <route id="r0" edges="51o 1i 2o 52i"/>
+
+
     <route id="r1" edges="51o 1i 4o 54i"/>
     <route id="r2" edges="51o 1i 3o 53i"/>
     <route id="r3" edges="54o 4i 3o 53i"/>
     <route id="r4" edges="54o 4i 1o 51i"/>
     <route id="r5" edges="54o 4i 2o 52i"/>
     <route id="r6" edges="52o 2i 1o 51i"/>
+
+
+    <!--<route id="r0" edges="beg middle end rend">-->
+        <!--<stop lane="middle_0" endPos="50" duration="20"/>-->
+    <!--</route>-->
+
+
     <route id="r7" edges="52o 2i 4o 54i"/>
     <route id="r8" edges="52o 2i 3o 53i"/>
     <route id="r9" edges="53o 3i 4o 54i"/>
