@@ -8,14 +8,14 @@ import optparse
 import subprocess
 import random
 import time
-import cv2
+#import cv2
 import curses
 from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential, load_model
 from keras.layers import Dense, Conv2D, Flatten
 from keras.callbacks import TensorBoard
-import readscreen3
+#import readscreen3
 import numpy as np
 import pandas as pd
 import datetime
