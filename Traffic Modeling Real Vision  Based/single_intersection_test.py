@@ -11,7 +11,7 @@ import time
 #import cv2
 import curses
 
-from awscli.customizations.emr.constants import TRUE
+#from awscli.customizations.emr.constants import TRUE
 from keras.optimizers import RMSprop, Adam
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential, load_model
@@ -555,6 +555,7 @@ for episode in range(num_episode):
     stride = 0
 
     length_data_avg = []
+    count_data = []
     delay_data_avg = []
     delay_data_min = []
     delay_data_max = []
@@ -594,6 +595,7 @@ for episode in range(num_episode):
             delay_data_max.append(max)
             delay_data_min.append(mini)
             length_data_avg.append(qlength)
+            count_data.append(num_vehicles)
             delay_data_time.append(traci.simulation.getCurrentTime() / 1000)
 
 
@@ -610,6 +612,12 @@ for episode in range(num_episode):
     plt.plot(delay_data_time, length_data_avg, 'b-', label='avg')
     plt.legend(loc='upper left')
     plt.ylabel('Average Queue Length')
+    plt.xlabel('Time in simulation (in s)')
+
+    plt.figure()
+    plt.plot(delay_data_time, count_data, 'b-', label='avg')
+    plt.legend(loc='upper left')
+    plt.ylabel('Average Number of Vehicles in Map')
     plt.xlabel('Time in simulation (in s)')
     plt.show()
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
