@@ -65,8 +65,18 @@ for i in range(2000):
 
 
     #obstacle introduction-
-    if i==1000:
+    if i%666==0:
+
+        #666 is for 10 min change
+        #333 is for 5 min change
+        #66 is for 1 min change
+        #1000 is for 15 min change
+        c+=1
+    if c%2==0:
         rcounter = 1
+
+    else:
+        rcounter = 0
 
 
 
