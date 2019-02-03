@@ -2,7 +2,7 @@
 counter = 0
 vehicles = ["type1","type2","type3","type4","type5","type6"]
 #routes = [10,11,12,13,14,20,21,22,23,24,30,31,32,33,34,40,41,42,43,44,130,131,132,133,134,140,141,142,143,144]
-routes = [1,4]
+routes = ["r1_stop",4]
 #routes = [0,1,2,3,4,5,6,7,8,9,10,11]
 vcounter = 0
 rcounter = 0
@@ -21,6 +21,9 @@ for i in range(2000):
         vcounter=0
 
 
+
+
+    #ratio of vehicles in lane switching part
 
     if i%666==0:
 
@@ -47,6 +50,8 @@ for i in range(2000):
 
         else:
             rcounter = 1
+
+
     # if ratio >8:
     #     rcounter = 1
     #     if ratio ==11:
