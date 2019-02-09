@@ -3,9 +3,9 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="cross_2lanes.net.xml"/>
-        <route-files value="obstacle_15mins.rou.xml"/>
-        <additional-files value="cross.det.xml"/>
+        <net-file value="single_intersection.net.xml"/>
+        <route-files value="obstacle_1mins.rou.xml"/>
+
     </input>
 
     <time>
