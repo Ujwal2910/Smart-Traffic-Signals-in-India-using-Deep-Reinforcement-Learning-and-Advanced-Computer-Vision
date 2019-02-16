@@ -4,7 +4,7 @@
 
     <input>
         <net-file value="single_intersection.net.xml"/>
-        <route-files value="obstacle_1mins.rou.xml"/>
+        <route-files value="new_obstacle_10mins.rou.xml"/>
 
     </input>
 

@@ -11,13 +11,16 @@
     <vType id="type6" vClass="bus"/>
 
     <route id="r1" edges="51o 1i 2o 52i"/>
-    <route id="r4" edges="54o 4i 1o 51i"/>
-    <route id="r1_stop" edges="51o 1i 2o 52i">
-        <stop lane="1i_1" endPos="50" duration="30"/>
+    <route id="r4" edges="54o 4i 3o 53i"/>
+    <route id="r1_stop_0" edges="51o 1i 2o 52i">
+        <stop lane="1i_0" endPos="98" duration="2600"/>
+    </route>
+    <route id="r1_stop_1" edges="51o 1i 2o 52i">
+        <stop lane="1i_1" endPos="98" duration="2600"/>
     </route>
 
-    <vehicle id='0' type='type2' route='r1_stop' depart='0'/>
-<vehicle id='1' type='type2' route='r1' depart='0'/>
+    <vehicle id='0' type='type6' route='r1_stop_0' depart='0' color='1,0,0'/>
+<vehicle id='1' type='type6' route='r1_stop_1' depart='0' color='1,0,0'/>
 <vehicle id='2' type='type2' route='r4' depart='0'/>
 <vehicle id='3' type='type2' route='r1' depart='0'/>
 <vehicle id='4' type='type2' route='r4' depart='0'/>

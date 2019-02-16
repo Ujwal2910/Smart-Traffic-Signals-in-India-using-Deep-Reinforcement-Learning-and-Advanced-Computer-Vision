@@ -384,17 +384,17 @@ def getState(transition_time):  # made the order changes
         for id in vehicleList:
             x, y = traci.vehicle.getPosition(id)
 
-            if x<500 and x>450 and y<520 and y>510:
-                leftcount+=1
-            else :
-                if x<510 and x>500 and y<500 and y>450:
-                    bottomcount+=1
-                else :
-                    if x<570 and x>520 and y<510 and y>500:
-                        rightcount+=1
-                    else :
-                        if x<520 and x>510 and y<570 and y>520:
-                            topcount+=1
+            if x < 110 and x > 60 and y < 130 and y > 120:
+                leftcount += 1
+            else:
+                if x < 120 and x > 110 and y < 110 and y > 600:
+                    bottomcount += 1
+                else:
+                    if x < 180 and x > 130 and y < 120 and y > 110:
+                        rightcount += 1
+                    else:
+                        if x < 130 and x > 120 and y < 180 and y > 130:
+                            topcount += 1
 
         print("Left : ", leftcount)
         print("Right : ", rightcount)
@@ -480,6 +480,33 @@ def getReward(this_state, this_new_state):
 
     return this_reward
 
+def getRewardAbsolute(this_state, this_new_state):
+    num_lanes = 4
+    qLengths1 = []
+    qLengths2 = []
+    for i in range(num_lanes):
+        qLengths1.append(this_state[0][0][i][0])
+        qLengths2.append(this_new_state[0][0][i][0])
+
+    qLengths11 = [x + 1 for x in qLengths1]
+    qLengths21 = [x + 1 for x in qLengths2]
+
+    q1 = np.prod(qLengths11)
+    q2 = np.prod(qLengths21)
+
+    # print("Old State with product : ", q1)
+    #
+    # print("New State with product : ", q2)
+    #
+    #
+    # if q1 > q2:
+    #     this_reward = 1
+    # else:
+    #     this_reward = -1
+    this_reward = q1 - q2
+
+    return this_reward
+
 
 def build_model(transition_time):
     num_hidden_units_cnn = 10
@@ -543,7 +570,7 @@ for _ in range(replay_memory_init_size):
     state = getState(transition_time)
     action = np.random.choice(np.arange(nA))
     new_state = makeMove(action,transition_time)
-    reward = getReward(state,new_state)
+    reward = getRewardAbsolute(state,new_state)
     replay_memory.append([state,action,reward,new_state])
     print(len(replay_memory))
 
@@ -605,7 +632,7 @@ for episode in range(num_episode):
             print("POLICY FOLLOWED ")
 
         new_state = makeMove(action, transition_time)
-        reward = getReward(state, new_state)
+        reward = getRewardAbsolute(state, new_state)
 
         vehicleList = traci.vehicle.getIDList()
         num_vehicles = len(vehicleList)
@@ -680,7 +707,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
 
-    q_estimator_model.save('models/single intersection models/obstacle/15mins/model_{}.h5'.format(episode))
+    q_estimator_model.save('models/single intersection models/tradeoff_models_absreward/model_{}.h5'.format(episode))
 
 
 
