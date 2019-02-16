@@ -9,10 +9,16 @@ rcounter = 0
 ratio = 1
 c=0
 flag = 0
-for i in range(2000):
+for i in range(500):
+
+
 
     if i%5 == 0:
-        counter +=5
+
+        if i < 5:
+            counter = 0
+        else:
+            counter +=15
 
     if i%10 == 0:
         vcounter += 1
@@ -67,12 +73,19 @@ for i in range(2000):
 
 
     #obstacle introduction-
-    if i%1000==0:
+    if counter%166==0:
 
         #666 is for 10 min change
         #333 is for 5 min change
         #66 is for 1 min change
         #1000 is for 15 min change
+
+        #15---250
+        #10---166
+        #5----83
+        #1----16
+
+
         rcounter = 2
         flag = 1
 
