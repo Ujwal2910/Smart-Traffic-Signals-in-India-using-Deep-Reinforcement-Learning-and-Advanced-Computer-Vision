@@ -565,7 +565,7 @@ AVG_Q_len_perepisode = []
 
 transition_time = 8
 target_update_time = 20
-q_estimator_model = load_model("models/single intersection models/tradeoff_models_absreward/model_15.h5")
+q_estimator_model = load_model("models/single intersection models/tradeoff_models_sqr_reward/model_15.h5")
 replay_memory_init_size = 150
 replay_memory_size = 8000
 batch_size = 32
