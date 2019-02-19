@@ -660,8 +660,10 @@ for episode in range(num_episode):
     index = np.arange(len(label))
     plt.bar(index, avg_free_time, color=['red', 'green', 'blue', 'blue'])
     plt.xlabel('Lane')
-    plt.ylabel('Average Green Time per Cycle')
+    plt.ylabel('Average Green Time per Cycle (in s)')
     plt.xticks(index, label)
+    axes = plt.gca()
+    axes.set_ylim([0, 60])
 
     plt.figure()
     label = ['Obstacle Lane', 'Top Lane w/ traffic', 'Right lane', 'Bottom lane']
@@ -670,6 +672,8 @@ for episode in range(num_episode):
     plt.xlabel('Lane')
     plt.ylabel('Average Q-length every 8 seconds')
     plt.xticks(index, label)
+    axes = plt.gca()
+    axes.set_ylim([0, 20])
     plt.show()
 
 
