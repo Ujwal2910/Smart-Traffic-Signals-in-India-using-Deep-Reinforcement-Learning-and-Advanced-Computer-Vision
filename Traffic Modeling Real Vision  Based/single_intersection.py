@@ -504,8 +504,11 @@ def getRewardAbsolute(this_state, this_new_state):
     # else:
     #     this_reward = -1
     this_reward = q1 - q2
+    squared_reward = this_reward*this_reward
+    if this_reward<0:
+        squared_reward = squared_reward*-1
 
-    return this_reward
+    return squared_reward
 
 
 def build_model(transition_time):
@@ -707,7 +710,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
 
-    q_estimator_model.save('models/single intersection models/tradeoff_models_absreward/model_{}.h5'.format(episode))
+    q_estimator_model.save('models/single intersection models/tradeoff_models_sqr_reward/model_{}.h5'.format(episode))
 
 
 
