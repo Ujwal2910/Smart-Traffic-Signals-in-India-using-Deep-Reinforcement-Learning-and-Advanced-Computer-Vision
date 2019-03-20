@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes>
+   <node id="0" x="0.0" y="0.0"  type="traffic_light"/>
+
+   <node id="1" x="-110.0" y="0.0" type="priority"/>
+   <node id="2" x="+110.0" y="0.0" type="priority"/>
+   <node id="3" x="0.0" y="-110.0" type="priority"/>
+   <node id="4" x="0.0" y="+110.0" type="priority"/>
+
+   <node id="51" x="-120.0" y="0.0" type="priority"/>
+   <node id="52" x="+120.0" y="0.0" type="priority"/>
+   <node id="53" x="0.0" y="-120.0" type="priority"/>
+   <node id="54" x="0.0" y="+120.0" type="priority"/>
+</nodes>
