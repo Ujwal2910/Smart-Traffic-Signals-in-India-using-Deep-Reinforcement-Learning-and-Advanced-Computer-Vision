@@ -21,6 +21,7 @@ import pandas as pd
 import datetime
 from time import time
 import matplotlib.pyplot as plt
+import math
 
 
 def get_options():
@@ -360,6 +361,111 @@ def getPhaseState(transition_time):
             phaseState[i][j][phase] = 1
     return phaseState
 
+def getPhaseState_baseline():
+    num_phases = 4
+    phase = traci.trafficlight.getPhase("0")
+    phaseState = np.zeros((10,24,num_phases))
+    for i in range(10):
+        for j in range(24):
+            phaseState[i][j][phase] = 1
+    return phaseState
+
+def getState_baseline(transition_time):
+    for _ in range(transition_time):
+        traci.simulationStep()
+
+    vehicleList = traci.vehicle.getIDList()
+    leftPositionVector = np.zeros((10,6))
+    leftVelocityVector = np.zeros((10,6))
+    topPositionVector = np.zeros((10,6))
+    topVelocityVector = np.zeros((10,6))
+    rightPositionVector = np.zeros((10,6))
+    rightVelocityVector = np.zeros((10,6))
+    bottomPositionVector = np.zeros((10,6))
+    bottomVelocityVector = np.zeros((10,6))
+
+    for id in vehicleList:
+        x, y = traci.vehicle.getPosition(id)
+
+        if x < 110 and x > 60 and y < 130 and y > 120:
+            x_norm = 130 - y
+            y_norm = 108 - x
+            x_norm = math.floor(x_norm / 1.66)
+            y_norm = math.floor(y_norm / 5)
+            leftPositionVector[y_norm][x_norm] = 1
+            leftVelocityVector[y_norm][x_norm] = traci.vehicle.getSpeed(id)
+        else:
+            if x < 120 and x > 110 and y < 110 and y > 60:
+                x_norm = x - 110
+                y_norm = 108 - y
+                x_norm = math.floor(x_norm / 1.66)
+                y_norm = math.floor(y_norm / 5)
+                bottomPositionVector[y_norm][x_norm] = 1
+                bottomVelocityVector[y_norm][x_norm] = traci.vehicle.getSpeed(id)
+            else:
+                if x < 180 and x > 130 and y < 120 and y > 110:
+                    x_norm = y - 110
+                    y_norm = x - 132
+                    x_norm = math.floor(x_norm / 1.66)
+                    y_norm = math.floor(y_norm / 5)
+                    rightPositionVector[y_norm][x_norm] = 1
+                    rightVelocityVector[y_norm][x_norm] = traci.vehicle.getSpeed(id)
+                else:
+                    if x < 130 and x > 120 and y < 180 and y > 130:
+                        x_norm = 130 - x
+                        y_norm = y - 132
+                        x_norm = math.floor(x_norm / 1.66)
+                        y_norm = math.floor(y_norm / 5)
+                        topPositionVector[y_norm][x_norm] = 1
+                        topVelocityVector[y_norm][x_norm] = traci.vehicle.getSpeed(id)
+
+    positionVector = np.concatenate((topPositionVector, rightPositionVector, bottomPositionVector, leftPositionVector), 1)
+    velocityVector = np.concatenate((topVelocityVector, rightVelocityVector, bottomVelocityVector, leftVelocityVector), 1)
+    phaseVector = getPhaseState_baseline()
+    newState = np.dstack((positionVector,velocityVector,phaseVector))
+    return newState
+
+
+def getQueueLength():
+    leftcount = 0
+    rightcount = 0
+    topcount = 0
+    bottomcount = 0
+    vehicleList = traci.vehicle.getIDList()
+
+    print("Traffic : ")
+
+    for id in vehicleList:
+        x, y = traci.vehicle.getPosition(id)
+
+        if x < 110 and x > 60 and y < 130 and y > 120:
+            leftcount += 1
+        else:
+            if x < 120 and x > 110 and y < 110 and y > 600:
+                bottomcount += 1
+            else:
+                if x < 180 and x > 130 and y < 120 and y > 110:
+                    rightcount += 1
+                else:
+                    if x < 130 and x > 120 and y < 180 and y > 130:
+                        topcount += 1
+
+    print("Left : ", leftcount)
+    print("Right : ", rightcount)
+    print("Top : ", topcount)
+    print("Bottom : ", bottomcount)
+
+    # transition_time_step_bottomcount+= bottomcount
+    # transition_time_step_leftcount+= leftcount
+    # transition_time_step_rightcount+= rightcount
+    # transition_time_step_topcount+= topcount
+
+    state = [bottomcount / 40,
+             rightcount / 40,
+             topcount / 40,
+             leftcount / 40
+             ]
+    return state
 
 def getState(transition_time):  # made the order changes
     newState = []
@@ -449,8 +555,8 @@ def getReward(this_state, this_new_state):
     qLengths1 = []
     qLengths2 = []
     for i in range(num_lanes):
-        qLengths1.append(this_state[0][0][i][0])
-        qLengths2.append(this_new_state[0][0][i][0])
+        qLengths1.append(this_state[i])
+        qLengths2.append(this_new_state[i])
 
     qLengths11 = [x + 1 for x in qLengths1]
     qLengths21 = [x + 1 for x in qLengths2]
@@ -485,8 +591,8 @@ def getRewardAbsolute(this_state, this_new_state):
     qLengths1 = []
     qLengths2 = []
     for i in range(num_lanes):
-        qLengths1.append(this_state[0][0][i][0])
-        qLengths2.append(this_new_state[0][0][i][0])
+        qLengths1.append(this_state[i])
+        qLengths2.append(this_new_state[i])
 
     qLengths11 = [x + 1 for x in qLengths1]
     qLengths21 = [x + 1 for x in qLengths2]
@@ -513,7 +619,7 @@ def build_model(transition_time):
     num_hidden_units_cnn = 10
     num_actions = 2
     model = Sequential()
-    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(transition_time, 1), strides=1, activation='relu', input_shape=(transition_time, 4,5)))
+    model.add(Conv2D(num_hidden_units_cnn, kernel_size=(10, 6), strides=6, activation='relu', input_shape=(10, 24, 6)))
     # model.add(LSTM(8))
     model.add(Flatten())
     model.add(Dense(20, activation='relu'))
@@ -568,10 +674,12 @@ for _ in range(replay_memory_init_size):
     if traci.simulation.getMinExpectedNumber() <= 0:
         traci.load(["--start", "-c", "data/cross.sumocfg",
                     "--tripinfo-output", "tripinfo.xml"])
-    state = getState(transition_time)
+    state = getState_baseline(transition_time)
+    queueLength = getQueueLength()
     action = np.random.choice(np.arange(nA))
     new_state = makeMove(action,transition_time)
-    reward = getRewardAbsolute(state,new_state)
+    new_queueLength = getQueueLength()
+    reward = getReward(queueLength,new_queueLength)
     replay_memory.append([state,action,reward,new_state])
     print(len(replay_memory))
 
@@ -584,7 +692,8 @@ for episode in range(num_episode):
                 "--tripinfo-output", "tripinfo.xml"])
     traci.trafficlight.setPhase("0", 0)
 
-    state = getState(transition_time)
+    state = getState_baseline(transition_time)
+    queueLength = getQueueLength()
     counter = 0
     stride = 0
 
@@ -633,7 +742,8 @@ for episode in range(num_episode):
             print("POLICY FOLLOWED ")
 
         new_state = makeMove(action, transition_time)
-        reward = getRewardAbsolute(state, new_state)
+        new_queueLength = getQueueLength()
+        reward = getReward(queueLength, new_queueLength)
 
         vehicleList = traci.vehicle.getIDList()
         num_vehicles = len(vehicleList)

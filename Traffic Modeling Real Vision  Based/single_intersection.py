@@ -387,7 +387,7 @@ def getState(transition_time):  # made the order changes
             if x < 110 and x > 60 and y < 130 and y > 120:
                 leftcount += 1
             else:
-                if x < 120 and x > 110 and y < 110 and y > 600:
+                if x < 120 and x > 110 and y < 110 and y > 60:
                     bottomcount += 1
                 else:
                     if x < 180 and x > 130 and y < 120 and y > 110:
