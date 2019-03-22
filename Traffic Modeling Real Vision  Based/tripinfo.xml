@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Wednesday 20 March 2019 05:29:55 PM IST by SUMO gui Version 0.32.0
+<!-- generated on Friday 22 March 2019 05:49:00 PM IST by SUMO gui Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
         <net-file value="data/single_intersection.net.xml"/>
-        <route-files value="data/cross_2lanes.rou.xml"/>
+        <route-files value="data/cross_9_1_30mins.rou.xml"/>
     </input>
 
     <output>

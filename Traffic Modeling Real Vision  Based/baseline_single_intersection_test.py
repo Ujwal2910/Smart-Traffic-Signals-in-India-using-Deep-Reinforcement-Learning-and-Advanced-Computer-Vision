@@ -22,6 +22,7 @@ import datetime
 from time import time
 import matplotlib.pyplot as plt
 import math
+from operator import add
 
 
 def get_options():
