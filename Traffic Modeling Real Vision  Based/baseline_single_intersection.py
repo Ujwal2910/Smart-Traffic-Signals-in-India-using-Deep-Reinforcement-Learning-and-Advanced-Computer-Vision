@@ -423,6 +423,7 @@ def getState_baseline(transition_time):
     velocityVector = np.concatenate((topVelocityVector, rightVelocityVector, bottomVelocityVector, leftVelocityVector), 1)
     phaseVector = getPhaseState_baseline()
     newState = np.dstack((positionVector,velocityVector,phaseVector))
+    newState = np.expand_dims(newState, axis=0)
     return newState
 
 
@@ -547,7 +548,7 @@ def makeMove(action, transition_time):
     # traci.simulationStep()
     # traci.simulationStep()
 
-    return getState(transition_time)
+    return getState_baseline(transition_time)
 
 
 def getReward(this_state, this_new_state):
@@ -818,7 +819,7 @@ for episode in range(num_episode):
     AVG_Q_len_perepisode.append(sum_q_lens / 702)
     sum_q_lens = 0
 
-    q_estimator_model.save('models/single intersection models/tradeoff_models_absreward_cubic/model_{}.h5'.format(episode))
+    q_estimator_model.save('models/single intersection models/baseline/swapping models/30mins/9to1/model_{}.h5'.format(episode))
 
 
 
