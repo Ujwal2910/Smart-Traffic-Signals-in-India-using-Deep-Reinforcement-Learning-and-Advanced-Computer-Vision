@@ -534,7 +534,7 @@ params_dict = [] #for graph writing
 sum_q_lens = 0
 AVG_Q_len_perepisode = []
 
-transition_time = 16
+transition_time = 40
 target_update_time = 20
 q_estimator_model = build_model(transition_time)
 target_estimator_model = build_model(transition_time)
@@ -636,6 +636,12 @@ for episode in range(num_episode):
     current_bottom_time /= num_cycles
     avg_free_time = [current_left_time, current_top_time, current_right_time, current_bottom_time]
 
+    print(delay_data_time)
+    print(delay_data_avg)
+    print(length_data_avg)
+    print(count_data)
+
+
     plt.plot(delay_data_time, delay_data_avg, 'b-', label='avg')
     #plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
     #plt.plot(delay_data_time, delay_data_max, 'r-', label='max')
@@ -656,7 +662,7 @@ for episode in range(num_episode):
     plt.xlabel('Time in simulation (in s)')
 
     plt.figure()
-    label = ['Obstacle Lane', 'Top Lane w/ traffic', 'Right lane', 'Bottom lane']
+    label = ['Obstacle Lane Uniform', 'Top Lane w/ traffic', 'Right lane', 'Bottom lane']
     index = np.arange(len(label))
     plt.bar(index, avg_free_time, color=['red', 'green', 'blue', 'blue'])
     plt.xlabel('Lane')
@@ -666,7 +672,7 @@ for episode in range(num_episode):
     axes.set_ylim([0, 60])
 
     plt.figure()
-    label = ['Obstacle Lane', 'Top Lane w/ traffic', 'Right lane', 'Bottom lane']
+    label = ['Obstacle Lane Uniform', 'Top Lane w/ traffic', 'Right lane', 'Bottom lane']
     index = np.arange(len(label))
     plt.bar(index, overall_lane_qlength, color=['red', 'green', 'blue', 'blue'])
     plt.xlabel('Lane')
