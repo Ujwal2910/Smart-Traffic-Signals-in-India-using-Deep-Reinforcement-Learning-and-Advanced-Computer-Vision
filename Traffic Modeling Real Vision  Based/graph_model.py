@@ -565,7 +565,7 @@ AVG_Q_len_perepisode = []
 
 transition_time = 8
 target_update_time = 20
-q_estimator_model = load_model("models/single intersection models/swapping models/30mins/9to1/model_15.h5")
+q_estimator_model = load_model("models/single intersection models/swapping models/30mins/9to1/model_10.h5")
 replay_memory_init_size = 150
 replay_memory_size = 8000
 batch_size = 32
@@ -678,48 +678,52 @@ for episode in range(num_episode):
     current_bottom_time /= num_cycles
     avg_free_time = [current_left_time, current_top_time, current_right_time, current_bottom_time]
 
-    plt.plot(delay_data_time, delay_data_avg, 'b-', label='avg')
-    #plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
-    #plt.plot(delay_data_time, delay_data_max,'r-', label='max')
-    plt.legend(loc='upper left')
-    plt.ylabel('Waiting time per minute')
-    plt.xlabel('Time in simulation (in s)')
-
-    plt.figure()
-    plt.plot(delay_data_time, length_data_avg, 'b-', label='avg')
-    plt.legend(loc='upper left')
-    plt.ylabel('Average Queue Length')
-    plt.xlabel('Time in simulation (in s)')
-
-    plt.figure()
-    plt.plot(delay_data_time, count_data, 'b-', label='avg')
-    plt.legend(loc='upper left')
-    plt.ylabel('Average Number of Vehicles in Map')
-    plt.xlabel('Time in simulation (in s)')
-
-    plt.figure()
-    label = ['Obstacle Lane reward', 'Top Lane w/ traffic', 'Right lane', 'Bottom lane']
-    index = np.arange(len(label))
-    plt.bar(index, avg_free_time, color=['red', 'green', 'blue', 'blue'])
-    plt.xlabel('Lane')
-    plt.ylabel('Average Green Time per Cycle (in s)')
-    plt.xticks(index, label)
-    axes = plt.gca()
-    axes.set_ylim([0,60])
-
-    plt.figure()
-    label = ['Obstacle Lane reward', 'Top Lane w/ traffic', 'Right lane', 'Bottom lane']
-    index = np.arange(len(label))
-    plt.bar(index, overall_lane_qlength, color=['red', 'green', 'blue', 'blue'])
-    plt.xlabel('Lane')
-    plt.ylabel('Average Q-length every 8 seconds')
-    plt.xticks(index, label)
-    axes = plt.gca()
-    axes.set_ylim([0,20])
-    plt.show()
-
-    AVG_Q_len_perepisode.append(sum_q_lens / 702)
-    sum_q_lens = 0
+    print(delay_data_time)
+    print(delay_data_avg)
+    print(length_data_avg)
+    print(count_data)
+    # plt.plot(delay_data_time, delay_data_avg, 'b-', label='avg')
+    # #plt.plot(delay_data_time, delay_data_min, 'g-', label='min')
+    # #plt.plot(delay_data_time, delay_data_max,'r-', label='max')
+    # plt.legend(loc='upper left')
+    # plt.ylabel('Waiting time per minute')
+    # plt.xlabel('Time in simulation (in s)')
+    #
+    # plt.figure()
+    # plt.plot(delay_data_time, length_data_avg, 'b-', label='avg')
+    # plt.legend(loc='upper left')
+    # plt.ylabel('Average Queue Length')
+    # plt.xlabel('Time in simulation (in s)')
+    #
+    # plt.figure()
+    # plt.plot(delay_data_time, count_data, 'b-', label='avg')
+    # plt.legend(loc='upper left')
+    # plt.ylabel('Average Number of Vehicles in Map')
+    # plt.xlabel('Time in simulation (in s)')
+    #
+    # plt.figure()
+    # label = ['Obstacle Lane reward', 'Top Lane w/ traffic', 'Right lane', 'Bottom lane']
+    # index = np.arange(len(label))
+    # plt.bar(index, avg_free_time, color=['red', 'green', 'blue', 'blue'])
+    # plt.xlabel('Lane')
+    # plt.ylabel('Average Green Time per Cycle (in s)')
+    # plt.xticks(index, label)
+    # axes = plt.gca()
+    # axes.set_ylim([0,60])
+    #
+    # plt.figure()
+    # label = ['Obstacle Lane reward', 'Top Lane w/ traffic', 'Right lane', 'Bottom lane']
+    # index = np.arange(len(label))
+    # plt.bar(index, overall_lane_qlength, color=['red', 'green', 'blue', 'blue'])
+    # plt.xlabel('Lane')
+    # plt.ylabel('Average Q-length every 8 seconds')
+    # plt.xticks(index, label)
+    # axes = plt.gca()
+    # axes.set_ylim([0,20])
+    # plt.show()
+    #
+    # AVG_Q_len_perepisode.append(sum_q_lens / 702)
+    # sum_q_lens = 0
 
 
 

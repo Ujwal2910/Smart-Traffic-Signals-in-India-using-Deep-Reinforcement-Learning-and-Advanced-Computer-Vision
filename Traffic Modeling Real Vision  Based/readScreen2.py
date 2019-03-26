@@ -47,7 +47,7 @@ def subtractImage(image, SIDE):
         bg = cv2.imread('upper_background.png')
         fgmask = image - bg
         fgmask = cv2.cvtColor(fgmask, cv2.COLOR_BGR2GRAY)
-        # cv2.imshow("sub_upper", fgmask)
+        cv2.imshow("sub_upper", fgmask)
 
     elif SIDE == 'lower':
         bg = cv2.imread('lower_background.png')
@@ -126,10 +126,10 @@ def getCenter(image):
 
 def getUpperQlength():
     image = getScreenImage()
-    #cv2.imshow("test",image)
+    cv2.imshow("test",image)
     upper_lane = np.array([(428, 39), (517, 39), (517, 351), (428, 351)], dtype="float32")
     warp_upperlane = warped_simulation(upper_lane, image)
-    #cv2.imshow("test",warp_upperlane)
+    cv2.imshow("test",warp_upperlane)
     mask_upper = subtractImage(warp_upperlane, "upper")
     tail_length_upper = tail_length(mask_upper)
 

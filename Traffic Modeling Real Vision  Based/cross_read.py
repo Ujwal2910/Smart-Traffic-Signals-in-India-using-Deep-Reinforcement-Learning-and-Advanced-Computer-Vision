@@ -50,7 +50,7 @@ def leftsubtractImage(image, SIDE):
         bg = cv2.imread('cross_left_upper.png')
         fgmask = image - bg
         fgmask = cv2.cvtColor(fgmask, cv2.COLOR_BGR2GRAY)
-        #cv2.imshow("sub_upper", fgmask)
+        cv2.imshow("sub_upper", fgmask)
 
     elif SIDE == 'lower':
         bg = cv2.imread('cross_left_lower.png')
@@ -80,7 +80,7 @@ def rightsubtractImage(image, SIDE):
         bg = cv2.imread('cross_right_upper.png')
         fgmask = image - bg
         fgmask = cv2.cvtColor(fgmask, cv2.COLOR_BGR2GRAY)
-        #cv2.imshow("sub_upper", fgmask)
+        cv2.imshow("sub_upper", fgmask)
 
     elif SIDE == 'lower':
         bg = cv2.imread('cross_right_lower.png')
@@ -178,8 +178,9 @@ def leftgetUpperQlength():
     image = LeftgetScreenImage()
     #cv2.imshow("test",image)
     upper_lane = np.array([(446, 19), (535, 19), (535, 331), (446, 331)], dtype="float32")
+    cv2.imshow("upper",upper_lane)
     warp_upperlane = warped_simulation(upper_lane, image)
-    #cv2.imshow("testupper",warp_upperlane)
+    cv2.imshow("test_warp_upper",warp_upperlane)
     mask_upper = leftsubtractImage(warp_upperlane, "upper")
     tail_length_upper = tail_length(mask_upper)
 
