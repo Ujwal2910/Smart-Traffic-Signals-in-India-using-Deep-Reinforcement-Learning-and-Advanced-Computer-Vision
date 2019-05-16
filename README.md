@@ -2,7 +2,7 @@ Welcome to the Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-
 
 ![](https://cdn-images-1.medium.com/max/1600/1*jkrJAJ1GcNUVSOXic28WkQ.gif)
 # Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision
-<img src="https://github.com/Ujwal2910/Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision/blob/master/images/bg2.PNG" alt="qqq" />
+
 
 With a growth in the economic sector since the early 1990s, India has been undergoing a paradigm shift in the domain of transportation as well. With the explosion in the number of road-vehicles, the surge in traffic density (especially in metropolitan cities like Bangalore and Delhi) has become a major cause of concern. It has, therefore, become really important to develop Intelligent traffic signals and systems in order to optimize the escalating traffic flow. For a developing country like India where the majority of motorists are still negligent of traffic laws and are often seen breaking them, for e.g, driving in opposite lanes, violating an indicator near turns and turning in a wrong direction, and many more such instances which eventually lead to traffic jams.
 
