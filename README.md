@@ -1,3 +1,4 @@
+Welcome to the Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision wiki!
 ![SUMO-Aimsun](https://github.com/Ujwal2910/Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision/blob/master/images/Capture.PNG)
 # Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision
 
@@ -11,7 +12,16 @@ We have used DQN+Target Network+Experience Replay in our project and processed f
 We have used SUMO as our running environment and have experimented with number of sceneraios and agents. Following image shall better help understand the scenarios used-
 ![Scenarios](https://github.com/Ujwal2910/Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision/blob/master/images/bgsub.PNG)
 ### Scenarios tested on single intersection. 
-In (a), equal traffic is supplied to all the carriageways. In (b), equal traffic is supplied to two of the carriageways, the other two carriageways are kept empty. In (c), the traffic in the two non-empty carriageways is made unequal. In (d), an obstacle (labeled in red) is introduced in one of the carriageways.
+**In (a), equal traffic is supplied to all the carriageways. In (b), equal traffic is supplied to two of the carriageways, the other two carriageways are kept empty. In (c), the traffic in the two non-empty carriageways is made unequal. In (d), an obstacle (labeled in red) is introduced in one of the carriageways.**
+
+***
+
+We also worked with Two junctions for multi agent RL setup-
+![Dual intersection](https://github.com/Ujwal2910/Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision/blob/master/images/dual_intersection.png)
+
+***
+
+
 # Computer Vision Module-
 We have used background subtraction for calculation of queue length of vehciles in a lane or section and four of these make a junction which acts as our state space. For a realistic scenario the figure below shall represent an accurate representation of the process-
 
@@ -21,7 +31,23 @@ The same we have done by taking in the frames from the simulator by recording th
 
 ![Simulator background queue calculation](https://github.com/Ujwal2910/Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision/blob/master/images/simbg.PNG)
 
-Here after getting a simulator frame, we convert it bird eye view so it looks like an image taken from a traffic camera and then perform background subtraction to get the queue length.
+**Here after getting a simulator frame, we convert it bird eye view so it looks like an image taken from a traffic camera and then perform background subtraction to get the queue length.**
+
+***
+# RL model-
+The Queue length obtained from the CV module goes into the RL model. We have used Queue length as our state space and the decision to switch green signal to the next lane or not is decided by the RL model. 
 
 ***
 
+State space - Queue lengths+ Phases 
+
+Action Space - Switch || Not Switch
+
+***
+
+# Results-
+
+Following graphs show our results when put against Round Robin 40 seconds. We also experimented with various reward functions also.
+![graphs](https://github.com/Ujwal2910/Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision/blob/master/images/reward.PNG)
+
+***
