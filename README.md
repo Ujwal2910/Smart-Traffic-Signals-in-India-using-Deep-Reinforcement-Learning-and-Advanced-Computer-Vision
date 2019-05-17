@@ -31,7 +31,7 @@ We have used background subtraction for calculation of queue length of vehciles 
 
 The same we have done by taking in the frames from the simulator by recording the screen and then extracting each lane frame from the four lanes and then processing it to get the queue lenghts.
 
-![Simulator background queue calculation](https://github.com/Ujwal2910/Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision/blob/master/images/simbg.PNG)
+![Simulator background queue calculation](https://github.com/Ujwal2910/Smart-Traffic-Signals-in-India-using-Deep-Reinforcement-Learning-and-Advanced-Computer-Vision/blob/master/images/output_iY9tDr.gif)
 
 **Here after getting a simulator frame, we convert it bird eye view so it looks like an image taken from a traffic camera and then perform background subtraction to get the queue length.**
 
