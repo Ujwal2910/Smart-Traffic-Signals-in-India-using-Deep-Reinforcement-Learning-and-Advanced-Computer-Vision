@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Traffic Management Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="dashboard-container">
+        <div id="top-bar">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+            <div class="top-bar-icons">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+        <div id="sidebar">
+            <ul>
+                <li class="active">Live Map</li>
+                <li>Analytics</li>
+                <li>Emergency</li>
+                <li>Weather</li>
+                <li>Event Horizon</li>
+                <li>Settings</li>
+            </ul>
+        </div>
+        <div id="main-content">
+            <div id="map" class="content-panel active"></div>
+            <div id="analytics-panel" class="content-panel">
+                <h1>Real-Time Analytics</h1>
+                <div class="analytics-grid">
+                    <div class="analytics-item">
+                        <h3>Traffic Flow</h3>
+                        <p><span id="avg-speed">0</span> km/h (Avg. Speed)</p>
+                    </div>
+                    <div class="analytics-item">
+                        <h3>CO₂ Saved (Illustrative)</h3>
+                        <p><span id="co2-saved">0</span> kg</p>
+                    </div>
+                    <div class="analytics-item">
+                        <h3>Signal Efficiency</h3>
+                        <p><span id="signal-efficiency">85</span>%</p>
+                    </div>
+                    <div class="analytics-item">
+                        <h3>Active Vehicles</h3>
+                        <p><span id="active-vehicles">0</span></p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Average Speed Trend</h3>
+                    <canvas id="speed-chart"></canvas>
+                </div>
+            </div>
+            <div id="emergency-panel" class="content-panel">
+                <h1>Emergency Green Wave</h1>
+                <p>Select a start and end point on the map to create a green wave for an emergency vehicle.</p>
+                <div class="green-wave-controls">
+                    <button id="select-start-btn" class="gw-btn">Select Start</button>
+                    <span id="start-coords">Not selected</span>
+                </div>
+                <div class="green-wave-controls">
+                    <button id="select-end-btn" class="gw-btn">Select End</button>
+                    <span id="end-coords">Not selected</span>
+                </div>
+                <button id="start-gw-btn" class="gw-btn primary" disabled>Start Green Wave</button>
+                <button id="cancel-gw-btn" class="gw-btn danger" style="display: none;">Cancel Green Wave</button>
+            </div>
+            <div id="weather-panel" class="content-panel">
+                <div id="weather-panel-content">
+                    <!-- Weather data will be populated by JS -->
+                </div>
+            </div>
+            <div id="event-horizon-panel" class="content-panel">
+                <h1>Event Horizon</h1>
+                <p>Upcoming events that may impact traffic.</p>
+                <ul id="event-list">
+                    <!-- Events will be populated by JS -->
+                </ul>
+            </div>
+            <div id="settings-panel" class="content-panel"><h1>Settings</h1><p>Settings will go here.</p></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
